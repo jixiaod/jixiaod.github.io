@@ -1,10 +1,10 @@
 ---
 title: Javascript 箭头函数
 tags:
-  - javascript
+  - Javascript
   - 箭头函数
 categories:
-  - 前端
+  - Javascript
 date: 2015-11-06 18:37:13
 ---
 

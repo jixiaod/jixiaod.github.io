@@ -1,7 +1,10 @@
 ---
 title: How to C in 2016
 tags:
-  - C
+    - C/C++
+categories:
+    - C/C++
+
 date: 2016-12-05 11:23:52
 ---
 

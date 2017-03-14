@@ -1,11 +1,12 @@
 ---
 title: HTTP Keep-Alive模式
-date: 2016-08-09 11:19:48
 tags:
     - HTTP
     - keepalive
 categories:
-    
+    - 底层原理    
+
+date: 2016-08-09 11:19:48
 ---
 
 ## 1、什么是 Keep-Alive 模式？

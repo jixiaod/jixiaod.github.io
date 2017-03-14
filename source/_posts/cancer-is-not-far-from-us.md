@@ -3,6 +3,8 @@ title: 癌症离我们不远
 date: 2016-12-14 18:10:51
 tags:
     - 癌症
+categories:
+    - 杂
 
 ---
 

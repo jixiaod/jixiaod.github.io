@@ -4,6 +4,8 @@ date: 2017-02-09 14:25:08
 tags:
     - mongo
     - lbs
+categories:
+    - 流程&工具
 
 ---
 

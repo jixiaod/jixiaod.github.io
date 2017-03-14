@@ -1,9 +1,10 @@
 ---
 title: React Native 源码阅读
 tags:
-  - React
+  - React Native
+  - 源码阅读
 categories:
-  - 前端
+  - Javascript
 date: 2015-10-12 21:11:47
 ---
 

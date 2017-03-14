@@ -1,9 +1,10 @@
 ---
 title: Facebook 教我们写代码
 tags:
-  - React
+    - React
+    - Facebook
 categories:
-  - 前端
+    - Javascript
 date: 2015-09-30 15:33:06
 ---
 

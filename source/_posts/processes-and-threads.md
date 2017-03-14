@@ -5,7 +5,9 @@ tags:
     - 进程
     - 线程
     - swoole
-        
+categories:
+    - 底层原理
+
 ---
 
 [进程](https://zh.wikipedia.org/wiki/行程)（process）是计算机中已运行程序的实体。关于进程需要知道的几点：

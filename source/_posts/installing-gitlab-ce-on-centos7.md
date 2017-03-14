@@ -3,6 +3,9 @@ title: Centos7 安装 Gitlab-CE
 date: 2017-03-03 11:30:02
 tags:
     - gitlab
+    - centos
+categories:
+    - linux
 
 ---
 

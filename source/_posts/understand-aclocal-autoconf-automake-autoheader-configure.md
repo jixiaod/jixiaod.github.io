@@ -2,7 +2,11 @@
 title: 图解 autoscan、aclocal、automake、autoconf、autoheader、configure
 date: 2017-03-14 11:02:23
 tags:
-    - C
+    - autoscan
+    - automake
+    - configure
+categories:
+    - C/C++
 
 ---
 

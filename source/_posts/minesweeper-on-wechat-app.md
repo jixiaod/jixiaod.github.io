@@ -3,6 +3,9 @@ title: 扫雷 - 微信小程序
 date: 2017-01-19 10:55:08
 tags:
     - 微信小程序
+    - wechat
+    - Javascript
+categories:
     - Javascript
 
 ---

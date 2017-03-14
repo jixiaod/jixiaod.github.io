@@ -1,9 +1,10 @@
 ---
 title: javascript函数的定义与继承、多重继承
 tags:
-    - javascript
+    - Javascript
+    - 继承
 categories:
-    - 前端
+    - Javascript
 date: 2010-08-06 15:20:35
 
 ---

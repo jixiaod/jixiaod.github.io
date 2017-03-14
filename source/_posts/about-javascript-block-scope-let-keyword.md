@@ -1,10 +1,10 @@
 ---
 title: Javascript 的“块作用域” - LET
 tags:
-  - javascript
+  - Javascript
   - let
 categories:
-  - 前端
+  - Javascript
 date: 2015-10-30 18:10:19
 ---
 
