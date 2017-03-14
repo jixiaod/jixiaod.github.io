@@ -137,9 +137,9 @@
       <category term="linux" scheme="http://blog.100dos.com/categories/linux/"/>
     
     
-      <category term="gitlab" scheme="http://blog.100dos.com/tags/gitlab/"/>
-    
       <category term="centos" scheme="http://blog.100dos.com/tags/centos/"/>
+    
+      <category term="gitlab" scheme="http://blog.100dos.com/tags/gitlab/"/>
     
   </entry>
   
@@ -177,13 +177,13 @@
       <category term="linux" scheme="http://blog.100dos.com/categories/linux/"/>
     
     
-      <category term="nginx" scheme="http://blog.100dos.com/tags/nginx/"/>
-    
-      <category term="mysql" scheme="http://blog.100dos.com/tags/mysql/"/>
+      <category term="PHP" scheme="http://blog.100dos.com/tags/PHP/"/>
     
       <category term="linux" scheme="http://blog.100dos.com/tags/linux/"/>
     
-      <category term="PHP" scheme="http://blog.100dos.com/tags/PHP/"/>
+      <category term="nginx" scheme="http://blog.100dos.com/tags/nginx/"/>
+    
+      <category term="mysql" scheme="http://blog.100dos.com/tags/mysql/"/>
     
   </entry>
   
@@ -286,9 +286,9 @@
       <category term="底层原理" scheme="http://blog.100dos.com/categories/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="进程" scheme="http://blog.100dos.com/tags/%E8%BF%9B%E7%A8%8B/"/>
-    
       <category term="线程" scheme="http://blog.100dos.com/tags/%E7%BA%BF%E7%A8%8B/"/>
+    
+      <category term="进程" scheme="http://blog.100dos.com/tags/%E8%BF%9B%E7%A8%8B/"/>
     
       <category term="swoole" scheme="http://blog.100dos.com/tags/swoole/"/>
     
@@ -371,9 +371,9 @@
       <category term="Javascript" scheme="http://blog.100dos.com/categories/Javascript/"/>
     
     
-      <category term="微信小程序" scheme="http://blog.100dos.com/tags/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/"/>
-    
       <category term="Javascript" scheme="http://blog.100dos.com/tags/Javascript/"/>
+    
+      <category term="微信小程序" scheme="http://blog.100dos.com/tags/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/"/>
     
       <category term="wechat" scheme="http://blog.100dos.com/tags/wechat/"/>
     
@@ -745,7 +745,7 @@
 <figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">matt@foo:~/repos/badcode% cleanup-format -i *.&#123;c,h,cc,cpp,hpp,cxx&#125;</div></pre></td></tr></table></figure>
 <p>参数 -i 会将格式化后的内容覆盖原文件，而不是写入新文件或创建备份文件。</p>
 <p>如果有很多文件，你可以并行的递归处理整个源码树：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line"><span class="meta">#!/usr/bin/env bash</span></div><div class="line"></div><div class="line"><span class="comment"># note: clang-tidy only accepts one file at a time, but we can run it</span></div><div class="line"><span class="comment">#       parallel against disjoint collections at once.</span></div><div class="line">find . \( -name \*.c -or -name \*.cpp -or -name \*.cc \) |xargs -n1 -P4 cleanup-tidy</div><div class="line"></div><div class="line"><span class="comment"># clang-format accepts multiple files during one run, but let's limit it to 12</span></div><div class="line"><span class="comment"># here so we (hopefully) avoid excessive memory usage.</span></div><div class="line">find . \( -name \*.c -or -name \*.cpp -or -name \*.cc -or -name \*.h \) |xargs -n12 -P4 cleanup-format -i</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line"><span class="meta">#!/usr/bin/env bash</span></div><div class="line"></div><div class="line"><span class="comment"># <span class="doctag">note:</span> clang-tidy only accepts one file at a time, but we can run it</span></div><div class="line"><span class="comment">#       parallel against disjoint collections at once.</span></div><div class="line">find . \( -name \*.c -or -name \*.cpp -or -name \*.cc \) |xargs -n1 -P4 cleanup-tidy</div><div class="line"></div><div class="line"><span class="comment"># clang-format accepts multiple files during one run, but let's limit it to 12</span></div><div class="line"><span class="comment"># here so we (hopefully) avoid excessive memory usage.</span></div><div class="line">find . \( -name \*.c -or -name \*.cpp -or -name \*.cc -or -name \*.h \) |xargs -n12 -P4 cleanup-format -i</div></pre></td></tr></table></figure>
 <p>现在，有一个新的 cleanup-tidy 脚本，内容如下：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><div class="line"><span class="meta">#!/usr/bin/env bash</span></div><div class="line"></div><div class="line">clang-tidy \</div><div class="line">    -fix \</div><div class="line">    -fix-errors \</div><div class="line">    -header-filter=.* \</div><div class="line">    --checks=readability-braces-around-statements,misc-macro-parentheses \</div><div class="line">    <span class="variable">$1</span> \</div><div class="line">    -- -I.</div></pre></td></tr></table></figure>
 <p><a href="http://clang.llvm.org/extra/clang-tidy/" target="_blank" rel="external">clang-tidy</a> 是策略驱动的代码重构工具，上面示例代码中开启了俩个修复项：</p>
@@ -1301,9 +1301,9 @@
       <category term="PHP" scheme="http://blog.100dos.com/categories/PHP/"/>
     
     
-      <category term="debug" scheme="http://blog.100dos.com/tags/debug/"/>
-    
       <category term="PHP" scheme="http://blog.100dos.com/tags/PHP/"/>
+    
+      <category term="debug" scheme="http://blog.100dos.com/tags/debug/"/>
     
   </entry>
   

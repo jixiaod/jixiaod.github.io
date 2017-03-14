@@ -733,7 +733,7 @@
 <figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">matt@foo:~/repos/badcode% cleanup-format -i *.&#123;c,h,cc,cpp,hpp,cxx&#125;</div></pre></td></tr></table></figure>
 <p>参数 -i 会将格式化后的内容覆盖原文件，而不是写入新文件或创建备份文件。</p>
 <p>如果有很多文件，你可以并行的递归处理整个源码树：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line"><span class="meta">#!/usr/bin/env bash</span></div><div class="line"></div><div class="line"><span class="comment"># note: clang-tidy only accepts one file at a time, but we can run it</span></div><div class="line"><span class="comment">#       parallel against disjoint collections at once.</span></div><div class="line">find . \( -name \*.c -or -name \*.cpp -or -name \*.cc \) |xargs -n1 -P4 cleanup-tidy</div><div class="line"></div><div class="line"><span class="comment"># clang-format accepts multiple files during one run, but let's limit it to 12</span></div><div class="line"><span class="comment"># here so we (hopefully) avoid excessive memory usage.</span></div><div class="line">find . \( -name \*.c -or -name \*.cpp -or -name \*.cc -or -name \*.h \) |xargs -n12 -P4 cleanup-format -i</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line"><span class="meta">#!/usr/bin/env bash</span></div><div class="line"></div><div class="line"><span class="comment"># <span class="doctag">note:</span> clang-tidy only accepts one file at a time, but we can run it</span></div><div class="line"><span class="comment">#       parallel against disjoint collections at once.</span></div><div class="line">find . \( -name \*.c -or -name \*.cpp -or -name \*.cc \) |xargs -n1 -P4 cleanup-tidy</div><div class="line"></div><div class="line"><span class="comment"># clang-format accepts multiple files during one run, but let's limit it to 12</span></div><div class="line"><span class="comment"># here so we (hopefully) avoid excessive memory usage.</span></div><div class="line">find . \( -name \*.c -or -name \*.cpp -or -name \*.cc -or -name \*.h \) |xargs -n12 -P4 cleanup-format -i</div></pre></td></tr></table></figure>
 <p>现在，有一个新的 cleanup-tidy 脚本，内容如下：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><div class="line"><span class="meta">#!/usr/bin/env bash</span></div><div class="line"></div><div class="line">clang-tidy \</div><div class="line">    -fix \</div><div class="line">    -fix-errors \</div><div class="line">    -header-filter=.* \</div><div class="line">    --checks=readability-braces-around-statements,misc-macro-parentheses \</div><div class="line">    <span class="variable">$1</span> \</div><div class="line">    -- -I.</div></pre></td></tr></table></figure>
 <p><a href="http://clang.llvm.org/extra/clang-tidy/" target="_blank" rel="external">clang-tidy</a> 是策略驱动的代码重构工具，上面示例代码中开启了俩个修复项：</p>
@@ -1505,7 +1505,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">162</span>
+              <span class="site-state-item-count">161</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1513,7 +1513,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-count">13</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1522,7 +1522,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">120</span>
+                <span class="site-state-item-count">111</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

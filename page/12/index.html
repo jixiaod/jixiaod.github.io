@@ -207,110 +207,6 @@
             
               
                 
-                <a class="post-title-link" href="/2010/10/08/the-most-important/" itemprop="url">
-                  最重要
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2010-10-08T20:28:24+08:00" content="2010-10-08">
-              2010-10-08
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/杂/" itemprop="url" rel="index">
-                    <span itemprop="name">杂</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>最重要的人就是眼下需要你帮助的人；</p>
-<p>最重要的事就是马上去做；</p>
-<p>最重要的时间就是当下。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
                 <a class="post-title-link" href="/2010/10/06/starry-sky/" itemprop="url">
                   星空
                 </a>
@@ -983,8 +879,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/杂/" itemprop="url" rel="index">
-                    <span itemprop="name">杂</span>
+                  <a href="/categories/数据库/" itemprop="url" rel="index">
+                    <span itemprop="name">数据库</span>
                   </a>
                 </span>
 
@@ -1052,6 +948,120 @@
   </article>
 
     
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2010/07/18/php-session/" itemprop="url">
+                  PHP SESSION
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2010-07-18T20:50:55+08:00" content="2010-07-18">
+              2010-07-18
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/PHP/" itemprop="url" rel="index">
+                    <span itemprop="name">PHP</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>前几天面试有问道SESSION修改生存周期的问题，现在找到了答案。</p>
+<p>本文引自：CSDN <a href="http://php.edu.csdn.net/ziyuan/PHPhh_sessionsjsd_syrm_y__219.html" target="_blank" rel="external">http://php.edu.csdn.net/ziyuan/PHPhh_sessionsjsd_syrm_y__219.html</a></p>
+<p>在PHP开发中对比起Cookie，Session是存储在服务器端的会话，相对安全，并且不像 Cookie 那样有存储长度限制，本文简单介绍 Session的使用。由于Session是以文本文件形式存储在服务器端的，所以不怕客户端修改 Session 内容。实际上在服务器端的Session文件，PHP自动修改Session文件的权限，只保留了系统读和写权限，而且不能通过ftp修改，所以安全得多。<br>对于Cookie来说，假设我们要验证用户是否登陆，就必须在Cookie中保存用户名和密码（可能是md5加密后字符串），并在每次请求页面的时候进行验证。如果用户名和密码存储在数据库，每次都要执行一次数据库查询，给数据库造成多余的负担。因为我们并不能只做一次验证。为什么呢？因为客户端Cookie中的信息是有可能被修改的。假如你存储$admin变量来表示用户是否登陆，$admin为true的时候表示登陆，为false的时候表示未登录，在第一次通过验证后将$admin等于true存储在 Cookie，下次就不用验证了，这样对么？错了，假如有人伪造一个值为true的$admin变量那不是就立即取的了管理权限么？非常的不安全。<br>而Session就不同了，Session是存储在服务器端的，远程用户没办法修改Session文件的内容，因此我们可以单纯存储一个$admin变量来判断是否登陆，首次验证通过后设置$admin值为true，以后判断该值是否为true，假如不是，转入登陆界面，这样就可以减少很多数据库操作了。而且可以减少每次为了验证Cookie而传递密码的不安全性了（Session验证只需要传递一次，假如你没有使用SSL安全协议的话）。即使密码进行了md5加密，也是很容易被截获的。<br>当然使用Session还有很多优点，比如控制容易，可以按照用户自定义存储等（存储于数据库）。我这里就不多说了。<br>Session在php.ini是否需要设置呢？一般不需要的，因为并不是每个人都有修改php.ini的权限，默认Session的存放路径是服务器的系统临时文件夹，我们可以自定义存放在自己的文件夹里，这个稍后我会介绍。<br>开始介绍如何创建Session。非常简单，真的。<br>启动Session 会话，并创建一个$admin变量：<br>＜?php<br>// 启动 Session<br>session_start();<br>// 声明一个名为 admin 的变量，并赋空值。<br>$_SESSION[“admin”] = null;<br>?＞<br>如果你使用了Seesion，或者该PHP文件要调用Session变量，那么就必须在调用Session之前启动它，使用 session_start() 函数。其它都不需要你设置了，PHP自动完成Session文件的创建。<br>执行完这个程序后，我们可以到系统临时文件夹找到这个Session文件，一般文件名形如：sess_4c83638b3b0dbf65583181c2f89168ec，后面是32位编码后的随机字符串。用编辑器打开它，看一下它的内容：<br>admin|N;<br>　　一般该内容是这样的结构：<br>　　变量名|类型:长度:值;<br>　　并用分号隔开每个变量。有些是可以省略的，比如长度和类型。<br>　　我们来看一下验证程序，假设数据库存储的是用户名和 md5 加密后的密码：<br>＜?php<br>// 表单提交后…<br>$posts = $_POST;<br>// 清除一些空白符号<br>foreach ($posts as $key =＞ $value) {<br>$posts[$key] = trim($value);<br>}<br>$password = md5($posts[“password”]);<br>$username = $posts[“username”];<br>$query = “SELECT <code>username</code> FROM <code>user</code> WHERE <code>password</code> = ‘$password’”;<br>// 取得查询结果<br>$userInfo = $DB-＞getRow($query);<br>if (!empty($userInfo)) {<br>if ($userInfo[“username”] == $username) {<br>// 当验证通过后，启动Session<br>session_start();<br>// 注册登陆成功的 admin 变量，并赋值 true<br>$_SESSION[“admin”] = true;<br>} else {<br>‑die(“用户名密码错误”);<br>}<br>‑} else {<br>die(“用户名密码错误”);<br>}</p>
+<p>我们在需要用户验证的页面启动Session，判断是否登陆：<br>＜?php<br>// 防止全局变量造成安全隐患<br>$admin = false;<br>// 启动会话，这步必不可少<br>session_start();<br>// 判断是否登陆<br>if (isset($_SESSION[“admin”]) &amp;&amp; $_SESSION[“admin”] === true) {<br>echo “您已经成功登陆”;<br>} else {<br>// 验证失败，将 $_SESSION[“admin”] 置为 false<br>$_SESSION[“admin”] = false;<br>die(“您无权访问”);<br>}<br>?＞<br>是不是很简单呢？将$_SESSION看成是存储在服务器端的数组即可，我们注册的每一个变量都是数组的键，跟使用数组没有什么分别。</p>
+<pre><code>如果要登出系统怎么办？销毁Session即可。
+</code></pre><p>＜?php<br>session_start();<br>// 这种方法是将原来注册的某个变量销毁<br>unset($_SESSION[“admin”]);<br>// 这种方法是销毁整个Session文件<br>session_destroy();<br>＞<br>Session能否像 Cookie 那样设置生存周期呢？有了Session是否就完全抛弃 Cookie 呢？我想说，结合Cookie来使用Session才是最方便的。<br>Session是如何来判断客户端用户的呢？它是通过SessionID来判断的，什么是SessionID，就是那个Session文件的文件名，Session ID 是随机生成的，因此能保证唯一性和随机性，确保Session的安全。一般如果没有设置Session的生存周期，则SessionID 存储在内存中，关闭浏览器后该 ID 自动注销，重新请求该页面后，重新注册一个SessionID。<br>如果客户端没有禁用Cookie，则 Cookie 在启动Session会话的时候扮演的是存储SessionID 和Session生存期的角色。<br>我们来手动设置Session的生存期：<br>＜?php<br>session_start();<br>// 保存一天<br>$lifeTime = 24 * 3600;<br>setcookie(session_name(), session_id(), time() + $lifeTime, “/“);<br>?＞</p>
+<p>其实Session还提供了一个函数 session_set_cookie_params(); 来设置Session的生存期的，该函数必须在 session_start() 函数调用之前调用：<br>＜?php<br>// 保存一天<br>$lifeTime = 24 * 3600;<br>session_set_cookie_params($lifeTime);<br>session_start();<br>$_SESSION[“admin”] = true;<br>?＞</p>
+<p>如果客户端使用 IE 6.0 ， session_set_cookie_params(); 函数设置 Cookie 会有些问题，所以我们还是手动调用 setcookie 函数来创建 cookie。<br>假设客户端禁用 Cookie 怎么办？没办法，所有生存周期都是浏览器进程了，只要关闭浏览器，再次请求页面又得重新注册 Session。那么怎么传递SessionID 呢？通过 URL 或者通过隐藏表单来传递，PHP 会自动将SessionID 发送到 URL 上，URL 形如：<a href="http://www.openphp.cn/index.php?PHPSESSID=bba5b2a240a77e5b44cfa01d49cf9669，" target="_blank" rel="external">http://www.openphp.cn/index.php?PHPSESSID=bba5b2a240a77e5b44cfa01d49cf9669，</a> 其中 URL 中的参数 PHPSESSID 就是SessionID了，我们可以使用 $_GET 来获取该值，从而实现SessionID 页面间传递。<br>＜?php<br>// 保存一天<br>$lifeTime = 24 * 3600;<br>// 取得当前Session名，默认为 PHPSESSID<br>$sessionName = session_name();<br>// 取得SessionID<br>$sessionID = $_GET[$sessionName];<br>// 使用 session_id() 设置获得的SessionID<br>session_id($sessionID);<br>session_set_cookie_params($lifeTime);<br>session_start();<br>$_SESSION[“admin”] = true;<br>?＞</p>
+<p>对于虚拟主机来说，如果所有用户的Session都保存在系统临时文件夹里，将给维护造成困难，而且降低了安全性，我们可以手动设置Session文件的保存路径，session_save_path()就提供了这样一个功能。我们可以将Session存放目录指向一个不能通过 Web 方式访问的文件夹，当然，该文件夹必须具备可读写属性。<br>＜?php<br>// 设置一个存放目录<br>$savePath = “./session_save_dir/“;<br>// 保存一天<br>$lifeTime = 24 * 3600;<br>session_save_path($savePath);<br>session_set_cookie_params($lifeTime);<br>session_start();<br>$_SESSION[“admin”] = true;<br>?＞</p>
+<p>同 session_set_cookie_params(); 函数一样，session_save_path() 函数也必须在 session_start() 函数调用之前调用。<br>我们还可以将数组，对象存储在Session中。操作数组和操作一般变量没有什么区别，而保存对象的话，PHP 会自动对对象进行序列化（也叫串行化），然后保存于Session中。下面例子说明了这一点：</p>
+<p>＜?php<br>class person {<br>var $age;<br>function output() {<br>echo $this-＞age;<br>}<br>function setAge($age) {<br>$this-＞age = $age;<br>}<br>}<br>?＞<br>setage.php<br>＜?php<br>session_start();<br>require_once “person.php”;<br>$person = new person();<br>$person-＞setAge(21);<br>$_SESSION[‘person’] = $person;<br>echo “＜a href=’output’＞check here to output age＜/a＞”;<br>?＞</p>
+<p>output.php<br>＜?<br>// 设置回调函数，确保重新构建对象。<br>ini_set(‘unserialize_callback_func’, ‘mycallback’);<br>function mycallback($classname) {<br>$classname . “.php”;<br>}<br>session_start();<br>$person = $_SESSION[“person”];<br>// 输出 21<br>$person-＞output();<br>?＞</p>
+<p>当我们执行 setage.php 文件的时候，调用了 setage() 方法，设置了年龄为 21，并将该状态序列化后保存在Session中（PHP 将自动完成这一转换），当转到 output.php 后，要输出这个值，就必须反序列化刚才保存的对象，又因为在解序列化的时候需要实例化一个未定义类，所以我们定义了以后回调函数，自动包含 person.php 这个类文件，因此对象被重构，并取得当前 age 的值为 21，然后调用 output() 方法输出该值。<br>另外，我们还可以使用 session_set_save_handler 函数来自定义Session的调用方式。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+    
   </section>
 
   
@@ -1092,7 +1102,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">162</span>
+              <span class="site-state-item-count">161</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1100,7 +1110,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-count">13</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1109,7 +1119,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">120</span>
+                <span class="site-state-item-count">111</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
