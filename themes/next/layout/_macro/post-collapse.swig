@@ -14,6 +14,7 @@
               {% if post.type === 'picture' %}
                 {{ post.content }}
               {% else %}
+                
                 <span itemprop="name">{{ post.title | default(__('post.untitled')) }}</span>
               {% endif %}
             </a>
@@ -27,7 +28,16 @@
           {{ date(post.date, 'MM-DD') }}
         </time>
       </div>
+      <div class="post-meta-cat">
+        {% set catname = '' %}
+        {% if post.categories and post.categories.length %}
+            {% for cat in post.categories %}
+                {% set catname = cat.name %}
+            {% endfor %}
+        {% endif %}
 
+        {{catname}}
+      </div>
     </header>
   </article>
 
