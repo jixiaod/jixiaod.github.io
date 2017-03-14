@@ -207,6 +207,113 @@
             
               
                 
+                <a class="post-title-link" href="/2010/01/21/eclipse-error-no-gluegen-rt-in-java.library.path/" itemprop="url">
+                  eclipse 的 no gluegen-rt in java.library.path
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2010-01-21T13:06:30+08:00" content="2010-01-21">
+              2010-01-21
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>今天研究了下NASA 的World Wind（一个开源的地理科普软件），算不上研究，就在本机跑了下人家的demo。</p>
+<p>出错提示：no gluegen-rt in java.library.path<br>如下:</p>
+<p>Exception in thread “AWT-EventQueue-0” java.lang.UnsatisfiedLinkError: no gluegen-rt in java.library.path<br>    at java.lang.ClassLoader.loadLibrary(ClassLoader.java:1709)<br>    at java.lang.Runtime.loadLibrary0(Runtime.java:823)<br>    at java.lang.System.loadLibrary(System.java:1028)<br>    at com.sun.gluegen.runtime.NativeLibLoader.loadLibraryInternal(NativeLibLoader.java:102)<br>    at com.sun.gluegen.runtime.NativeLibLoader.access$000(NativeLibLoader.java:51)<br>    at com.sun.gluegen.runtime.NativeLibLoader$1.run(NativeLibLoader.java:70)<br>    at java.security.AccessController.doPrivileged(Native Method)<br>    at com.sun.gluegen.runtime.NativeLibLoader.loadGlueGenRT(NativeLibLoader.java:68)<br>    at com.sun.gluegen.runtime.NativeLibrary.ensureNativeLibLoaded(NativeLibrary.java:399)<br>    at com.sun.gluegen.runtime.NativeLibrary.open(NativeLibrary.java:163)<br>    at com.sun.gluegen.runtime.NativeLibrary.open(NativeLibrary.java:129)<br>    at com.sun.opengl.impl.x11.DRIHack.begin(DRIHack.java:109)<br>    at com.sun.opengl.impl.x11.X11GLDrawableFactory.<clinit>(X11GLDrawableFactory.java:99)<br>    at java.lang.Class.forName0(Native Method)<br>    at java.lang.Class.forName(Class.java:169)<br>    at javax.media.opengl.GLDrawableFactory.getFactory(GLDrawableFactory.java:111)<br>    at javax.media.opengl.GLCanvas.chooseGraphicsConfiguration(GLCanvas.java:520)<br>    at javax.media.opengl.GLCanvas.<init>(GLCanvas.java:131)<br>    at javax.media.opengl.GLCanvas.<init>(GLCanvas.java:90)<br>    at gov.nasa.worldwind.awt.WorldWindowGLCanvas.<init>(Unknown Source)<br>    at WwMap$AppFrame.<init>(WwMap.java:10)<br>    at WwMap$1.run(WwMap.java:21)<br>    at java.awt.event.InvocationEvent.dispatch(InvocationEvent.java:209)<br>    at java.awt.EventQueue.dispatchEvent(EventQueue.java:597)<br>    at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:269)<br>    at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:184)<br>    at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:174)<br>    at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:169)<br>    at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:161)<br>    at java.awt.EventDispatchThread.run(EventDispatchThread.java:122)</init></init></init></init></clinit></p>
+<p>配置java.library.path<br>PS：eclipse-&gt;help-&gt;about eclipse SDK -&gt;configuration details,我得到的path是java.library.path=/usr/lib/jni，不准确、可能是我以前安装的时候没有配置好的缘故。不太清楚、、</p>
+<p>下面的方法获得绝对正确的path<br>System.out.println(System.getProperty(“java.library.path”));<br>//同理，也可以试试<br>System.out.println(System.getProperty(“java.home”));<br>找到本地library.path位置。一般是<br>/usr/lib/jvm/java-6-sun-1.6.0.16/jre/lib/i386/client:/usr/lib/jvm/java-6-sun-1.6.0.16/jre/lib/i386:/usr/lib/jvm/java-6-sun-1.6.0.16/jre/../lib/i386:/usr/lib/xulrunner:/usr/java/packages/lib/i386:/lib:/usr/lib<br>把.so文件放到上面的任何一个文件夹下应该都可以，我放到/usr/lib   (.so类似于windows下的.dll文件，动态连接程序)</p>
+<p>这样之后，程序能跑了，可惜奈何我显卡垃圾、、跑不起来。。。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2010/01/18/love-the-woman-with-big-voice/" itemprop="url">
                   喜欢大嗓门的女人
                 </a>
@@ -992,111 +1099,6 @@ function getIP(){
   </article>
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2009/12/10/i-dont-know-what-to-say/" itemprop="url">
-                  有点让我不知所云了
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2009-12-10T23:58:27+08:00" content="2009-12-10">
-              2009-12-10
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/杂/" itemprop="url" rel="index">
-                    <span itemprop="name">杂</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>生活有点让我不知所云了。。最近，一直在纠结。。感觉真杯具。。灰尝不如意，看谁都不顺眼。。。真想打一架，发泄心中的闷气。。</p>
-<p>总是在梦想和现实之间徘徊。。好梦未醒，又掉落回冰冷＋无奈。。只能空感慨。。。一声长叹。。何其悲已。。</p>
-<p>发现自己真TM矫情。。也是，生活总是不能满足。。</p>
-<p>算了，还是抱着颗感恩的心。。一颗金子般纯洁的美丽心情。。。虽然不能想要什么就得到什么。但是他亦然是公平的。。。不要大悲，亦不要大喜。。生活乐无边，小小年纪，不要空感叹。。。脚踏实地吧。。。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-    
   </section>
 
   
@@ -1137,7 +1139,7 @@ function getIP(){
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">161</span>
+              <span class="site-state-item-count">162</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
