@@ -197,6 +197,124 @@
             
               
                 
+                <a class="post-title-link" href="/2009/12/08/ms3d-code-analysis/" itemprop="url">
+                  ms3d文件分析
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2009-12-08T10:37:38+08:00" content="2009-12-08">
+              2009-12-08
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/杂/" itemprop="url" rel="index">
+                    <span itemprop="name">杂</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>网上弄了个java3dgamesdk，一个简单的游戏引擎，但是实现的东西很全。MS3DLoader可以载入一个ms3d格式的3D模型，分析了下发现很多东西看不懂。大概知道他是“贱贱的”载入ms3d文件里的内容。但是苦于不知道ms3d里面到底写了什么东西，自己下载了个MilkShape3D搞了个模型，发现没法查看源文件（全乱码）。功夫不负我的辛苦，找到了前辈分享的心</p>
+<p>啊。。。ms3d文件分析看了之后，终于基本上理解了MS3DLoader。他有提到一本《Focus on 3D Models》作者Evan Pipho，baidu下发现是个牛淫ms3d文件分析。。下载了个电子书，打算好好拜读。。。</p>
+<p>下面为ms3d文件分析：</p>
+<p>1.静态部分：</p>
+<p>【文件头】<br>文件头大小为14字节</p>
+<p>前10个字节为固定的标志 MS3D000000      &lt;-其中后6个字节就是字符0（即值为48）<br>后4个字节为该模型格式的版本号，这4个字节为一个有符号整数，目前该版本号的值为3或4，两种版本的格式细节不同。</p>
+<p>【顶点】<br>       紧接着文件头的就是模型的顶点数据部分，顶点部分的头两个字节为一个无符号整数，表示有多少个顶点。之后便是一个接一个的顶点的数据，单个顶点的结构如下：<br>struct SMs3dVertex<br>{<br>        unsigned char m_ucFlags;          //编辑器用标志<br>        CVector3 m_vVert;                   //x,y,z的坐标<br>        char m_cBone;                         //Bone ID （-1 ,没有骨头）<br>        unsigned char m_mcUnused;      //保留，未使用<br>};<br>1）第一个成员表示了该顶点在编辑器中的状态（引擎中不是必须）其各个值的含义如下：<br>    0：顶点可见，未选中状态         1：顶点可见，选中状态<br>    2：顶点不可见，未选中状态      3：顶点不可见，选中状态<br>2）第二个成员为顶点的坐标，CVector3为三个float型组成，总共12字节<br>3）第三个成员为该顶点所绑定的骨骼的ID号，如果该值为-1 则代表没有绑定任何骨骼（静态）<br>4）第四个成员不包含任何信息，直接略过</p>
+<p>【多边形】<br>       紧接着顶点数据的是多边形数据（三角形），多边形部分头两个字节是一个无符号整数，表示有多少个三角形。之后便是一个接一个的三角形数据，单个三角形结构如下：<br>struct SMs3dTriangle<br>{<br>        unsigned short m_usFlags;                       //编辑器用标志<br>        unsigned short m_usVertIndices[3];          //顶点索引<br>        CVector3 m_vNormals[3];                          //顶点法线<br>        float m_fTexCoords[2][3];                         //纹理坐标（UV）<br>        unsigned char m_ucSmoothing;               //<br>        unsigned char m_ucGroup;                      //组索引<br>};<br>1）第一个成员表示了该三角形在编辑器中的状态，具体值的含义和顶点结构里第一个成员相同，唯一不同的是本结构中的这个值是两个字节，而顶点结构中的是一个字节。<br>2）第二个成员的三个值表示了组成本三角形的三个顶点的索引，索引即是顶点部分挨个顶点的位置。<br>3）第三个成员的三个值为顶点法线，用于光照计算，每个表示法线的三维向量必须是单位向量。<br>4）第四个成员存储三个顶点的纹理坐标（UV），不过其存储顺序比较特别，为 6个float依次代表u1,u2,u3,v1,v2,v3；所有的U值依次在前，所有的V值依次随后。<br>5）、6）第五第六个成员是该三角形所属的组的信息，在这里不是十分重要，往下看会了解。</p>
+<p>【网格】<br>       出于灵活性的考虑，模型的一个个三角形被按照网格或是组来划分；这允许模型的不同部分，使用不同的贴图、材质，甚至仅仅渲染模型的指定部分。<br>       网格部分紧跟着多边形（三角形）部分，网格部分头两个字节是一个无符号整数，表示有得多少个网格。之后便是一个接一个的网格数据，每个网格结构的大小可能不同（因为他们拥有的三角形数不同）。网格结构如下：<br>struct SMs3dMesh<br>{<br>        unsigned char m_ucFlags;               //编辑器用标志<br>        char m_cName[32];                            //网格名<br>        unsigned short m_usNumTris;         //本网格中三角形的数量<br>        unsigned short* m_uspIndices;         //三角形索引<br>        char m_cMaterial;                            //材质索引，-1为没有材质<br>};</p>
+<p>1）第一个成员表示了该网格在编辑器中的状态，具体含义和顶点结构里第一个成员相同。<br>2）第二个成员是一个字符串，表示该网格的名字。<br>3）第三个成员为本网格所包含的三角形的数量。<br>4）第四个成员大小不是确定的，依赖于第三个成员的值而定；为本网格拥有的所有的三角形的索引（即三角形部分挨个三角形的索引）<br>5）第五个成员为本网格的材质索引，如果值为-1 则代表本网格不包含材质。</p>
+<p>【材质】<br>       材质结构相当大，包含很多的数据。<br>       紧跟着网格部分的便是材质部分，材质部分头两个字节是一个无符号整数，表示有多少个材质。之后便是一个接一个的材质信息，材质结构如下：<br>struct SMs3dMaterial<br>{<br>        char m_cName[32];                 //材质名<br>        float m_fAmbient[4];                  //环境光<br>        float m_fDiffuse[4];                   //漫射光<br>        float m_fSpecular[4];                //高光<br>        float m_fEmissive[4];                 //自发光<br>        float m_fShininess;                   //0-128<br>        float m_fTransparency;           //透明度 0-1<br>        char m_cMode;                       //未使用<br>        char m_cTexture[128];            //贴图文件名<br>        char m_cAlpha[128];               //透明贴图文件名<br>};<br>1）第一个成员是一个字符串，为本材质的名字。<br>2）第二个成员为环境光<br>3）第三个成员为漫反射光<br>4）第四个成员为高光<br>5）第五个成员为自发光<br>6）第六个成员是个发光值，影响高光的效果。改值越低，高光越暗。<br>7）第七个成员为材质的透明度，由于之前几个材质的属性里有透明度这个值。当用OpenGL作为API时，要使用这个值，最简单的方式就是将这个值作为第三个成员diffuse的最后一个alpha值即可<br>8）第八个成员目前未使用（可能未来会使用吧）<br>9）第九个成员为一个字符串，是贴图文件的文件名（即贴图作为独立的图片文件不包含在模型数据内）。<br>10）第十个成员为一个字符串，是透明度图（Alpha map,我就这么翻了）的文件名。由于目前透明度图在模型中不被支持（也许未来的某一天开始支持了），所以这个现在也不用。</p>
+<p>2.骨骼动画：</p>
+<p>剩下的部分是模型的最后一部分，全是由一种结构Joint所组成<br>在介绍Joint结构前，先介绍下另一个结构KeyFrame（Joint结构中有使用），该结构表示了某一帧时某个骨骼的旋转帧数据或平移帧数据，结构体如下：<br>struct SMs3dKeyFrame<br>{<br>        float m_fTime;<br>        float m_fParam[3];<br>};<br>1）第一个成员为一个时间，表示这一帧所处的时间，单位是秒。<br>2）第二个成员为一个三维向量，表示一个旋转或平移。如果是表示平移，那三个值分别是X,Y,Z轴上的平移值；如果是表示旋转，则这三个值表示了旋转的欧拉角</p>
+<p>【骨骼】</p>
+<pre><code>接下来进入正题，紧接着材质数据的后面就是Joint信息，一开始总是两个字节的无符号整数，表示一共有多少个Joint，之后便是一个个的Joint，Joint结构的大小不是固定的（这点同Mesh一样）。Joint结构的定义如下：
+</code></pre><p>struct SMs3dJoint<br>{<br>        unsigned char m_ucpFlags;                                //编辑器标志<br>        char m_cName[32];                                             //本Joint的名字<br>        char m_cParent[32];                                            //本Joint的父Joint名字<br>        float m_fRotation[3];                                           //初始旋转<br>        float m_fPosition[3];                                            //初始平移<br>        unsigned short m_usNumRotFrames;                 //旋转帧的数量<br>        unsigned short m_usNumTransFrames;            //平移帧的数量<br>        SMs3dKeyFrame<em> m_RotKeyFrames;                //所有的旋转帧<br>        SMs3dKeyFrame</em> m_TransKeyFrames;            //所有的平移帧<br>};<br>1）第一个成员为编辑器标志，作用同前面所有的编辑器标志一样<br>2）第二个成员为本Joint的名字，用于标识一个Joint<br>3）第三个成员为本Joint的父Joint的名字，如果是个空字符串，则表示这个Joint没有父Joint，这是个根<br>4）第四个成员为本Joint初始的旋转值<br>5）第五个成员为本Joint初始的平移值<br>6）第六个成员为本Joint的旋转帧的数量<br>7）第七个成员为本Joint的平移帧的数量<br>8）第八个成员为本Joint的所有旋转帧数据，数组大小取决于第六个成员的值<br>9）第九个成员为本Joint的所有平移帧数据，数组大小取决于第七个成员的值<br>       以上就是本模型文件的整个结构了，所有渲染需要的信息都包含在里面</p>
+<p>【一些说明】<br>（1）这里面每个顶点绑定一个骨骼，骨骼ID是用char表示的，那也就是本模型最多有256根骨骼<br>（2）模型里只有顶点绑定了骨骼，而三角形和网格都没有骨骼信息，但法线也是要变换的。所以是通过法线所在的三角形找到对应的顶点索引，再通过顶点里的骨骼信息来找到那根跟随的骨骼；但是法线是单位向量，所以只需要进行旋转变换即可，平移变换不用于法线<br>（3）关于在帧之间插值，平移变换就是普通的插值；旋转变换先要将欧拉角转换成四元数，再对四元数插值，最后直接将四元数转换为矩阵（这个矩阵最后还要加上平移，这样就是该骨骼的相对变换矩阵，即相对于它父节点的变换）；相对变换矩阵可能需要两个，1个是包含了所有变换的，用于顶点坐标的；另一个是只包含了旋转变换的，用于法线。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2009/12/07/stay-up-late-again/" itemprop="url">
                   又熬夜了哈哈～
                 </a>
@@ -914,115 +1032,11 @@
   </article>
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2009/10/20/java-decompile-tool/" itemprop="url">
-                  java 反编译
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2009-10-20T10:49:19+08:00" content="2009-10-20">
-              2009-10-20
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/杂/" itemprop="url" rel="index">
-                    <span itemprop="name">杂</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><a href="http://java.decompiler.free.fr" target="_blank" rel="external">http://java.decompiler.free.fr</a>  反编译工具 jd-gui.exe</p>
-<p>反编译 javatank .class文件 文件在我邮箱（哪位看到想要的家伙，留个邮箱）</p>
-<p>编译后代码：（供个人使用）邮箱里</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/14/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><span class="page-number current">15</span><a class="page-number" href="/page/16/">16</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/16/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/14/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><span class="page-number current">15</span><a class="page-number" href="/page/16/">16</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><a class="extend next" rel="next" href="/page/16/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1058,7 +1072,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">160</span>
+              <span class="site-state-item-count">161</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1075,7 +1089,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">67</span>
+                <span class="site-state-item-count">68</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

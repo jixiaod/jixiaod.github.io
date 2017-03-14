@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.100dos.com/"/>
-  <updated>2017-03-14T02:25:20.000Z</updated>
+  <updated>2017-03-14T03:23:03.000Z</updated>
   <id>http://blog.100dos.com/</id>
   
   <author>
@@ -14,6 +14,38 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>图解 autoscan、aclocal、automake、autoconf、autoheader、configure</title>
+    <link href="http://blog.100dos.com/2017/03/14/understand-aclocal-autoconf-automake-autoheader-configure/"/>
+    <id>http://blog.100dos.com/2017/03/14/understand-aclocal-autoconf-automake-autoheader-configure/</id>
+    <published>2017-03-14T03:02:23.000Z</published>
+    <updated>2017-03-14T03:23:03.000Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="autoscan-autoconf"><a href="#autoscan-autoconf" class="headerlink" title="autoscan (autoconf)"></a>autoscan (autoconf)</h3><p>扫描源代码以搜寻普通的可移植性问题，比如检查编译器、库、头文件等，生成文件configure.scan，它是configure.ac的一个雏形。</p>
+<h3 id="aclocal-automake"><a href="#aclocal-automake" class="headerlink" title="aclocal (automake)"></a>aclocal (automake)</h3><p>根据已经安装的宏，用户定义宏和 acinclude.m4 文件中的宏将 configure.ac 文件所需要的宏集中定义到文件 aclocal.m4 中。aclocal是一个 perl 脚本程序，它的定义是：</p>
+<blockquote>
+<p>aclocal - create aclocal.m4 by scanning configure.ac</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">user input files   optional input     process          output files</div><div class="line">================   ==============     =======          ============</div><div class="line"> </div><div class="line">                    acinclude.m4 - - - - -.</div><div class="line">                                          V</div><div class="line">                                      .-------,</div><div class="line">configure.ac ------------------------&gt;|aclocal|</div><div class="line">                 &#123;user macro files&#125; -&gt;|       |------&gt; aclocal.m4</div><div class="line">                                      `-------&apos;</div></pre></td></tr></table></figure>
+<h3 id="autoheader-autoconf"><a href="#autoheader-autoconf" class="headerlink" title="autoheader(autoconf)"></a>autoheader(autoconf)</h3><p>根据 configure.ac 中的某些宏，比如 cpp 宏定义，运行 m4，生成 autoconfig.h.in</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">user input files    optional input     process          output files</div><div class="line">================    ==============     =======          ============</div><div class="line"> </div><div class="line">                    aclocal.m4 - - - - - - - .</div><div class="line">                                             |</div><div class="line">                                             V</div><div class="line">                                     .----------,</div><div class="line">configure.ac -----------------------&gt;|autoheader|----&gt; autoconfig.h.in</div><div class="line">                                     `----------&apos;</div></pre></td></tr></table></figure>
+<h3 id="automake"><a href="#automake" class="headerlink" title="automake"></a>automake</h3><p>automake 将 Makefile.am 中定义的结构建立 Makefile.in，然后 configure 脚本将生成的 Makefile.in 文件转换为 Makefile。如果在 configure.ac 中定义了一些特殊的宏，比如 <code>AC_PROG_LIBTOOL</code>，它会调用 libtoolize，否则它会自己产生 config.guess 和 config.sub。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">user input files   optional input   processes          output files</div><div class="line">================   ==============   =========          ============</div><div class="line"> </div><div class="line">                                     .--------,</div><div class="line">                                     |        | - - -&gt; COPYING</div><div class="line">                                     |        | - - -&gt; INSTALL</div><div class="line">                                     |        |------&gt; install-sh</div><div class="line">                                     |        |------&gt; missing</div><div class="line">                                     |automake|------&gt; mkinstalldirs</div><div class="line">configure.ac -----------------------&gt;|        |</div><div class="line">Makefile.am  -----------------------&gt;|        |------&gt; Makefile.in</div><div class="line">                                     |        |------&gt; stamp-h.in</div><div class="line">                                 .---+        | - - -&gt; config.guess</div><div class="line">                                 |   |        | - - -&gt; config.sub</div><div class="line">                                 |   `------+-&apos;</div><div class="line">                                 |          | - - - -&gt; config.guess</div><div class="line">                                 |libtoolize| - - - -&gt; config.sub</div><div class="line">                                 |          |--------&gt; ltmain.sh</div><div class="line">                                 |          |--------&gt; ltconfig</div><div class="line">                                 `----------&apos;</div></pre></td></tr></table></figure>
+<h3 id="autoconf"><a href="#autoconf" class="headerlink" title="autoconf"></a>autoconf</h3><p>将 configure.ac 中的宏展开，生成 configure 脚本。这个过程可能要用到 aclocal.m4 中定义的宏。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">user input files   optional input   processes          output files</div><div class="line">================   ==============   =========          ============</div><div class="line"> </div><div class="line">                   aclocal.m4 - - - - - -.</div><div class="line">                                         V</div><div class="line">                                     .--------,</div><div class="line">configure.ac -----------------------&gt;|autoconf|------&gt; configure -----&gt;autoconfig.h, Makefile</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;autoscan-autoconf&quot;&gt;&lt;a href=&quot;#autoscan-autoconf&quot; class=&quot;headerlink&quot; title=&quot;autoscan (autoconf)&quot;&gt;&lt;/a&gt;autoscan (autoconf)&lt;/h3&gt;&lt;p&gt;扫描源代码以
+    
+    </summary>
+    
+    
+      <category term="C" scheme="http://blog.100dos.com/tags/C/"/>
+    
+  </entry>
   
   <entry>
     <title>Centos7 安装 Gitlab-CE</title>
@@ -1466,7 +1498,7 @@
 <li>现居住地 : 北京市</li>
 <li>婚姻状况 : 已婚</li>
 <li>联系电话 : 188<em>**</em>6729</li>
-<li>邮箱 : <a href="&#109;&#97;&#105;&#x6c;&#116;&#x6f;&#x3a;&#x6a;&#x69;&#46;&#x78;&#105;&#97;&#x6f;&#100;&#64;&#103;&#x6d;&#97;&#x69;&#x6c;&#46;&#99;&#111;&#109;">&#x6a;&#x69;&#46;&#x78;&#105;&#97;&#x6f;&#100;&#64;&#103;&#x6d;&#97;&#x69;&#x6c;&#46;&#99;&#111;&#109;</a></li>
+<li>邮箱 : <a href="&#109;&#97;&#x69;&#x6c;&#x74;&#111;&#x3a;&#x6a;&#x69;&#x2e;&#x78;&#105;&#97;&#111;&#100;&#x40;&#x67;&#x6d;&#97;&#105;&#108;&#46;&#x63;&#111;&#x6d;">&#x6a;&#x69;&#x2e;&#x78;&#105;&#97;&#111;&#100;&#x40;&#x67;&#x6d;&#97;&#105;&#108;&#46;&#x63;&#111;&#x6d;</a></li>
 <li>出生年月 : 1986年10月</li>
 <li>博客 : <a href="http://blog.100dos.com">http://blog.100dos.com</a></li>
 <li>Github : <a href="https://github.com/jixiaod" target="_blank" rel="external">https://github.com/jixiaod</a></li>
@@ -1630,67 +1662,6 @@
     
     
       <category term="简历" scheme="http://blog.100dos.com/tags/%E7%AE%80%E5%8E%86/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Kong 集群配置</title>
-    <link href="http://blog.100dos.com/2016/08/01/kong-cluster-configuration/"/>
-    <id>http://blog.100dos.com/2016/08/01/kong-cluster-configuration/</id>
-    <published>2016-08-01T07:27:53.000Z</published>
-    <updated>2017-03-14T02:25:20.000Z</updated>
-    
-    <content type="html"><![CDATA[<h3 id="先了解下几个-Kong-的关于集群的配置"><a href="#先了解下几个-Kong-的关于集群的配置" class="headerlink" title="先了解下几个 Kong 的关于集群的配置"></a>先了解下几个 Kong 的关于集群的配置</h3><ul>
-<li>cluster_listen: “0.0.0.0:7946”<ul>
-<li>跟集群中其他 Kong 节点通讯的 IP 地址和端口，使用 UDP 和 TCP 协议。所有集群中的节点都必须能够跟这个节点的这个地址进行通讯。只有 IPv4 地址是被允许的（不支持域名）。</li>
-</ul>
-</li>
-<li>cluster_listen_rpc: “127.0.0.1:7373”<ul>
-<li>节点用于本地集群代理通讯的 IP 地址和端口（只能是TCP，且只能在本地）。</li>
-<li>只能在这个 Kong 节点内部使用。只支持 IPv4 地址（不支持域名）。</li>
-</ul>
-</li>
-<li>cluster<ul>
-<li>advertise: “”<ul>
-<li>跟集群中其他 Kong 节点通讯的 IP 地址和端口，使用 UDP 和 TCP 协议。所有集群中的节点都必须能够跟这个节点的这个地址进行通讯。只有 IPv4 地址是被允许的（不支持域名）。</li>
-<li>只支持 IPv4 地址（不支持域名）。</li>
-<li>advertise 配置项用来指定集群中其他节点跟该节点的通讯地址。默认情况下，跟其他节点通讯的地址就是 cluster_listen 的配置。如果cluster_listen 的 host 地址是 “0.0.0.0”，则得到的第一个本地的、无回路的 IPv4 地址就是跟其他节点通讯的地址。然后，在某些情况下（在通过有 NAT 网络地址转换时），或许有能够被网络路由到的地址，却不能被 Kong 集群中不能与其他节点通讯的情况。这时，advertise 配置的 IP 地址 能够解决这个问题。</li>
-</ul>
-</li>
-<li>encrypt: “foo”<ul>
-<li>Kong 网络传输加密的 key。必须是 base64 的16位 key 值。</li>
-</ul>
-</li>
-<li>ttl_on_failure: 3600<ul>
-<li>TTL (time to live)， 单位是秒，当集群中的一个节点因为故障，停止向发送心跳的 ping 检查。如果在这个配置的周期内，节点一直不能发送心跳检查，那么新加入到集群中的节点启动时，将会停止尝试连接它。这个配置的最小值是 60。</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="Kong-集群配置"><a href="#Kong-集群配置" class="headerlink" title="Kong 集群配置"></a>Kong 集群配置</h3><p>结合上问配置说明和Kong集群介绍，大概应该了解：配置在同一网断内的 Kong 集群，只需要把所有节点的数据存储配置到同一个数据库即可。节点会根据数据库中存储的节点信息，去自动做互相的通信。如何配置数据存储可参考 <a href="http://blog.100dos.com/2016/07/25/the-installation-and-configuration-of-kong/">Kong 安装与配置</a>。</p>
-<p>成功启动新的 Kong 节点，可以在这三个节点都能通过命令查看现在集群的状态</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">tiger➜~» kong cluster members                                                                                         [16:59:45]</div><div class="line">[INFO] Using configuration: /etc/kong/kong.yml</div><div class="line">tigerdeMacBook-Pro.local_0.0.0.0:7946_8add5ecc222c486ab6caadadf35afbfa  192.168.20.156:7946  alive</div><div class="line">v194_0.0.0.0:7946_f8b6daf71a9f4906993ad1cc3f1ca6a2                      192.168.1.194:7946   alive</div><div class="line">v5_0.0.0.0:7946_1da4f4fbcd2d467a8799ae1c7e056771                        192.168.1.75:7946    alive</div><div class="line"></div><div class="line">[root@v5 ~]# /usr/local/bin/kong cluster members</div><div class="line">[INFO] Using configuration: /etc/kong/kong.yml</div><div class="line">v5_0.0.0.0:7946_1da4f4fbcd2d467a8799ae1c7e056771                        192.168.1.75:7946    alive</div><div class="line">v194_0.0.0.0:7946_f8b6daf71a9f4906993ad1cc3f1ca6a2                      192.168.1.194:7946   alive</div><div class="line">tigerdeMacBook-Pro.local_0.0.0.0:7946_8add5ecc222c486ab6caadadf35afbfa  192.168.20.156:7946  alive</div><div class="line"></div><div class="line">[lan_dev@v194 ~]$ kong cluster members</div><div class="line">[INFO] Using configuration: /etc/kong/kong.yml</div><div class="line">v194_0.0.0.0:7946_f8b6daf71a9f4906993ad1cc3f1ca6a2                      192.168.1.194:7946   alive</div><div class="line">tigerdeMacBook-Pro.local_0.0.0.0:7946_8add5ecc222c486ab6caadadf35afbfa  192.168.20.156:7946  alive</div><div class="line">v5_0.0.0.0:7946_1da4f4fbcd2d467a8799ae1c7e056771                        192.168.1.75:7946    alive</div></pre></td></tr></table></figure>
-<p>能看到现在集群中已经有俩个状态是 alive 的节点。</p>
-<p>如果夸多个机房的配置，一种方法是使用VPN，这样同样可以保证所有节点在同一网断下。或者是显示的配置 advertise 项指明节点去与哪个地址通讯。比如指定这三台服务器都去跟其中一个节点的地址去通信：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">advertise: &quot;192.168.1.75:7946&quot;</div></pre></td></tr></table></figure>
-<p>同样启动 3 个节点，注意启动信息里会有这一行</p>
-<p>[INFO] serf …………..-profile=wan -rpc-addr=127.0.0.1:7373 -event-handler=member-join,member-leave,member-failed,member-update,member-reap,user:kong=/usr/local/kong/serf_event.sh -bind=0.0.0.0:7946 -advertise=192.168.1.75:7946 -node=v194_0.0.0.0:7946_f8b6daf71a9f4906993ad1cc3f1ca6a2 -log-level=err</p>
-<p>其中指明了 advertise=192.168.1.75:7946，通过该地址通讯。</p>
-<p>同样可以在三台节点使用命令查看集群状态</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[lan_dev@v194 ~]$ kong cluster members</div><div class="line">[INFO] Using configuration: /etc/kong/kong.yml</div><div class="line">v194_0.0.0.0:7946_f8b6daf71a9f4906993ad1cc3f1ca6a2                      192.168.1.75:7946  alive</div><div class="line">v5_0.0.0.0:7946_1da4f4fbcd2d467a8799ae1c7e056771                        192.168.1.75:7946  alive</div><div class="line">tigerdeMacBook-Pro.local_0.0.0.0:7946_8add5ecc222c486ab6caadadf35afbfa  192.168.1.75:7946  alive</div><div class="line"></div><div class="line">[root@v5 ~]# /usr/local/bin/kong cluster members</div><div class="line">[INFO] Using configuration: /etc/kong/kong.yml</div><div class="line">tigerdeMacBook-Pro.local_0.0.0.0:7946_8add5ecc222c486ab6caadadf35afbfa  192.168.1.75:7946  alive</div><div class="line">v194_0.0.0.0:7946_f8b6daf71a9f4906993ad1cc3f1ca6a2                      192.168.1.75:7946  alive</div><div class="line">v5_0.0.0.0:7946_1da4f4fbcd2d467a8799ae1c7e056771                        192.168.1.75:7946  alive</div><div class="line"></div><div class="line">tiger➜~» kong cluster members                                                                                                                                                                          [17:32:07]</div><div class="line">[INFO] Using configuration: /etc/kong/kong.yml</div><div class="line">tigerdeMacBook-Pro.local_0.0.0.0:7946_8add5ecc222c486ab6caadadf35afbfa  192.168.1.75:7946  alive</div><div class="line">v5_0.0.0.0:7946_1da4f4fbcd2d467a8799ae1c7e056771                        192.168.1.75:7946  alive</div><div class="line">v194_0.0.0.0:7946_f8b6daf71a9f4906993ad1cc3f1ca6a2                      192.168.1.75:7946  alive</div></pre></td></tr></table></figure>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h3 id=&quot;先了解下几个-Kong-的关于集群的配置&quot;&gt;&lt;a href=&quot;#先了解下几个-Kong-的关于集群的配置&quot; class=&quot;headerlink&quot; title=&quot;先了解下几个 Kong 的关于集群的配置&quot;&gt;&lt;/a&gt;先了解下几个 Kong 的关于集群的配置&lt;/h3&gt;&lt;
-    
-    </summary>
-    
-      <category term="Nginx" scheme="http://blog.100dos.com/categories/Nginx/"/>
-    
-    
-      <category term="kong" scheme="http://blog.100dos.com/tags/kong/"/>
     
   </entry>
   

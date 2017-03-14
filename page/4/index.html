@@ -197,6 +197,147 @@
             
               
                 
+                <a class="post-title-link" href="/2016/07/25/kong-introduction/" itemprop="url">
+                  Kong 介绍
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-25T14:01:05+08:00" content="2016-07-25">
+              2016-07-25
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Nginx/" itemprop="url" rel="index">
+                    <span itemprop="name">Nginx</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Kong 是开源的高性能、高可用，基于 Nginx 的接口管理中间层，并且能通过 Kong 管理和扩展你的 API 接口和微服务。包含很多功能强大的插件，HTTP基本认证、秘钥认证、IP黑白名单限制、CORS、API 请求限流、限制请求包尺寸、请求转发、TCP、UDP、文件日志、以及 nginx 监控等。Kong的插件使用 Lua 编写，能减少开发者基于 Nginx 开发接口时的复杂度和开发时间。</p>
+<ul>
+<li>RESTful 的接口管理<ul>
+<li>建立在 Nginx 之上，Kong 能够完全通过简单的RESTful 接口来操作管理；</li>
+</ul>
+</li>
+<li>面向插件<ul>
+<li>把你的服务放到 Kong 的后面，然后只需执行简单的命令，就能使用功能强大的插件；</li>
+</ul>
+</li>
+<li>支持多种平台和环境<ul>
+<li>Kong 几乎可以运行在任何环境，云服务或者预置系统，单个服务器、虚拟机，或者跨多个数据中心的部署。</li>
+</ul>
+</li>
+</ul>
+<h2 id="为什么要使用-Kong-？"><a href="#为什么要使用-Kong-？" class="headerlink" title="为什么要使用 Kong ？"></a>为什么要使用 Kong ？</h2><p>传统的 API 接口服务的架构大致如下：</p>
+<p><img src="/images/kong-introduction/without-kong.png" alt=""></p>
+<ul>
+<li>通用的功能在多个 API 服务之间有冗余</li>
+<li>整个系统是一个整体，很难维护</li>
+<li>在不影响其他服务的情况下，很难再继续扩展</li>
+<li>由于系统的限制，开发效率不高</li>
+</ul>
+<p>使用 Kong 的架构：</p>
+<p><img src="/images/kong-introduction/with-kong.png" alt=""></p>
+<ul>
+<li>以 Kong 为中心，并且结合 Kong 的插件功能集成到一起</li>
+<li>能够随意扩展，构建高效的分布式架构</li>
+<li>通过简单的命令就可以在 Kong 上通过插件的方式扩展功能</li>
+<li>开发团队能够更多的专注产品开发，Kong 能够帮你去解决其他问题</li>
+</ul>
+<h2 id="Kong-有两个核心功能组件："><a href="#Kong-有两个核心功能组件：" class="headerlink" title="Kong 有两个核心功能组件："></a>Kong 有两个核心功能组件：</h2><ul>
+<li>Kong Server ：基于 nginx 的服务器，用来接收 API 请求。</li>
+<li>Apache Cassandra ：用来存储操作数据，并且从 Kong 0.8.3 开始支持PostgreSQL做为数据库存储。</li>
+</ul>
+<p>了解更多</p>
+<ul>
+<li>Github :  <a href="https://github.com/Mashape/kong" target="_blank" rel="external">https://github.com/Mashape/kong</a></li>
+<li>官方网站：<a href="https://getkong.org" target="_blank" rel="external">https://getkong.org</a></li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/07/16/11-important-database-designing-rules-which-I-follow/" itemprop="url">
                   11 个我遵循的重要数据库设计原则
                 </a>
@@ -1035,125 +1176,11 @@
   </article>
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/04/11/startup-company-and-investment/" itemprop="url">
-                  记一次“关于创业&投资”的沟通
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-04-11T11:15:55+08:00" content="2016-04-11">
-              2016-04-11
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/杂/" itemprop="url" rel="index">
-                    <span itemprop="name">杂</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>这个周末的星期天的下午，介绍原来大连公司的老板［李］认识了一个北京创业公司的老板［杨］。［李］打算来北京发展，其实已经好多年了。我记得2010年从他那边离职的时侯，他就说过“将来一定要来北京！”，期间微信、电话、见面，每次都说过“我们马上就要来北京了！”。不过这次见面聊了一下，这次看来是真的要来了。</p>
-<p>［杨］现在也是自己在创业，起步阶段，之前做过某知名公司的投资人。因为［李］这次是带着新的想法来，想来北京看看能不能融到钱。所以想到［杨］之前做过投资人的经历，应该能从投资人的角度帮［李］提点意见。</p>
-<h2 id="投不投？"><a href="#投不投？" class="headerlink" title="投不投？"></a>投不投？</h2><p>首先要看这个产品是不是真的只是缺钱的问题。如果给了你这些钱，真的能够做起来。［李］的问题看来并不只是差钱的问题，即使给［李］钱，他也未必能找到人来帮他开发。一会详细说下创业公司招人难的问题。</p>
-<p>即使做成了也未必能卖得出去，对于做企业OA服务的（［李］做的并不是OA系统，这里可以这么理解）提供商。这次的客户跟你签约买你的产品，并不代表他能够再次跟你签约买你其他的产品。所以跟投资人谈的时候讲XXX是我的客户，是没有用的。因为你已经再做另外的一个产品了，客户会给你现在的产品买账，不代表他还会购买你的其它产品。</p>
-<p>反复确认产品的场景是不是真的是个痛点，以及拿到钱之后，创始人如何去把痛点放大，并且复制这个痛点。不能只是有这个想法，必须还要有规划。而且这个规划是切实可行的，经过验证的，不能是自己臆想出来的。</p>
-<h2 id="缺“人才”"><a href="#缺“人才”" class="headerlink" title="缺“人才”"></a>缺“人才”</h2><p>［李］想来北京，主要是认为东北人才流失严重，根本招不到人。这个我也是深有感触的，毕竟我也是从东北跑到北京的。但是来北京之后，人才就真的能够顺利找到／留住吗？并不是。北京的人才面对的机会更多，诱惑也更多。你认为一个人才从大连跑到北京更容易，还是从北京到北京的成本更低？</p>
-<p>而且对于一些优秀的人才来说，凭什么让他们能乐意去到你的公司？难道就为了创始人的理想吗？不可能的。所以想要得到这些优秀的人才，就要付出相对行业要高一些的薪酬。但是创业公司哪来的钱呢？这样的话，可以一个技术大牛就能把你的公司拖垮、耗死。所以，可能就需要创始人去思考如果用一群庸才也能把活完成，而且干好。</p>
-<p>所以，如果单纯缺人的问题，来北京看似并不能解决问题。</p>
-<p>除了尝试使用“庸才”，还有俩个办法：一个是找兼职，另一个是找外包。兼职可以保证找到一些优秀的人才帮你做事，而且能够节约成本。但是兼职有一个问题，就是不能确定给你兼职的人的“时间”。最好的情况就是恰好给你干活的这段时间，他恰好公司空闲。否则，可能工期是个很大的问题。外包的话，首先要肯定的是，一个技术很优秀的人，在帝都肯定是不会去全职去做外包工作的。所以完成质量上和沟通扯皮的成本会很高。目前看到的外包公司，真的都很 low。如果考虑找外包，可以尝试国外的公司或个人，国外有很多的自由工作者是全职做私活的，而且能力都很强。</p>
-<p>在多说一句，对于我个人来说。一直在找一家合适的，并且公司愿景符合我未来方向的公司。所以，必须要澄清一点就是优秀的人才不只是看钱，愿景也很重要。</p>
-<h2 id="发展！"><a href="#发展！" class="headerlink" title="发展！"></a>发展！</h2><p>创业公司的发展都是一步一步来的，发展好的话，都会经历从无到有、从小到大的过程。当然大多数都是发展中死掉了。刚开始还是俩三个人合伙比较好，［杨］的公司搭配就很合理。他负责接单，另外一个人负责执行。现在就能把工作很好的 run 起来，不断的去尝试、验证他们的想法。［李］从开始到现在都是他一个人，所有的工作都是一个人来，很苦逼的。</p>
-<p>公司发展壮大之后，还涉及到角色转变的问题，时刻拥抱变化，调整自己的心态和工作内容同样很重要。</p>
-<h2 id="感谢"><a href="#感谢" class="headerlink" title="感谢"></a>感谢</h2><p>最后很感谢［杨］能抽出时间做这次交流，用杨的话说，“没事啊，多沟通和交流嘛”。我觉得对！</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1189,7 +1216,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">160</span>
+              <span class="site-state-item-count">161</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1206,7 +1233,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">67</span>
+                <span class="site-state-item-count">68</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

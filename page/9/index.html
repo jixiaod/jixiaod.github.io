@@ -197,6 +197,124 @@
             
               
                 
+                <a class="post-title-link" href="/2013/08/08/how-to-commit/" itemprop="url">
+                  正确的版本提交
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2013-08-08T19:00:25+08:00" content="2013-08-08">
+              2013-08-08
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/流程-工具/" itemprop="url" rel="index">
+                    <span itemprop="name">流程&工具</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>别告诉我你作为一个程序员没用过svn或<a href="http://blog.toobe.org/git-commands/" target="_blank" rel="external">git类似的版本工具</a>！不过大部分程序员虽然在开发时用他们，但是不是只把他们当作一个备份工具？首先，我们要明确一点，他们是版本工具，不是简单的备份工具。如何能更多的发挥他们的版本功能，做好每一次代码提交是关键。我们要把版本工具变成一个能够产生沟通交流和文档编写的一个宝贵工具。</p>
+<p>总是有这样的情况，我们需要找到一个很久之前的版本，久到开发人员根本记不得是那个版本提交的。只好去查log日志，由于可能只记得大概的提交日志。就开发逐个屡提交的msg，可是坑爹的msg都是简单几句“细节调整”、“小修改”、“错误处理” ——- 你XXX的啊！！！！这可怎么找。</p>
+<p>所以，最首要的，写清楚这次提交做了哪些修改。为了省事，你可能会这么写commit msg：</p>
+<p>~# svn ci -m ‘asdf’</p>
+<p>或许系统管理员为了避免开发人员提交时写太少的注释信息，设定了hooks来限制开发者。但是你会多写点信息，不过是这么写：</p>
+<p>~# svn ci -m ‘asdfasdfasdfasdfsadfasdfasdfasdfasdfasdfasdfasdfasdf’</p>
+<p>冥冥之中，淡淡的忧伤在心中萦绕～</p>
+<p>对于其他团队开发成员，根本搞不楚你的这次提交修改了什么。对于你自己的提交来说，刚刚提交的话，也许还记得这次修改做了什么。等到了明天可能就忘了，更别提修改了哪些文件、哪个文件的哪一行代码了。类似“小修改”、“错误处理”这样的msg信息根本不能帮助你了解这个版本，没有表达清楚你所做的修改。如果这样想要找到版本的修改的话，只能去查看所有修改过的文件，花掉很多本不改浪费在这上面的时间（有可能需要几个小时）。开发成员或许只需要1分钟不到的时间就可以完成这个提交注释，为什么不去做呢？</p>
+<p>另，每次代码的修改一定都有原因，不然的话你为什么要去修改他呢？提交时一定要写清楚为什么要做这些修改，否则当其他开发人员进行修改时，会引入一些原作者已经发现和已经避免的问题。或许你会说你的代码注释写得很详细，已经说明了做这次修改的原因和意义。但是在commit msg写上修改的原因可以免去其他开发人员去查看代码的麻烦，如果你没有在文件代码里写上注释信息，劝你还是在提交时写上修改原因的好。</p>
+<p>还有，确保每次提交只有一个修改。如果一次修改即“替换了首页的图片”，又“换了详情页面的一张图片”，还“修改了SESSION共享的bug”，刚刚提交之后，你还能知道这次修改自己修改的哪些文件是修改了哪些内容，时间长就又忘了。所以，一次commit只提交一次修改。这样做，可能遇到的情况就是经常需要去提交新版本，这也是打算想让整个团队使用分布式git代替svn的原因之一。而且这么做也可以让你更加专注“focus”，focus到正在修改的问题直到你把这个问题解决提交为止。这样也会更有效率，开发时遇到的跟当前bug不相关的问题，先记录下来稍后再解决。</p>
+<p>同时，如果一次修改分几次提交同样会有问题，这个修改时很难review。这种情况通常也是你同时在修改多个问题导致的，因为你没有focus，导致这些问题可能都没有被解决掉，出现了很多只修改了一半半途而废的问题。到提交的时候，自己也闹不清楚哪些个修改对应哪次提交。所以还是提倡一次只专注解决一个问题。FOCUS！！</p>
+<p>&nbsp;</p>
+<p>最后总结一下，什么才算的上一个正确的提交：</p>
+<p>1.写清楚这次提交做了哪些修改；</p>
+<p>2.写清楚这次提交为什么要做这些修改；</p>
+<p>3.确定这次提交只做一个修改，且不要把一次修改分多次提交，以确定这次提交的版本是一个有效版本；</p>
+<p>4.最最重要的，不要版本工具当成备份工具来使用。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2013/08/07/beauty-of-coder/" itemprop="url">
                   程序员之美
                 </a>
@@ -1334,117 +1452,11 @@
   </article>
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2012/07/27/make-the-team-work-more-efficient/" itemprop="url">
-                  关于一个小团队的合作效率
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2012-07-27T00:47:30+08:00" content="2012-07-27">
-              2012-07-27
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/杂/" itemprop="url" rel="index">
-                    <span itemprop="name">杂</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>项目赶得紧，如何让每个人都能提高自己工作效率的办法，更快速的完成自己手头的工作，以便着手新的工作。</p>
-<p>首先，保证每个人都熟悉项目的每个细节。只是熟悉自己的一点东西，不可能写出顾全大局的代码。但是，不是每个人都有这样的精力去了解熟悉，而且也不是所有的人都愿意去这样做。</p>
-<p>第二，确定团队的成员技术过硬。只有过硬的技术，才能更快，更优质的代码。平时多争取技术经验的交流，分享。代码注释要清晰，便于其他人更好的查看，理解你的代码思路。肖xx建的wiki可能会大派用场吧。</p>
-<p>第三，让每个人了解当前项目推进的进度，我门已经做了哪些，正在做哪些，将来还要做哪些。redmine目前只是我一个人在用，适时的让大家都养成查看版本开发进度，是解决的好办法。</p>
-<p>再一个，加班赶进度，我也是不提倡的，不过没办法。今天苹果那边催api接口，老淼也提到了最好是赶着酒会一起。看来下周肯定是修不了了，对不起了，亲爱的。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/8/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/10/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/8/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><a class="extend next" rel="next" href="/page/10/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1480,7 +1492,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">160</span>
+              <span class="site-state-item-count">161</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1497,7 +1509,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">67</span>
+                <span class="site-state-item-count">68</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
