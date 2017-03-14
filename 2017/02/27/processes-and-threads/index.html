@@ -1,0 +1,594 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+
+
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="进程,线程,swoole," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="百作坊" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+<meta name="description" content="进程（process）是计算机中已运行程序的实体。关于进程需要知道的几点：
+
+进程是程序的基本执行实体。
+在面向线程设计的系统（如当代多数操作系统、Linux 2.6及更新的版本）中，进程本身不是基本运行单位，而是线程的容器。
+程序本身只是指令、数据及其组织形式的描述，进程才是程序（那些指令和数据）的真正运行实例。
+若干进程有可能与同一个程序相关系，且每个进程皆可以同步（循序）或异步（平行）的方式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="进程和线程">
+<meta property="og:url" content="http://blog.100dos.com/2017/02/27/processes-and-threads/index.html">
+<meta property="og:site_name" content="百作坊">
+<meta property="og:description" content="进程（process）是计算机中已运行程序的实体。关于进程需要知道的几点：
+
+进程是程序的基本执行实体。
+在面向线程设计的系统（如当代多数操作系统、Linux 2.6及更新的版本）中，进程本身不是基本运行单位，而是线程的容器。
+程序本身只是指令、数据及其组织形式的描述，进程才是程序（那些指令和数据）的真正运行实例。
+若干进程有可能与同一个程序相关系，且每个进程皆可以同步（循序）或异步（平行）的方式">
+<meta property="og:image" content="http://blog.100dos.com/images/swoole-process-threads.png">
+<meta property="og:updated_time" content="2017-03-14T02:25:20.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="进程和线程">
+<meta name="twitter:description" content="进程（process）是计算机中已运行程序的实体。关于进程需要知道的几点：
+
+进程是程序的基本执行实体。
+在面向线程设计的系统（如当代多数操作系统、Linux 2.6及更新的版本）中，进程本身不是基本运行单位，而是线程的容器。
+程序本身只是指令、数据及其组织形式的描述，进程才是程序（那些指令和数据）的真正运行实例。
+若干进程有可能与同一个程序相关系，且每个进程皆可以同步（循序）或异步（平行）的方式">
+<meta name="twitter:image" content="http://blog.100dos.com/images/swoole-process-threads.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"hide"},
+    fancybox: true,
+    motion: true
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://blog.100dos.com/2017/02/27/processes-and-threads/"/>
+
+
+  <title> 进程和线程 | 百作坊 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?e70448447504ef27f728084c8f2978ea";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="site-title">百作坊</span>
+    </a>
+  </div>
+  <p class="site-subtitle">100dos.com</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+    </ul>
+  
+
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                进程和线程
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-02-27T11:11:14+08:00" content="2017-02-27">
+              2017-02-27
+            </time>
+          </span>
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="https://zh.wikipedia.org/wiki/行程" target="_blank" rel="external">进程</a>（process）是计算机中已运行程序的实体。关于进程需要知道的几点：</p>
+<ul>
+<li>进程是程序的基本执行实体。</li>
+<li>在面向线程设计的系统（如当代多数操作系统、Linux 2.6及更新的版本）中，进程本身不是基本运行单位，而是线程的容器。</li>
+<li>程序本身只是指令、数据及其组织形式的描述，进程才是程序（那些指令和数据）的真正运行实例。</li>
+<li>若干进程有可能与同一个程序相关系，且每个进程皆可以同步（循序）或异步（平行）的方式独立运行。</li>
+<li>现代计算机系统可在同一段时间内以进程的形式将多个程序加载到存储器中，并借由时间共享（或称时分复用），以在一个处理器上表现出同时（平行性）运行的感觉。</li>
+<li>同样的，使用多线程技术（多线程即每一个线程都代表一个进程内的一个独立执行上下文）的操作系统或计算机架构，同样程序的平行线程，可在多CPU主机或网络上真正同时运行（在不同的CPU上）。</li>
+<li>进程需要一些资源才能完成工作，如CPU使用时间、存储器、文件以及I/O设备，且为依序逐一进行，也就是每个CPU核心任何时间内仅能运行一项进程。</li>
+<li>进程在运行时，状态（state）会改变。进城的状态包括：<ul>
+<li>新生（new）：进程新产生中。</li>
+<li>运行（running）：正在运行。</li>
+<li>等待（waiting）：等待某事发生，例如等待用户输入完成。亦称“阻塞”（blocked）</li>
+<li>就绪（ready）：排班中，等待CPU。</li>
+<li>结束（terminated）：完成运行。</li>
+</ul>
+</li>
+<li>进程间通信（IPC Inter-process communication）:每个进程都有自己的一部分独立的系统资源，彼此是隔离的。为了能使不同的进程互相访问资源并进行协调工作，才有了进程间通信。</li>
+<li>进程控制块是操作系统能够支持多进程和提供多处理的结构。 </li>
+<li>当操作系统做进程切换时，它会执行两步操作，一是中断当前处理器中的进程，二是执行下一个进程。 不管是中断还是执行，进程控制块中的程序计数器、上下文数据和进程状态都会发生变化。</li>
+</ul>
+<p>在 PHP 中的 <a href="http://php.net/manual/zh/book.pcntl.php" target="_blank" rel="external">PCNTL</a> 扩展实现了Unix方式的进程创建，程序执行，信号处理以及进程的中断。但是只能 CLI 环境下使用，且在 Windows 平台不可用。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"></div><div class="line">$pid = pcntl_fork();</div><div class="line"><span class="comment">//父进程和子进程都会执行下面代码</span></div><div class="line"><span class="keyword">if</span> ($pid == <span class="number">-1</span>) &#123;</div><div class="line">    <span class="comment">//错误处理：创建子进程失败时返回-1.</span></div><div class="line">     <span class="keyword">die</span>(<span class="string">'could not fork'</span>);</div><div class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> ($pid) &#123;</div><div class="line">     <span class="comment">//父进程会得到子进程号，所以这里是父进程执行的逻辑</span></div><div class="line">     pcntl_wait($status); <span class="comment">//等待子进程中断，防止子进程成为僵尸进程。</span></div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">     <span class="comment">//子进程得到的$pid为0, 所以这里是子进程执行的逻辑。</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><a href="https://zh.wikipedia.org/wiki/线程" target="_blank" rel="external">线程</a>（thread）是操作系统能够进行运算调度的最小单位。</p>
+<ul>
+<li>它被包含在进程之中，是进程中的实际运作单位。</li>
+<li>一条线程指的是进程中一个单一顺序的控制流，一个进程中可以并发多个线程，每条线程并行执行不同的任务。</li>
+<li>在Unix System V及SunOS中也被称为轻量进程（lightweight processes），但轻量进程更多指内核线程（kernel thread），而把用户线程（user thread）称为线程。</li>
+<li>线程是独立调度和分派的基本单位。线程可以操作系统内核调度的内核线程，如Win32线程；由用户进程自行调度的用户线程，如Linux平台的POSIX Thread；或者由内核与用户进程，如Windows 7的线程，进行混合调度。</li>
+<li>同一进程中的多条线程将共享该进程中的全部系统资源，如虚拟地址空间，文件描述符和信号处理等等。但同一进程中的多个线程有各自的调用栈（call stack），自己的寄存器环境（register context），自己的线程本地存储（thread-local storage）。</li>
+<li>一个进程可以有很多线程，每条线程并行执行不同的任务。</li>
+<li>线程的四种基本状态：<ul>
+<li>产生（spawn）</li>
+<li>中断（block）</li>
+<li>非中断（unblock）</li>
+<li>结束（finish）</li>
+</ul>
+</li>
+</ul>
+<p>在PHP中有 <a href="http://php.net/manual/zh/intro.pthreads.php" target="_blank" rel="external">pthreads</a> 多线程扩展，实现了面向对象的 多线程 API。可以创建、读取、写入以及执行多线程应用，并可以在多个线程之间进行同步控制。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">workerThread</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($num)</span></span>&#123;</div><div class="line">        <span class="keyword">$this</span>-&gt;num = $num;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">run</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">while</span>(<span class="keyword">true</span>)&#123;</div><div class="line">            <span class="keyword">echo</span> <span class="keyword">$this</span>-&gt;num . <span class="string">"\n"</span>;</div><div class="line">            sleep(<span class="number">1</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">for</span> ($i=<span class="number">0</span>; $i &lt; <span class="number">50</span>; $i++)&#123;</div><div class="line">    $workers[$i] = <span class="keyword">new</span> workerThread($i);</div><div class="line">    $workers[$i]-&gt;start();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>线程较之进程，其优势在于一个快，不管是创建新的线程还是终止一个线程；或者是线程间的切换还是线程间共享数据或通信，其速度与进程相比都有较大的优势。进程和线程区别：</p>
+<ul>
+<li>线程是在一个进程内的，可以共享内存变量实现线程间通信。<ul>
+<li>而进程间通信是要借助于<a href="https://zh.wikipedia.org/wiki/行程間通訊" target="_blank" rel="external">进程间通信（IPC）</a>，文件、管道、消息队列等等。</li>
+</ul>
+</li>
+<li>线程比进程更轻量级，开大量进程会比线程消耗更多系统资源。<ul>
+<li>比如 PHP-FPM 模块。通常情况下，一个PHP-FPM 进程占用的内存为10M左右，假如支持10000并发，就需要100G的内存。一台物理机的资源是有限的，就那么多CPU和内存，决定了单独依靠 PHP-FPM 不可能开发出单机百万级并发的系统。</li>
+</ul>
+</li>
+</ul>
+<p>我们用多进程和多线程的很大因素是为了解决并发问题，先理清一个概念并发和并行是不是一个意思？</p>
+<blockquote>
+<p>并发和并行的区别就是一个处理器同时处理多个任务和多个处理器或者是多核的处理器同时处理多个不同的任务。 前者是逻辑上的同时发生（simultaneous），而后者是物理上的同时发生。</p>
+</blockquote>
+<p>由于进程的性能问题，我们觉得并发使用的更多的线程，而不是进程。在处理网络请求时，多线程模型下，可以采用一个独立线程接受请求然后派发到各个 worker 线程的方式。但是使用多线程也存在一些问题：</p>
+<ul>
+<li>线程读写变量存在同步问题，需要加锁</li>
+<li>锁的粒度过大会有性能问题，可能会导致只有1个线程在运行，其他线程都在等待锁。这样就不是并行了</li>
+<li>同时使用多个锁，逻辑复杂，一旦某个锁没被正确释放，可能会发生线程死锁</li>
+<li>某个线程发生致命错误会导致整个进程崩溃</li>
+</ul>
+<p>多进程方式更加稳定，另外利用进程间通信（IPC）也可以实现数据共享。至于为什么进程想对安全稳定，主要是依靠进程<a href="https://zh.wikipedia.org/zh-cn/沙盒_(電腦安全" target="_blank" rel="external">沙箱</a>)，可以查看这篇文章<a href="http://zkread.com/article/584903.html" target="_blank" rel="external">《为什么浏览器采用多进程模型》</a>。</p>
+<ul>
+<li>共享内存，这种方式和线程间读写变量是一样的，需要加锁，会有同步、死锁问题。</li>
+<li>消息队列，可以采用多个子进程抢队列模式，性能很好</li>
+<li>PIPE，UnixSock，TCP，UDP。可以使用read/write来传递数据，TCP/UDP方式使用socket来通信，子进程可以分布运行</li>
+</ul>
+<p>Swoole 框架的多进程和多线程的设计实用就非常合理，在需要稳定的时候使用进程，在需要效率的时候使用线程。盗个图</p>
+<p><img src="/images/swoole-process-threads.png" alt=""></p>
+<p>Swoole 中 worker/task 进程都是由 Manager 进程 Fork 并管理的。</p>
+<ul>
+<li>子进程结束运行时，Manager 进程负责回收此子进程，避免成为僵尸进程。并创建新的子进程</li>
+<li>服务器关闭时，Manager 进程将发送信号给所有子进程，通知子进程关闭服务</li>
+<li>服务器 reload 时，Manager进程会逐个关闭/重启子进程</li>
+</ul>
+<p>Swoole 提供了完善的进程管理机制，当Worker进程异常退出，如发生PHP的致命错误、被其他程序误杀，或达到 max_request 次数之后正常退出。主进程会重新拉起新的 Worker 进程。 Worker 进程内可以像普通的 apache+php 或者 php-fpm 中写代码。不需要像 Node.js 那样写异步回调的代码。</p>
+<p>Swoole 的Master主进程是一个多线程的程序，其中一组很重要的是Reactor线程。Swoole 在接收到一个请求连接之后，将这个链接分配给一个固定的Reactor线程，并由这个线程来监听socket。在socket可读时读取数据，并进行协议解析，将请求投递到Worker进程。在socket可写时将数据发送给TCP客户端。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/qrcode_for_gh_b81f9d06ec2e_258.jpg" alt="小弟 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>扫一下呗，反正我也不怎么发～</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/进程/" rel="tag">#进程</a>
+          
+            <a href="/tags/线程/" rel="tag">#线程</a>
+          
+            <a href="/tags/swoole/" rel="tag">#swoole</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/09/nearby-jobs/" rel="next" title="8w+拉勾网招聘数据帮你查询 - 家附近的工作">
+                <i class="fa fa-chevron-left"></i> 8w+拉勾网招聘数据帮你查询 - 家附近的工作
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/03/installing-centos7-nginx1-10-3-php7-mysql5-7/" rel="prev" title="CentOS 7 从零开始搭建 LNMP 环境（nginx/1.10.3 PHP/7.1.2 Mysql/5.7.17）">
+                CentOS 7 从零开始搭建 LNMP 环境（nginx/1.10.3 PHP/7.1.2 Mysql/5.7.17） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+  </div>
+
+
+          </div>
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://tva1.sinaimg.cn/crop.0.0.414.414.180/62d98a55jw1e6lb32mfm7j20bo0bo0to.jpg"
+               alt="小弟" />
+          <p class="site-author-name" itemprop="name">小弟</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">160</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">67</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+        
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/jixiaod" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/jixiaod" target="_blank" title="Code">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  Code
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.douban.com/people/ttihgiesr" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2008 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="author" itemprop="copyrightHolder"> 『百作坊』 Generated by <a href="https://hexo.io">Hexo</a> & Theme by <a href="https://github.com/jixiaod/hexo-theme-next">Next</a> & Public by <a href="https://pages.github.com">Github Pages</a>.</span>
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+</body>
+</html>

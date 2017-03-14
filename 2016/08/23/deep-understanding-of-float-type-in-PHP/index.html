@@ -1,0 +1,695 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+
+
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="float," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="百作坊" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+<meta name="description" content="我们都知道 PHP 是一个弱类型的动态脚本语言，所谓弱类型是指不仅在声明变量时不需要指定它的类型，且运算时也不做类型验证。比如可以将一个整型和浮点数类型做加法操作。
+&amp;lt;?php$x = 1; // $x 是整型$y = 1.1; // $y 浮点数var_dump($x);var_dump($y);$z = $x + $y; // $z 是浮点数var_dump($z);// outputi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入理解 PHP 中的浮点型">
+<meta property="og:url" content="http://blog.100dos.com/2016/08/23/deep-understanding-of-float-type-in-PHP/index.html">
+<meta property="og:site_name" content="百作坊">
+<meta property="og:description" content="我们都知道 PHP 是一个弱类型的动态脚本语言，所谓弱类型是指不仅在声明变量时不需要指定它的类型，且运算时也不做类型验证。比如可以将一个整型和浮点数类型做加法操作。
+&amp;lt;?php$x = 1; // $x 是整型$y = 1.1; // $y 浮点数var_dump($x);var_dump($y);$z = $x + $y; // $z 是浮点数var_dump($z);// outputi">
+<meta property="og:updated_time" content="2017-03-14T02:25:20.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深入理解 PHP 中的浮点型">
+<meta name="twitter:description" content="我们都知道 PHP 是一个弱类型的动态脚本语言，所谓弱类型是指不仅在声明变量时不需要指定它的类型，且运算时也不做类型验证。比如可以将一个整型和浮点数类型做加法操作。
+&amp;lt;?php$x = 1; // $x 是整型$y = 1.1; // $y 浮点数var_dump($x);var_dump($y);$z = $x + $y; // $z 是浮点数var_dump($z);// outputi">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"hide"},
+    fancybox: true,
+    motion: true
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://blog.100dos.com/2016/08/23/deep-understanding-of-float-type-in-PHP/"/>
+
+
+  <title> 深入理解 PHP 中的浮点型 | 百作坊 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?e70448447504ef27f728084c8f2978ea";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="site-title">百作坊</span>
+    </a>
+  </div>
+  <p class="site-subtitle">100dos.com</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+    </ul>
+  
+
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                深入理解 PHP 中的浮点型
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-23T16:23:59+08:00" content="2016-08-23">
+              2016-08-23
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/PHP/" itemprop="url" rel="index">
+                    <span itemprop="name">PHP</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>我们都知道 PHP 是一个弱类型的动态脚本语言，所谓弱类型是指不仅在声明变量时不需要指定它的类型，且运算时也不做类型验证。比如可以将一个整型和浮点数类型做加法操作。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$x = <span class="number">1</span>; <span class="comment">// $x 是整型</span></div><div class="line">$y = <span class="number">1.1</span>; <span class="comment">// $y 浮点数</span></div><div class="line">var_dump($x);</div><div class="line">var_dump($y);</div><div class="line"></div><div class="line">$z = $x + $y; <span class="comment">// $z 是浮点数</span></div><div class="line">var_dump($z);</div><div class="line"></div><div class="line"><span class="comment">// output</span></div><div class="line">int(<span class="number">1</span>)</div><div class="line">float(<span class="number">1.1</span>)</div><div class="line">float(<span class="number">2.1</span>)</div></pre></td></tr></table></figure>
+<p>并且上面的代码也可以注意到，在变量声明时也无需指定变量的类型，说明赋值是最简单的隐式的类型转换。然后把整型和浮点数相加得到了另一个浮点数。</p>
+<p>在 PHP 中，对于浮点数 <code>float</code> 同样也代表  <code>double</code> 双精度和 <code>real</code> 实数类型，在 php.net 上有如下关于浮点数精度的说明。</p>
+<h3 id="浮点数的精度问题"><a href="#浮点数的精度问题" class="headerlink" title="浮点数的精度问题"></a>浮点数的精度问题</h3><blockquote>
+<p>浮点数的精度有限。尽管取决于系统，PHP 通常使用 IEEE 754 双精度格式，则由于取整而导致的最大相对误差为 1.11e-16。非基本数学运算可能会给出更大误差，并且要考虑到进行复合运算时的误差传递。<br>此外，以十进制能够精确表示的有理数如 0.1 或 0.7，无论有多少尾数都不能被内部所使用的二进制精确表示，因此不能在不丢失一点点精度的情况下转换为二进制的格式。这就会造成混乱的结果：例如，floor((0.1+0.7)*10) 通常会返回 7 而不是预期中的 8，因为该结果内部的表示其实是类似 7.9999999999999991118…。</p>
+</blockquote>
+<p>那么 0.1 和 0.7 为什么转换为二进制时会产生误差呢？我们先只看 0.1 转换成二进制就好。十进制数值转换为二进制数值可以通过下面的方法：</p>
+<ul>
+<li>整数部分：连续用该整数除以2，取余数，然后商再除以2，直到商等于0为止。然后把得到的各个余数按相反的顺序排列 － 简称”除2取余法”。</li>
+<li>小数部分：十进制小数转换为二进制小数，采用”乘2取整，顺序排列”法。用2乘以十进制小数，将得到的整数部分取出，再用2乘余下的小数部分，然后再将积的整数部分取出，如此进行，直到积中的小数部分为 0 或者达到所要求的精度为止。然后把取出的整数部分按顺序排列起来，即先取出的整数部分作为二进制小数的高位，后取出的整数部分作为低位有效位 － 简称”乘2取整法”。</li>
+<li>含有小数的十进制数转换成二进制，整数、小数部分分别进行转换，然后相加。</li>
+</ul>
+<p>0.1 没有整数部分，所以只需要对小数部分做乘2取整。</p>
+<table>
+<thead>
+<tr>
+<th>运算</th>
+<th>乘积</th>
+<th>是否有整数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.1 * 2</td>
+<td>0.2</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0.2 * 2</td>
+<td>0.4</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0.4 * 2</td>
+<td>0.8</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0.8 * 2</td>
+<td>1.6</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0.6 * 2</td>
+<td>1.2</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0.2 * 2</td>
+<td>0.4</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0.4 * 2</td>
+<td>0.8</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0.8 * 2</td>
+<td>1.6</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0.6 * 2</td>
+<td>1.2</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0.2 * 2</td>
+<td>0.4</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0.4 * 2</td>
+<td>0.8</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0.8 * 2</td>
+<td>1.6</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0.6 * 2</td>
+<td>1.2</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0.2 * 2</td>
+<td>0.4</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0.4 * 2</td>
+<td>0.8</td>
+<td>0</td>
+</tr>
+<tr>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+</tbody>
+</table>
+<p>我们能看到最后永远重复 0011 的循环……</p>
+<h3 id="IEEE-754"><a href="#IEEE-754" class="headerlink" title="IEEE 754"></a>IEEE 754</h3><p>PHP 浮点数使用 IEEE 754 二进制浮点数算术标准来存储。</p>
+<p>sign：符号位（sign bit）；<br>exponent：“指数部分”，即次高有效的e个比特，存储指数部分；<br>fraction：最后剩下的f个低有效位的比特，存储“有效数”（significand）的小数部分。</p>
+<h4 id="32位单精度"><a href="#32位单精度" class="headerlink" title="32位单精度"></a>32位单精度</h4><p>单精度二进制小数，使用32个比特存储。</p>
+<table>
+<thead>
+<tr>
+<th>1</th>
+<th>8</th>
+<th>23</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S</td>
+<td>Exp</td>
+<td>Fraction</td>
+</tr>
+<tr>
+<td>31</td>
+<td>30至23 偏正值（实际的指数大小+127）</td>
+<td>22至0位编号（从右边开始为0）</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>S为符号位，Exp为指数字，Fraction为有效数字。 指数部分即使用所谓的偏正值形式表示，偏正值为实际的指数大小与一个固定值（32位的情况是127）的和。采用这种方式表示的目的是简化比较。因为，指数的值可能为正也可能为负，如果采用补码表示的话，全体符号位S和Exp自身的符号位将导致不能简单的进行大小比较。正因为如此，指数部分通常采用一个无符号的正数值存储。单精度的指数部分是−126～+127加上偏移值127，指数值的大小从1～254（0和255是特殊值）。浮点小数计算时，指数值减去偏正值将是实际的指数大小。</p>
+</blockquote>
+<h4 id="64位双精度"><a href="#64位双精度" class="headerlink" title="64位双精度"></a>64位双精度</h4><p>双精度二进制小数，使用64个比特存储。</p>
+<table>
+<thead>
+<tr>
+<th>1</th>
+<th>8</th>
+<th>23</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S</td>
+<td>Exp</td>
+<td>Fraction</td>
+</tr>
+<tr>
+<td>63</td>
+<td>62至52偏正值（实际的指数大小+1023）</td>
+<td>51至0位编号（从右边开始为0）</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>S为符号位，Exp为指数字，Fraction为有效数字。指数部分即使用所谓的偏正值形式表示，偏正值为实际的指数大小与一个固定值（64位的情况是1023）的和。采用这种方式表示的目的是简化比较。因为，指数的值可能为正也可能为负，如果采用补码表示的话，全体符号位S和Exp自身的符号位将导致不能简单的进行大小比较。正因为如此，指数部分通常采用一个无符号的正数值存储。双精度的指数部分是−1022～+1023加上1023，指数值的大小从1～2046（0（2进位全为0）和2047（2进位全为1）是特殊值）。浮点小数计算时，指数值减去偏正值将是实际的指数大小。</p>
+</blockquote>
+<p>参考IEEE 754 知道，对于单精度存储小数位至多保留23位。即 0.1 转换为二进制之后 0011 的无限循环只能保留23位，即使是双精度也只能保留52位，其余均要舍去。所以浮点数会出现精度的问题，转换结果可以根据浮点数转换工具查看。</p>
+<p>十进制 =&gt; 二进制 =&gt; 十六进制 =&gt; 转换后浮点数<br>0.1 =&gt; 00111101110011001100110011001101 =&gt; 0x3dcccccd =&gt; 0.10000000149011612<br>0.7 =&gt; 00111111001100110011001100110011 =&gt; 0x3f333333 =&gt; 0.699999988079071</p>
+<h3 id="浮点数的范围和精度"><a href="#浮点数的范围和精度" class="headerlink" title="浮点数的范围和精度"></a>浮点数的范围和精度</h3><p>浮点数计算公式如下：</p>
+<p>sign * 2<sup>exponent</sup> * fraction</p>
+<p>能看出浮点数的范围是由指数的位数来决定的。单精度的浮点数指数有8位，双精度有11位。于是，单精度的指数范围为-127~+128，而双精度的指数范围为-1023~+1024，并且指数位是按补码的形式来划分的。其中负指数决定了浮点数所能表达的绝对值最小的非零数；而正指数决定了浮点数所能表达的绝对值最大的数，也即决定了浮点数的取值范围。单精度的范围为-2<sup>128</sup> ~ +2<sup>128</sup>，也即-3.40E+38 ~ +3.40E+38；双精度的范围为-2<sup>1024</sup> ~ +2<sup>1024</sup>，也即-1.79E+308 ~ +1.79E+308。</p>
+<p>浮点数的精度是由尾数的位数来决定的，且尾数是按科学计数法来存储的，如 9.2233720368548E+18。</p>
+<ul>
+<li>单精度：2<sup>23</sup> = 8388608，一共7位，这意味着最多能有7位有效数字，但绝对能保证的为6位，也即 float 的精度为6~7位有效数字；</li>
+<li>双精度：2<sup>52</sup> = 4503599627370496，一共16位，所以精度为15~16位。</li>
+</ul>
+<h3 id="整型溢出"><a href="#整型溢出" class="headerlink" title="整型溢出"></a>整型溢出</h3><p>如果给定的一个数超出了 integer 的范围，将会被解释为 float。同样如果执行的运算结果超出了 integer 范围，也会返回 float。</p>
+<p>64 位系统下的整数溢出:</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$large_number = <span class="number">9223372036854775807</span>;</div><div class="line">var_dump($large_number);                     <span class="comment">// int(9223372036854775807)</span></div><div class="line"></div><div class="line">$large_number = <span class="number">9223372036854775808</span>;</div><div class="line">var_dump($large_number);                     <span class="comment">// float(9.2233720368548E+18)</span></div><div class="line"></div><div class="line">$million = <span class="number">1000000</span>;</div><div class="line">$large_number =  <span class="number">50000000000000</span> * $million;</div><div class="line">var_dump($large_number);                     <span class="comment">// float(5.0E+19)</span></div></pre></td></tr></table></figure>
+<h3 id="整型转换为浮点数"><a href="#整型转换为浮点数" class="headerlink" title="整型转换为浮点数"></a>整型转换为浮点数</h3><p>如果整型数字的精度可以保留，则结果值是最接近原值的一个近似值，否则这个值不确定。下面代码即是精度不能保留的例子，能够看到最后的结果值是用科学计数法表示，且保留的精度是14位。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="comment">// 64位系统，PHP 5.6 / PHP 7</span></div><div class="line">$int = <span class="number">9223372036854775807</span>;</div><div class="line">$float = (float)$int;</div><div class="line">var_dump($int);</div><div class="line">var_dump($float);</div><div class="line"></div><div class="line">output:</div><div class="line">int(<span class="number">9223372036854775807</span>)</div><div class="line">float(<span class="number">9.2233720368548E+18</span>)  <span class="comment">// 能够注意到保留的精度是 14 位</span></div></pre></td></tr></table></figure>
+<h3 id="浮点数转换为整型"><a href="#浮点数转换为整型" class="headerlink" title="浮点数转换为整型"></a>浮点数转换为整型</h3><p>从浮点数转换成整数时，将向下取整。</p>
+<blockquote>
+<p>向上取整：不管四舍五入的规则 只要后面有小数前面的整数就加1<br>向下取整：不管四舍五入的规则 只要后面有小数忽略小数</p>
+</blockquote>
+<p>如果浮点数超出了整数范围（32 位平台下通常为 +/- 2.15e+9 = 2<sup>31</sup>，64 位平台下通常为 +/- 9.22e+18 = 2<sup>63</sup>），则结果为未定义，因为没有足够的精度给出一个确切的整数结果。在此情况下没有警告，甚至没有任何通知！</p>
+<p>Warning : 决不要将未知的分数强制转换为 integer，这样有时会导致不可预料的结果。<br><figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"><span class="keyword">echo</span> (int) ( (<span class="number">0.1</span>+<span class="number">0.7</span>) * <span class="number">10</span> ); <span class="comment">// 显示 7!</span></div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/qrcode_for_gh_b81f9d06ec2e_258.jpg" alt="小弟 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>扫一下呗，反正我也不怎么发～</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/float/" rel="tag">#float</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/08/09/http-keepalive-model-md/" rel="next" title="HTTP Keep-Alive模式">
+                <i class="fa fa-chevron-left"></i> HTTP Keep-Alive模式
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/08/29/debug-in-php/" rel="prev" title="如何调试 PHP 程序">
+                如何调试 PHP 程序 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+  </div>
+
+
+          </div>
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://tva1.sinaimg.cn/crop.0.0.414.414.180/62d98a55jw1e6lb32mfm7j20bo0bo0to.jpg"
+               alt="小弟" />
+          <p class="site-author-name" itemprop="name">小弟</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">160</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">67</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+        
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/jixiaod" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/jixiaod" target="_blank" title="Code">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  Code
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.douban.com/people/ttihgiesr" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2008 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="author" itemprop="copyrightHolder"> 『百作坊』 Generated by <a href="https://hexo.io">Hexo</a> & Theme by <a href="https://github.com/jixiaod/hexo-theme-next">Next</a> & Public by <a href="https://pages.github.com">Github Pages</a>.</span>
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+</body>
+</html>

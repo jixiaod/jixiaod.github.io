@@ -1,0 +1,636 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+
+
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="事务," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="百作坊" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+<meta name="description" content="Mysql/InnoDB 支持四个事务隔离级别，默认是可重复读（REPEATABLE-READ）。四个事务级别逐渐增强，保证数据有更高的一致性。但级别越高，性能越差。
+
+
+
+隔离级别
+脏读
+不可重复读
+幻读
+锁
+
+
+
+
+未提交读(Read uncommitted)
+可能
+可能
+可能
+不锁表，隔离级别最低，并发性能高
+
+
+提交读(Read commited)
+不可能
+可能
+可能
+锁定正在读取的行">
+<meta property="og:type" content="article">
+<meta property="og:title" content="事务的四个隔离级别">
+<meta property="og:url" content="http://blog.100dos.com/2016/09/19/the-four-levels-of-database-isolation-for-transactions/index.html">
+<meta property="og:site_name" content="百作坊">
+<meta property="og:description" content="Mysql/InnoDB 支持四个事务隔离级别，默认是可重复读（REPEATABLE-READ）。四个事务级别逐渐增强，保证数据有更高的一致性。但级别越高，性能越差。
+
+
+
+隔离级别
+脏读
+不可重复读
+幻读
+锁
+
+
+
+
+未提交读(Read uncommitted)
+可能
+可能
+可能
+不锁表，隔离级别最低，并发性能高
+
+
+提交读(Read commited)
+不可能
+可能
+可能
+锁定正在读取的行">
+<meta property="og:updated_time" content="2017-03-14T02:25:20.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="事务的四个隔离级别">
+<meta name="twitter:description" content="Mysql/InnoDB 支持四个事务隔离级别，默认是可重复读（REPEATABLE-READ）。四个事务级别逐渐增强，保证数据有更高的一致性。但级别越高，性能越差。
+
+
+
+隔离级别
+脏读
+不可重复读
+幻读
+锁
+
+
+
+
+未提交读(Read uncommitted)
+可能
+可能
+可能
+不锁表，隔离级别最低，并发性能高
+
+
+提交读(Read commited)
+不可能
+可能
+可能
+锁定正在读取的行">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"hide"},
+    fancybox: true,
+    motion: true
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://blog.100dos.com/2016/09/19/the-four-levels-of-database-isolation-for-transactions/"/>
+
+
+  <title> 事务的四个隔离级别 | 百作坊 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?e70448447504ef27f728084c8f2978ea";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="site-title">百作坊</span>
+    </a>
+  </div>
+  <p class="site-subtitle">100dos.com</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+    </ul>
+  
+
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                事务的四个隔离级别
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-09-19T11:09:40+08:00" content="2016-09-19">
+              2016-09-19
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Mysql-DB/" itemprop="url" rel="index">
+                    <span itemprop="name">Mysql&DB</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Mysql/InnoDB 支持四个事务隔离级别，默认是可重复读（REPEATABLE-READ）。四个事务级别逐渐增强，保证数据有更高的一致性。但级别越高，性能越差。</p>
+<table>
+<thead>
+<tr>
+<th>隔离级别</th>
+<th>脏读</th>
+<th>不可重复读</th>
+<th>幻读</th>
+<th>锁</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>未提交读(Read uncommitted)</td>
+<td>可能</td>
+<td>可能</td>
+<td>可能</td>
+<td>不锁表，隔离级别最低，并发性能高</td>
+</tr>
+<tr>
+<td>提交读(Read commited)</td>
+<td>不可能</td>
+<td>可能</td>
+<td>可能</td>
+<td>锁定正在读取的行</td>
+</tr>
+<tr>
+<td>可重复读(Repeatable read)</td>
+<td>不可能</td>
+<td>不可能</td>
+<td>可能</td>
+<td>锁定所读取的所有行</td>
+</tr>
+<tr>
+<td>串行读(Serializable)</td>
+<td>不可能</td>
+<td>不可能</td>
+<td>不可能</td>
+<td>锁表</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>未提交读：允许脏读，也就是可能读取到其他会话中未提交的事务修改的数据。</li>
+<li>提交读：只能读到已经提交的数据。（不重复读）</li>
+<li>可重复读：在同一个事务内的查询都是事务开始时刻是一致的，InnoDB的默认级别。在SQL标准中，该隔离级别消除了不可重复读，但是还是存在幻读。</li>
+<li>串行读：完全串行化的读，每次读都需要获得表级共享锁，读写相互都会阻塞。</li>
+</ul>
+<p>脏读(dirty read)：指当一个事务正在访问数据，并且对数据进行了修改，而该次修改还没有提交到数据库中。这时，另一个事务也访问这个数据，然后使用了这个数据。</p>
+<p>不可重复读(nonrepeatable read)：指在一个事务内，多次读同一数据。在这个事务还没有结束时，另一个事务也访问该同一数据。那么，在第一个事务中的俩次读数据之间，由于第二个事务的修改，和第一个事务读取到的数据可能是不一样的。这样就发生了在一个事务内俩次读到的数据是不一样的，因此称为不可重复读。（不可重复读在于修改同样条件的数据）</p>
+<p>幻读(phantom read)：第一个事务对一个表中的数据做了修改，这个修改涉及到表中的全部数据行。同时，第二个事务也修改这个表中的数据，插入一行新的数据。那么，以后就会发生操作第一个事务的用户发现表中还有没有修改的数据行，就好象发生了幻觉一样。（幻读是在于新增或删除表中数据）</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/qrcode_for_gh_b81f9d06ec2e_258.jpg" alt="小弟 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>扫一下呗，反正我也不怎么发～</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/事务/" rel="tag">#事务</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/02/reading-note-brief-history-of-humankind/" rel="next" title="［读书笔记］－ 《人类简史》">
+                <i class="fa fa-chevron-left"></i> ［读书笔记］－ 《人类简史》
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/09/25/understanding-select-poll-epoll-io-mutiplexing/" rel="prev" title="理解 select、poll 和 epoll">
+                理解 select、poll 和 epoll <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+  </div>
+
+
+          </div>
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://tva1.sinaimg.cn/crop.0.0.414.414.180/62d98a55jw1e6lb32mfm7j20bo0bo0to.jpg"
+               alt="小弟" />
+          <p class="site-author-name" itemprop="name">小弟</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">160</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">67</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+        
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/jixiaod" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/jixiaod" target="_blank" title="Code">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  Code
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.douban.com/people/ttihgiesr" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2008 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="author" itemprop="copyrightHolder"> 『百作坊』 Generated by <a href="https://hexo.io">Hexo</a> & Theme by <a href="https://github.com/jixiaod/hexo-theme-next">Next</a> & Public by <a href="https://pages.github.com">Github Pages</a>.</span>
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+</body>
+</html>

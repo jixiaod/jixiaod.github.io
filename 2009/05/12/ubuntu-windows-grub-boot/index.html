@@ -1,0 +1,518 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+
+
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="百作坊, 小弟, 纪刚, LNMP Stack, Web, PHP, 工作和生活, 诗和远方" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="百作坊" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+<meta name="description" content="其实，就是自己不小心造成的后果。小心的话，应该不会如此的费劲！我是在windows下 用grub安装，因为以前安过，于是把ubuntu 的盘格掉了。坏事了，开机没了引导，因为引导原来是ubuntu的。于是拿了自己的ubuntu 的系统盘（amd的，以前刻这玩的），安完就又可以引导了。但是不喜欢这个ubuntu的版本，我又给格了。这次，我借了同学的dos启动盘。因为在网上找到方法，用dos：DOS引">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ubuntu 添加 Windows 引导">
+<meta property="og:url" content="http://blog.100dos.com/2009/05/12/ubuntu-windows-grub-boot/index.html">
+<meta property="og:site_name" content="百作坊">
+<meta property="og:description" content="其实，就是自己不小心造成的后果。小心的话，应该不会如此的费劲！我是在windows下 用grub安装，因为以前安过，于是把ubuntu 的盘格掉了。坏事了，开机没了引导，因为引导原来是ubuntu的。于是拿了自己的ubuntu 的系统盘（amd的，以前刻这玩的），安完就又可以引导了。但是不喜欢这个ubuntu的版本，我又给格了。这次，我借了同学的dos启动盘。因为在网上找到方法，用dos：DOS引">
+<meta property="og:updated_time" content="2017-03-14T02:25:20.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Ubuntu 添加 Windows 引导">
+<meta name="twitter:description" content="其实，就是自己不小心造成的后果。小心的话，应该不会如此的费劲！我是在windows下 用grub安装，因为以前安过，于是把ubuntu 的盘格掉了。坏事了，开机没了引导，因为引导原来是ubuntu的。于是拿了自己的ubuntu 的系统盘（amd的，以前刻这玩的），安完就又可以引导了。但是不喜欢这个ubuntu的版本，我又给格了。这次，我借了同学的dos启动盘。因为在网上找到方法，用dos：DOS引">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"hide"},
+    fancybox: true,
+    motion: true
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://blog.100dos.com/2009/05/12/ubuntu-windows-grub-boot/"/>
+
+
+  <title> Ubuntu 添加 Windows 引导 | 百作坊 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?e70448447504ef27f728084c8f2978ea";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="site-title">百作坊</span>
+    </a>
+  </div>
+  <p class="site-subtitle">100dos.com</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+    </ul>
+  
+
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Ubuntu 添加 Windows 引导
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2009-05-12T12:39:17+08:00" content="2009-05-12">
+              2009-05-12
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/杂/" itemprop="url" rel="index">
+                    <span itemprop="name">杂</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>其实，就是自己不小心造成的后果。小心的话，应该不会如此的费劲！<br>我是在windows下 用grub安装，因为以前安过，于是把ubuntu 的盘格掉了。坏事了，开机没了引导，因为引导原来是ubuntu的。于是拿了自己的ubuntu 的系统盘（amd的，以前刻这玩的），安完就又可以引导了。但是不喜欢这个ubuntu的版本，我又给格了。<br>这次，我借了同学的dos启动盘。因为在网上找到方法，用dos：DOS引导盘引导系统到纯DOS提示符下，执行：”fdisk /mbr”即可。这样我就不用再为了引导，而装我那个低版本了。<br>我试了下，果然管用。这样我就又可以进到windows了。<br>继续grub安装：我安的是8.10,个人不喜欢9.04。ubuntu的7部，前三部正常。到了第四部，竟然一个盘也看不见，windows下的也看不见。费了半天劲，最后试了下：sudo umount -l /isodevice<br>好了……然后一步步安装完成。<br>从启电脑，添加windows的启动项：<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">sudo gedit /boot/grub/meun.lst  在ubuntu 启动的后面添加</div><div class="line"></div><div class="line">title        Windows XP</div><div class="line">root        (hd0,0)</div><div class="line">makeactive</div><div class="line">chainloader    +1</div></pre></td></tr></table></figure></p>
+<p>一、硬盘下启动Ubuntu 8.10 LiveCD<br>1、在某个分区根目录新建一个Ubuntu目录。<br>2、将下载的ubuntu-8.10-desktop-i386.iso复制到该目录下。<br>3、用winRAR打开ISO，解压缩casper目录下的vmlinuz、initrd.gz文件到Ubuntu目录下。<br>4、下载grub4dos，将grldr文件、menu.lst文件复制到C盘根目录下。<br>修改menu.lst文件启动 LiveCD，命令如下：</p>
+<pre><code>title Ubuntu 8.10 LiveCD
+find --set-root /Ubuntu/vmlinuz
+kernel /Ubuntu/vmlinuz boot=casper iso-scan/filename=/Ubuntu/ubuntu-8.10-desktop-i386.iso quiet splash rw persistent debian-installer/locale=zh_CN.UTF-8 console-setup/layoutcode=cn console-setup/variantcode= --
+initrd /Ubuntu/initrd.gz
+boot
+</code></pre><p>5、打开C盘根目录下的隐藏文件boot.ini，在文件后面加入：C:\GRLDR=ubuntu。<br>6、重新启动电脑，在启动菜单中选择ubuntu即可。</p>
+<p>二、安装Ubuntu 8.10<br>1、进入Ubuntu 8.10 LiveCD后，首先打开“附件\终端”，输入：sudo umount -l /isodevice。可以防止Ubuntu 8.10安装过程无法显示分区。<br>2、点击桌面的“安装”，开始安装。前三步可以默认。<br>3、第四步出现分区列表后，选择“手动”。<br>如果没有事先预留空闲的空间，则选择要安装的分区（至少10G），删除该分区成为“空闲的空间”。<br>如果已有了预留空闲的空间，则可以选择“空闲的空间”进行分区和安装。<br>分区的方法很多，我用最简单的：新建1G逻辑分区，类型swap，我的电脑名称为：/dev/sda9；剩下的类型ext3，挂载点“/”，我的电脑名称为/dev/sda10。<br>选择ext3分区，点击“下一步”。<br>4、第五步到第六步也是默认。<br>5、第七步最关键：默认把grub启动加载器安装到MBR，对某些电脑可能造成无法启动，而且重装window时也会被破坏掉。我将其修改的方法是：点击“高级”，在“安装启动加载器的设备”选择挂载点“/”的分区，我的是：/dev/sda10。<br>注：第七步默认安装造成无法启动电脑情况的，修复方法：用DOS启动盘进入DOS中，运行：fdisk /mbr。重启电脑，就可以进入windows。</p>
+<p>三、手动增加Ubuntu 8.10启动项<br>1、安装结束后，选择继续使用Ubuntu 8.10 LiveCD。<br>2、进入C盘，将menu.lst该名。并确保其他分区根目录下没有menu.lst文件。<br>3、进入Ubuntu 8.10安装的“/”分区（我的电脑是/dev/sda10），复制boot文件夹到C盘根目录下。<br>4、重启电脑，选择ubuntu后，grldr文件后自动找到C盘boot/grub文件夹下的menu.lst文件。选择第一个启动Ubuntu 8.10。</p>
+<p>四、重装windows系统的恢复。<br>1、重装windows系统前备份C盘根目录下的boot文件夹、grldr文件、boot.ini文件。重装后再复制到C盘。<br>2、如果没有备份，则将附件的grldr文件复制到C盘，打开C盘根目录下的隐藏文件boot.ini，在文件后面加入：C:\GRLDR=ubuntu。并将Ubuntu 8.10安装的“/”分区下的boot文件夹复制到C盘根目录下。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/qrcode_for_gh_b81f9d06ec2e_258.jpg" alt="小弟 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>扫一下呗，反正我也不怎么发～</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2009/04/26/add-busybox-to-android/" rel="next" title="Android 中添加 Busybox">
+                <i class="fa fa-chevron-left"></i> Android 中添加 Busybox
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2009/05/18/eclipse-tomcat5.5-apache-ant-1.7.1/" rel="prev" title="Eclipse + Tomcat5.5 + Apache-ant-1.7.1 （J2EE）环境配置">
+                Eclipse + Tomcat5.5 + Apache-ant-1.7.1 （J2EE）环境配置 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+  </div>
+
+
+          </div>
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://tva1.sinaimg.cn/crop.0.0.414.414.180/62d98a55jw1e6lb32mfm7j20bo0bo0to.jpg"
+               alt="小弟" />
+          <p class="site-author-name" itemprop="name">小弟</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">160</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">67</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+        
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/jixiaod" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/jixiaod" target="_blank" title="Code">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  Code
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.douban.com/people/ttihgiesr" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2008 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="author" itemprop="copyrightHolder"> 『百作坊』 Generated by <a href="https://hexo.io">Hexo</a> & Theme by <a href="https://github.com/jixiaod/hexo-theme-next">Next</a> & Public by <a href="https://pages.github.com">Github Pages</a>.</span>
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+</body>
+</html>

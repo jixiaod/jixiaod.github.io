@@ -1,0 +1,556 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+
+
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="svn," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="百作坊" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+<meta name="description" content="&amp;nbsp;
+版本迭代发布：1. 分支（branch）开发完成，合并分支代码到主干（trunk）2. 所有人代码合并完成，开发自测通过，合并到发布版本（release）3. QA人员在测试服务器测试release，完成后发布到线上环境4. 如测试发现问题，重复以上步骤
+紧急发布：1. 直接修改发布版本代码（release），测试通过后，直接更新到线上2. “第一时间”合并修改代码到trunk，保证">
+<meta property="og:type" content="article">
+<meta property="og:title" content="svn 协作开发流程">
+<meta property="og:url" content="http://blog.100dos.com/2015/08/17/rule-of-svn-for-team/index.html">
+<meta property="og:site_name" content="百作坊">
+<meta property="og:description" content="&amp;nbsp;
+版本迭代发布：1. 分支（branch）开发完成，合并分支代码到主干（trunk）2. 所有人代码合并完成，开发自测通过，合并到发布版本（release）3. QA人员在测试服务器测试release，完成后发布到线上环境4. 如测试发现问题，重复以上步骤
+紧急发布：1. 直接修改发布版本代码（release），测试通过后，直接更新到线上2. “第一时间”合并修改代码到trunk，保证">
+<meta property="og:image" content="http://www.100dos.com/assets/images/svn-dev.jpg">
+<meta property="og:updated_time" content="2017-03-14T02:25:20.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="svn 协作开发流程">
+<meta name="twitter:description" content="&amp;nbsp;
+版本迭代发布：1. 分支（branch）开发完成，合并分支代码到主干（trunk）2. 所有人代码合并完成，开发自测通过，合并到发布版本（release）3. QA人员在测试服务器测试release，完成后发布到线上环境4. 如测试发现问题，重复以上步骤
+紧急发布：1. 直接修改发布版本代码（release），测试通过后，直接更新到线上2. “第一时间”合并修改代码到trunk，保证">
+<meta name="twitter:image" content="http://www.100dos.com/assets/images/svn-dev.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"hide"},
+    fancybox: true,
+    motion: true
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://blog.100dos.com/2015/08/17/rule-of-svn-for-team/"/>
+
+
+  <title> svn 协作开发流程 | 百作坊 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?e70448447504ef27f728084c8f2978ea";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="site-title">百作坊</span>
+    </a>
+  </div>
+  <p class="site-subtitle">100dos.com</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+    </ul>
+  
+
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                svn 协作开发流程
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2015-08-17T16:28:47+08:00" content="2015-08-17">
+              2015-08-17
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/流程-工具/" itemprop="url" rel="index">
+                    <span itemprop="name">流程&工具</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>&nbsp;</p>
+<h2 id="版本迭代发布："><a href="#版本迭代发布：" class="headerlink" title="版本迭代发布："></a>版本迭代发布：</h2><p>1. 分支（branch）开发完成，合并分支代码到主干（trunk）<br>2. 所有人代码合并完成，开发自测通过，合并到发布版本（release）<br>3. QA人员在测试服务器测试release，完成后发布到线上环境<br>4. 如测试发现问题，重复以上步骤</p>
+<h2 id="紧急发布："><a href="#紧急发布：" class="headerlink" title="紧急发布："></a>紧急发布：</h2><p>1. 直接修改发布版本代码（release），测试通过后，直接更新到线上<br>2. “第一时间”合并修改代码到trunk，保证代码统一</p>
+<h2 id="SVN-目录结构"><a href="#SVN-目录结构" class="headerlink" title="SVN 目录结构"></a>SVN 目录结构</h2><p>branches/[app name]/[version]/[username] 个人开发分支<br>trunk 协作开发主干<br>release 线上发布版本|生产环境版本|稳定版本|<br>tags 对比较重要的封板保存的版本|开发历史节点|</p>
+<p><img src="http://www.100dos.com/assets/images/svn-dev.jpg" alt="svn 协作流程"></p>
+<h2 id="1-创建新的开发分支"><a href="#1-创建新的开发分支" class="headerlink" title="1. 创建新的开发分支"></a>1. 创建新的开发分支</h2><p>~# cd /your svn path/branches<br>~# svn mkdir foo/1.0<br>~# svn ci -m “create braches/foo/1.0”</p>
+<p>从trunk 拷贝建立新分支</p>
+<p>~# svn cp svn://svn.moji.com/project/trunk svn://svn.moji.com/project/branches/foo/1.0/tiger -m ‘create branches/foo/1.0/tiger’</p>
+<h2 id="2-检出开发分支到本地"><a href="#2-检出开发分支到本地" class="headerlink" title="2. 检出开发分支到本地"></a>2. 检出开发分支到本地</h2><p>~# svn checkout svn://svn.moji.com/project/branches/foo/1.0/tiger</p>
+<h2 id="3-提交个人分支代码"><a href="#3-提交个人分支代码" class="headerlink" title="3. 提交个人分支代码"></a>3. 提交个人分支代码</h2><p>分支代码修改后，就可以提交到。</p>
+<p>~# svn up<br>~# svn commit -m ‘fix XXX 的问题’</p>
+<p>SVN作为版本工具，帮助我们提高开发效率。版本迭代开发期间，必须“每天”至少下班前要提交自己代码。且写清楚提交日志非常重要，如：</p>
+<p>~# svn ci -m “添加了XXX的功能”<br>~# svn ci -m “修改了XXX的BUG”<br>~# svn ci -m “删除了XXX的功能”<br>~# svn ci -m “完善更新了XXX的功能”</p>
+<p>且，尽可能按照功能开发分多次提交代码，保证每个版本记录开发的功能分离，以便日志查找及代码回滚。</p>
+<p>原则：</p>
+<p>1. 写清楚这次提交做了哪些修改；<br>2. 写清楚这次提交为什么要做这些修改；<br>3. 确定这次提交只做一个修改，且不要把一次修改分多次提交，以确定这次提交的版本是一个有效版本；<br>4. 最最重要，既要把svn这种版本工具当成备份工具来用，还要不仅仅是当成备份工具来使用。</p>
+<h2 id="4-合并trunk代码到个人分支"><a href="#4-合并trunk代码到个人分支" class="headerlink" title="4. 合并trunk代码到个人分支"></a>4. 合并trunk代码到个人分支</h2><p>合并主干 trunk 代码到分支，保持分支代码与主干代码同步</p>
+<p>~# cd path/branches/foo/1.0/tiger<br>~# svn merge svn://svn.moji.com/project/trunk</p>
+<p>提交合并代码</p>
+<p>~# svn commit -m ‘sync merge from trunk’</p>
+<p>注：sync merge 用来获取主干分支上所有的新更改。换句话说，目标分支从主干分支作为代码源 copy 以来所有的修改，被从主干分支同步到目标分支。Sync merge 合并代码时，会自动根据合并历史纪录去忽略已经被合并的修改，所以可以阶段性重复的去从源主干分主合并代码，保持目标分支代码最新。</p>
+<h2 id="5-合并分支代码到主干-trunk"><a href="#5-合并分支代码到主干-trunk" class="headerlink" title="5. 合并分支代码到主干 trunk"></a>5. 合并分支代码到主干 trunk</h2><p>分支所有开发工作完成后，需要合并左右的更改到主干分支。Reintegrate merge 是把分支合并回他的源主干分支。</p>
+<p>~# cd /path/project/trunk<br>~# svn merge –reintegrate svn://svn.moji.com/project/branches/mall/1.0/tiger</p>
+<p>提交分支合并代码</p>
+<p>~# svn commit -m ‘merge from branches/mall/1.0/tiger’</p>
+<p>如果想只合并部分功能到主干trunk，或者是几个固定版本50、54、60</p>
+<p>~# svn merge -c50,54,60 svn://svn.moji.com/project/branches/mall/1.0/tiger</p>
+<p>或者是某个版本区间 50 ～ 60</p>
+<p>~# svn merge -r50:60 svn://svn.moji.com/project/branches/mall/1.0/tiger</p>
+<p>如何快速找到分支建立的版本号</p>
+<p>~# svn log -v —stop-on-copy</p>
+<h2 id="Merge合并问题："><a href="#Merge合并问题：" class="headerlink" title="Merge合并问题："></a>Merge合并问题：</h2><h3 id="合并符号表示："><a href="#合并符号表示：" class="headerlink" title="合并符号表示："></a>合并符号表示：</h3><p>A Added<br>D Deleted<br>U Updated<br>C Conflict<br>G Merged<br>E Existed<br>R Replaced</p>
+<h3 id="解决冲突-confilict"><a href="#解决冲突-confilict" class="headerlink" title="解决冲突 confilict"></a>解决冲突 confilict</h3><p>不建议在合并过程中尝试编辑冲突（即，出现冲突，选择稍后解决postone），合并之后，可以找到冲突来源的开发成员一起沟通解决。</p>
+<p>合并之后，逐个resolved 冲突</p>
+<p>~# svn resolved [conflict file]</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/qrcode_for_gh_b81f9d06ec2e_258.jpg" alt="小弟 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>扫一下呗，反正我也不怎么发～</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/svn/" rel="tag">#svn</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/07/20/why-do-we-need-performance-appraisals/" rel="next" title="为什么要有绩效考核？">
+                <i class="fa fa-chevron-left"></i> 为什么要有绩效考核？
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/09/30/first-contact-with-a-juice-dealer/" rel="prev" title="Facebook 教我们写代码">
+                Facebook 教我们写代码 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+  </div>
+
+
+          </div>
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://tva1.sinaimg.cn/crop.0.0.414.414.180/62d98a55jw1e6lb32mfm7j20bo0bo0to.jpg"
+               alt="小弟" />
+          <p class="site-author-name" itemprop="name">小弟</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">160</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">67</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+        
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/jixiaod" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/jixiaod" target="_blank" title="Code">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  Code
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.douban.com/people/ttihgiesr" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2008 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="author" itemprop="copyrightHolder"> 『百作坊』 Generated by <a href="https://hexo.io">Hexo</a> & Theme by <a href="https://github.com/jixiaod/hexo-theme-next">Next</a> & Public by <a href="https://pages.github.com">Github Pages</a>.</span>
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+</body>
+</html>

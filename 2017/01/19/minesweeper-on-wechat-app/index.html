@@ -1,0 +1,532 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+
+
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="微信小程序,Javascript," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="百作坊" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+<meta name="description" content="微信小程序这几天很火，9号正式发布，今天19号过了10天，到现在略有降温的趋势。个大厂商对微信小程序的态度很不看好，最激进的要数[罗辑思维]，直接下架了自己的[得到APP]。滴滴、京东等APP也只保留了最精简的功能，某些担心过于完善的功能会抢夺APP本身的用户。不过这也印证了小程序的初衷，小而精、用完即走。（并不否认腾讯微信平台确实流氓的事实）
+
+PS：墨迹天气也开发了微信小程序版本，并且在1月9">
+<meta property="og:type" content="article">
+<meta property="og:title" content="扫雷 - 微信小程序">
+<meta property="og:url" content="http://blog.100dos.com/2017/01/19/minesweeper-on-wechat-app/index.html">
+<meta property="og:site_name" content="百作坊">
+<meta property="og:description" content="微信小程序这几天很火，9号正式发布，今天19号过了10天，到现在略有降温的趋势。个大厂商对微信小程序的态度很不看好，最激进的要数[罗辑思维]，直接下架了自己的[得到APP]。滴滴、京东等APP也只保留了最精简的功能，某些担心过于完善的功能会抢夺APP本身的用户。不过这也印证了小程序的初衷，小而精、用完即走。（并不否认腾讯微信平台确实流氓的事实）
+
+PS：墨迹天气也开发了微信小程序版本，并且在1月9">
+<meta property="og:image" content="http://blog.100dos.com/images/wechat-minesweeper.png">
+<meta property="og:updated_time" content="2017-03-14T02:25:20.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="扫雷 - 微信小程序">
+<meta name="twitter:description" content="微信小程序这几天很火，9号正式发布，今天19号过了10天，到现在略有降温的趋势。个大厂商对微信小程序的态度很不看好，最激进的要数[罗辑思维]，直接下架了自己的[得到APP]。滴滴、京东等APP也只保留了最精简的功能，某些担心过于完善的功能会抢夺APP本身的用户。不过这也印证了小程序的初衷，小而精、用完即走。（并不否认腾讯微信平台确实流氓的事实）
+
+PS：墨迹天气也开发了微信小程序版本，并且在1月9">
+<meta name="twitter:image" content="http://blog.100dos.com/images/wechat-minesweeper.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"hide"},
+    fancybox: true,
+    motion: true
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://blog.100dos.com/2017/01/19/minesweeper-on-wechat-app/"/>
+
+
+  <title> 扫雷 - 微信小程序 | 百作坊 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?e70448447504ef27f728084c8f2978ea";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="site-title">百作坊</span>
+    </a>
+  </div>
+  <p class="site-subtitle">100dos.com</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+    </ul>
+  
+
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                扫雷 - 微信小程序
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-19T10:55:08+08:00" content="2017-01-19">
+              2017-01-19
+            </time>
+          </span>
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>微信小程序这几天很火，9号正式发布，今天19号过了10天，到现在略有降温的趋势。个大厂商对微信小程序的态度很不看好，最激进的要数[罗辑思维]，直接下架了自己的[得到APP]。滴滴、京东等APP也只保留了最精简的功能，某些担心过于完善的功能会抢夺APP本身的用户。不过这也印证了小程序的初衷，小而精、用完即走。（并不否认腾讯微信平台确实流氓的事实）</p>
+<blockquote>
+<p>PS：墨迹天气也开发了微信小程序版本，并且在1月9号第一时间发布，欢迎使用。</p>
+</blockquote>
+<p>作为技术人员，怎能不亲手试试小程序开发呢？扫雷 Minesweeper</p>
+<h2 id="实现思路："><a href="#实现思路：" class="headerlink" title="实现思路："></a>实现思路：</h2><ul>
+<li>如果不了解扫雷的游戏规则，请自行 Google</li>
+<li>绘制一张 10*10 的地图，并且标注地雷和非地雷，并且需要用数字表示每个点周围地雷的数量</li>
+<li>用 mineMap[x][y] 表示一个点位<ul>
+<li>mineMap[x][y] &lt; 0 (代码中 == -1) 初始状态</li>
+<li>0 &lt; mineMap[x][y] &lt; 9 该点周围地雷的数量</li>
+<li>mineMap[x][y] == 9 表示该点是地雷</li>
+<li>mineMap[x][y] &gt; 9 （代码中 == 10）表示该点插旗</li>
+</ul>
+</li>
+</ul>
+<h2 id="Github"><a href="#Github" class="headerlink" title="Github"></a>Github</h2><ul>
+<li><a href="https://github.com/jixiaod/wechat-app-minesweeper" target="_blank" rel="external">https://github.com/jixiaod/wechat-app-minesweeper</a></li>
+</ul>
+<h2 id="如何跑起来？"><a href="#如何跑起来？" class="headerlink" title="如何跑起来？"></a>如何跑起来？</h2><ul>
+<li>下载 &amp; 安装 <a href="https://mp.weixin.qq.com/debug/wxadoc/dev/devtools/download.html" target="_blank" rel="external">微信小程序开发工具</a> </li>
+<li>配置 wechat-app-minesweeper 代码目录到开发工具即可</li>
+</ul>
+<h2 id="玩法"><a href="#玩法" class="headerlink" title="玩法"></a>玩法</h2><ul>
+<li>需要注意的是，由于没有鼠标右键标记Flag，简单做了 Flag 切换，开启后，方可标记Flag</li>
+<li>最初的想法是通过 tap 和 longtap 来区分扫雷和Flag，但是开发工具不能区分这俩个事件，只能作罢</li>
+</ul>
+<p><img src="/images/wechat-minesweeper.png" alt=""></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/qrcode_for_gh_b81f9d06ec2e_258.jpg" alt="小弟 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>扫一下呗，反正我也不怎么发～</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/微信小程序/" rel="tag">#微信小程序</a>
+          
+            <a href="/tags/Javascript/" rel="tag">#Javascript</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/27/reading-note-the-trime-minister-of-qing-dynasty/" rel="next" title="［读书笔记］－ 《大清相国》">
+                <i class="fa fa-chevron-left"></i> ［读书笔记］－ 《大清相国》
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/02/09/nearby-jobs/" rel="prev" title="8w+拉勾网招聘数据帮你查询 - 家附近的工作">
+                8w+拉勾网招聘数据帮你查询 - 家附近的工作 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+  </div>
+
+
+          </div>
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://tva1.sinaimg.cn/crop.0.0.414.414.180/62d98a55jw1e6lb32mfm7j20bo0bo0to.jpg"
+               alt="小弟" />
+          <p class="site-author-name" itemprop="name">小弟</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">160</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">67</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+        
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/jixiaod" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/jixiaod" target="_blank" title="Code">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  Code
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.douban.com/people/ttihgiesr" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2008 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="author" itemprop="copyrightHolder"> 『百作坊』 Generated by <a href="https://hexo.io">Hexo</a> & Theme by <a href="https://github.com/jixiaod/hexo-theme-next">Next</a> & Public by <a href="https://pages.github.com">Github Pages</a>.</span>
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+</body>
+</html>

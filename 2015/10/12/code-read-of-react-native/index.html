@@ -1,0 +1,543 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+
+
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="React," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="百作坊" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+<meta name="description" content="React Native (以下称 R-N )是 Facebook 开源的跨平台开发框架，让开发者能够用 Javascript （以下称JS） 就可以开发 Native App 应用。能够像写类似 React.js 的代码写法去写 R-N。但是没有那些  之类的 html 标签，而是使用像 Text 和 View 类似 Objective-C（以下称OC）的原生组件来写UI，用 StyleShee">
+<meta property="og:type" content="article">
+<meta property="og:title" content="React Native 源码阅读">
+<meta property="og:url" content="http://blog.100dos.com/2015/10/12/code-read-of-react-native/index.html">
+<meta property="og:site_name" content="百作坊">
+<meta property="og:description" content="React Native (以下称 R-N )是 Facebook 开源的跨平台开发框架，让开发者能够用 Javascript （以下称JS） 就可以开发 Native App 应用。能够像写类似 React.js 的代码写法去写 R-N。但是没有那些  之类的 html 标签，而是使用像 Text 和 View 类似 Objective-C（以下称OC）的原生组件来写UI，用 StyleShee">
+<meta property="og:updated_time" content="2017-03-14T02:25:20.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="React Native 源码阅读">
+<meta name="twitter:description" content="React Native (以下称 R-N )是 Facebook 开源的跨平台开发框架，让开发者能够用 Javascript （以下称JS） 就可以开发 Native App 应用。能够像写类似 React.js 的代码写法去写 R-N。但是没有那些  之类的 html 标签，而是使用像 Text 和 View 类似 Objective-C（以下称OC）的原生组件来写UI，用 StyleShee">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"hide"},
+    fancybox: true,
+    motion: true
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://blog.100dos.com/2015/10/12/code-read-of-react-native/"/>
+
+
+  <title> React Native 源码阅读 | 百作坊 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?e70448447504ef27f728084c8f2978ea";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="site-title">百作坊</span>
+    </a>
+  </div>
+  <p class="site-subtitle">100dos.com</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+    </ul>
+  
+
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                React Native 源码阅读
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2015-10-12T21:11:47+08:00" content="2015-10-12">
+              2015-10-12
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/前端/" itemprop="url" rel="index">
+                    <span itemprop="name">前端</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="http://facebook.github.io/react-native/" target="_blank" rel="external">React Native</a> (以下称 R-N )是 Facebook 开源的跨平台开发框架，让开发者能够用 Javascript （以下称JS） 就可以开发 Native App 应用。能够像写类似 React.js 的代码写法去写 R-N。但是没有那些 <div> 之类的 html 标签，而是使用像 Text 和 View 类似 Objective-C（以下称OC）的原生组件来写UI，用 StyleSheet 对象来写类似CSS的样式。</div></p>
+<p>JS 变成了跨平台的语言。可以想象将来只要掌握 JS，就可以替代原本的 iOS 和 Android 开发工作，甚至是桌面开发。让一个程序员成为“全栈工程”。对于公司老板来讲，意味着可以雇佣更少的程序员了。:-(</p>
+<p>想要学习 React Native 入门开发，可以从<a href="http://zhuanlan.zhihu.com/FrontendMagazine/19996445" target="_blank" rel="external">知乎的这篇文章</a>入手。</p>
+<p>开始之前，我们先看俩个概念：</p>
+<h3 id="Objective-C-Runtime"><a href="#Objective-C-Runtime" class="headerlink" title="Objective-C Runtime"></a>Objective-C Runtime</h3><p>Objective-C 是基于C加入了面向对象特性和消息转发机制的动态语言，除编译器之外，还需用Runtime系统来动态创建类和对象，进行消息发送和转发。把代码执行的决策从编译和链接的时候，推迟到运行时。这给程序员写代码带来很大的灵活性，比如说你可以把消息转发给你想要的对象，或者随意交换一个方法的实现之类的。</p>
+<h3 id="JavascriptCore-amp-JS-如何调用-OC"><a href="#JavascriptCore-amp-JS-如何调用-OC" class="headerlink" title="JavascriptCore &amp; JS 如何调用 OC"></a>JavascriptCore &amp; JS 如何调用 OC</h3><p>iOS 7 引入了 javascriptCore 库，使得 OC 和 JS 可以互相调用。有俩种方式可以让 JS 调用 OC：</p>
+<ul>
+<li><p>Blocks ：在 OC 下把 block 代码赋予一个 JSContenxt 标识符，javascriptCore 就会自动把 block 封装在javascript函数里。</p>
+</li>
+<li><p>JSExport 协议 ：在 @protocol 中定义的函数，都能够在 JS 中访问到（独立的函数，非在类中定义的函数）。</p>
+</li>
+</ul>
+<p>R-N 主要是以Block 的方式，也有一部分是以 JSExport 的方式。</p>
+<p>我们先来看 R-N 的 ios 事例代码，如下</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">var ios = React.createClass(&#123;</div><div class="line">  render: function() &#123;</div><div class="line">    return (</div><div class="line">      &lt;View style=&#123;styles.container&#125;&gt;</div><div class="line">        &lt;Text style=&#123;styles.welcome&#125;&gt;</div><div class="line">          Welcome to React Native!</div><div class="line">        &lt;/Text&gt;</div><div class="line">        &lt;Text style=&#123;styles.instructions&#125;&gt;</div><div class="line">          To get started, edit index.ios.js</div><div class="line">        &lt;/Text&gt;</div><div class="line">        &lt;Text style=&#123;styles.instructions&#125;&gt;</div><div class="line">          Press Cmd+R to reload,&#123;&apos;\n&apos;&#125;</div><div class="line">          Cmd+D or shake for dev menu</div><div class="line">        &lt;/Text&gt;</div><div class="line">      &lt;/View&gt;</div><div class="line">    );  </div><div class="line">  &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>（注：以下函数方法链接会跳转到R-N 在 github 上源码的对应行）</p>
+<p>R-N 的 通过 render 方法渲染了页面所有的 UI 组件，这里有 View 、Text等组件，还包括组件引用的 StyleSheet 对象。R-N 的组件都是通过 React.createClass 创建，在 <a href="https://github.com/facebook/react/blob/v0.14.0-beta1/src/isomorphic/classic/class/ReactClass.js" target="_blank" rel="external">ReactClass.js</a> 找到 <a href="https://github.com/facebook/react/blob/v0.14.0-beta1/src/isomorphic/classic/class/ReactClass.js#L804" target="_blank" rel="external">createClass</a> 方法，ReactClass 实现了接口 <a href="https://github.com/facebook/react/blob/v0.14.0-beta1/src/isomorphic/classic/class/ReactClass.js#L92" target="_blank" rel="external">ReactClassInterface</a> ，像 getDefaultProps、componentDidMount 都是在接口里被定义的。JS 是如何在Class 中实现接口？ 代码如下</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">// Reduce time spent doing lookups by setting these on the prototype.</div><div class="line">for (var methodName in ReactClassInterface) &#123;</div><div class="line">  if (!Constructor.prototype[methodName]) &#123;</div><div class="line">    Constructor.prototype[methodName] = null;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>Constructor 是 <a href="https://github.com/facebook/react/blob/v0.14.0-beta1/src/isomorphic/classic/class/ReactClass.js#L850" target="_blank" rel="external">ReactClassComponent</a> ，由 ReactComponent.prototype 和 ReactClassMixin 俩部分组成。在ReactComponent 中可以看到 setState 方法去异步的更新组件（通过message queue去更新state）。所以 setState 之后，如果立即去访问 this.state 可能还是返回之前的值。</p>
+<p>JS 调用 OC 的方法的流程大概是如下：（如有不准确的地方，望指正）</p>
+<p>1. 在 ReactNativeBaseComponent 中的 <a href="https://github.com/facebook/react-native/blob/v0.12.0-rc/Libraries/ReactNative/ReactNativeBaseComponent.js#L273" target="_blank" rel="external">RCTUIManager.createView</a> 即是一个 OC 函数的调用，看名字大致也能看出来是用来创建组件的。</p>
+<p>2. 而 RCTUIManager 的来源是 <a href="https://github.com/facebook/react-native/blob/v0.12.0-rc/Libraries/ReactNative/ReactNativeBaseComponent.js#L19" target="_blank" rel="external">NativeModules</a>，NativeModules 的来源是 <a href="https://github.com/facebook/react-native/blob/v0.12.0-rc/Libraries/BatchedBridge/BatchedBridgedModules/NativeModules.js#L14" target="_blank" rel="external">BatchedBridge</a>，BatchedBridge 来自<a href="https://github.com/facebook/react-native/blob/v0.12.0-rc/Libraries/BatchedBridge/BatchedBridge.js#L15" target="_blank" rel="external">MessageQueue</a></p>
+<p>3. MessageQueue 的参数 __fbBatchedBridgeConfig 配置是在 <a href="https://github.com/facebook/react-native/blob/v0.12.0-rc/React/Base/RCTBatchedBridge.m#L328" target="_blank" rel="external">OC 代码</a>中写入的，在 OC 代码初始化时候即被执行，告诉 JS 有哪些方法是可以被 JS 调用的。</p>
+<p>4. JS 调用 OC 方法是在 MessageQueue 的 <a href="https://github.com/facebook/react-native/blob/v0.12.0-rc/Libraries/Utilities/MessageQueue.js#L137" target="_blank" rel="external">__callFunction</a> 中。BridgeProfiling.profile 是判断参数是否是一个function，然后执行。</p>
+<h3 id="那-OC-是如何暴露自己的方法给-JS-呢？"><a href="#那-OC-是如何暴露自己的方法给-JS-呢？" class="headerlink" title="那 OC 是如何暴露自己的方法给 JS 呢？"></a>那 OC 是如何暴露自己的方法给 JS 呢？</h3><p>答案是 <a href="https://github.com/facebook/react-native/blob/v0.12.0-rc/React/Modules/RCTUIManager.m#L740" target="_blank" rel="external">RCT_EXPORT_METHOD</a> 标记，通过它可以把一个 OC 函数暴露给JS。没错，之前的<a href="https://github.com/facebook/react-native/blob/v0.12.0-rc/Libraries/ReactNative/ReactNativeBaseComponent.js#L273" target="_blank" rel="external">RCTUIManager.createView</a> 就是调用的这里的 OC 函数。还有另外一个标记 <a href="https://github.com/facebook/react-native/blob/v0.12.0-rc/React/Modules/RCTUIManager.m#L209" target="_blank" rel="external">RCT_EXPORT_MODULE</a>，通过它可以把整个模块暴露给 JS。</p>
+<p>RCT_EXPORT_MODULE 调用 RCTRegisterModule 把模块注册到 RCTModuleClasses，在 OC 初始化模块时通过 <a href="https://github.com/facebook/react-native/blob/v0.12.0-rc/React/Base/RCTBatchedBridge.m#L249" target="_blank" rel="external">RCTGetModuleClasses()</a> 就可以获取到所有暴露出来的模块，并且以 JSON 格式写入 JS 的配置。</p>
+<p>RCT_EXPORT_METHOD 通过给函数加上 <strong>rct_export</strong> 前缀，在运行时通过 <a href="https://github.com/facebook/react-native/blob/v0.12.0-rc/React/Base/RCTModuleData.m#L58" target="_blank" rel="external">class_copyMethodList</a> 获取到一个模块的所有函数，并把前缀是 <strong>rct_export</strong> 筛选出来。同时在OC 初始化的 initModules 之后，执行 <a href="https://github.com/facebook/react-native/blob/v0.12.0-rc/React/Base/RCTBatchedBridge.m#L138" target="_blank" rel="external">RCTProfileHookModules(self)</a> ，在 RCTProfileHookModules 中用 <a href="https://github.com/facebook/react-native/blob/v0.12.0-rc/React/Base/RCTProfile.m#L201" target="_blank" rel="external">Runtime 的方式</a> 把这些暴露出来的函数，放到了 Block 中，这样 JS 就可以直接调用了。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>在 React-Native 中，JS 调用 OC 流程大致如下：</p>
+<p>JS call =&gt; JS Bridge =&gt; OC Bridge =&gt; OC modules &amp; functions</p>
+<p>OC 代码通过 EXPORT_* 方法去定义暴露模块和函数，并通过 Runtime 的方法去从新包装 OC 代码到 Block 中，这样 JS 就可以调用 OC 代码了。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/qrcode_for_gh_b81f9d06ec2e_258.jpg" alt="小弟 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>扫一下呗，反正我也不怎么发～</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/React/" rel="tag">#React</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/09/30/first-contact-with-a-juice-dealer/" rel="next" title="Facebook 教我们写代码">
+                <i class="fa fa-chevron-left"></i> Facebook 教我们写代码
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/10/29/a-speech-by-the-father-of-php/" rel="prev" title="PHP之父Rasmus Lerdorf演讲：激情下的PHP">
+                PHP之父Rasmus Lerdorf演讲：激情下的PHP <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+  </div>
+
+
+          </div>
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://tva1.sinaimg.cn/crop.0.0.414.414.180/62d98a55jw1e6lb32mfm7j20bo0bo0to.jpg"
+               alt="小弟" />
+          <p class="site-author-name" itemprop="name">小弟</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">160</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">67</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+        
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/jixiaod" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/jixiaod" target="_blank" title="Code">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  Code
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.douban.com/people/ttihgiesr" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2008 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="author" itemprop="copyrightHolder"> 『百作坊』 Generated by <a href="https://hexo.io">Hexo</a> & Theme by <a href="https://github.com/jixiaod/hexo-theme-next">Next</a> & Public by <a href="https://pages.github.com">Github Pages</a>.</span>
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+</body>
+</html>

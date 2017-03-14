@@ -1,0 +1,584 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+
+
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="数据库," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="百作坊" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+<meta name="description" content="简介在你阅读这篇文章之前，需要先提醒你，我并不是数据库设计方面的专家。以下的11个原则，都是我从具体的项目中总结而来，都是以往项目开发经验和书中的所看所学。在做数据库设计时，觉得对我个人来说还是有很大帮助的。同时也非常欢迎指出文章中有问题的地方。
+原则一：要知道你设计的应用程序的本质要实现的功能是什么？（OLTP 或 OLAP）当你开始做数据库设计时，第一件事应该是分析你将要开发的应用程序的本质是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="11 个我遵循的重要数据库设计原则">
+<meta property="og:url" content="http://blog.100dos.com/2016/07/16/11-important-database-designing-rules-which-I-follow/index.html">
+<meta property="og:site_name" content="百作坊">
+<meta property="og:description" content="简介在你阅读这篇文章之前，需要先提醒你，我并不是数据库设计方面的专家。以下的11个原则，都是我从具体的项目中总结而来，都是以往项目开发经验和书中的所看所学。在做数据库设计时，觉得对我个人来说还是有很大帮助的。同时也非常欢迎指出文章中有问题的地方。
+原则一：要知道你设计的应用程序的本质要实现的功能是什么？（OLTP 或 OLAP）当你开始做数据库设计时，第一件事应该是分析你将要开发的应用程序的本质是">
+<meta property="og:image" content="http://blog.100dos.com/images/11-important-database-designing-rules-which-I-follow/a2.jpg">
+<meta property="og:image" content="http://blog.100dos.com/images/11-important-database-designing-rules-which-I-follow/a3.jpg">
+<meta property="og:image" content="http://blog.100dos.com/images/11-important-database-designing-rules-which-I-follow/a4.jpg">
+<meta property="og:image" content="http://blog.100dos.com/images/11-important-database-designing-rules-which-I-follow/a5.jpg">
+<meta property="og:image" content="http://blog.100dos.com/images/11-important-database-designing-rules-which-I-follow/a6.jpg">
+<meta property="og:image" content="http://blog.100dos.com/images/11-important-database-designing-rules-which-I-follow/a7.jpg">
+<meta property="og:image" content="http://blog.100dos.com/images/11-important-database-designing-rules-which-I-follow/a8.jpg">
+<meta property="og:image" content="http://blog.100dos.com/images/11-important-database-designing-rules-which-I-follow/a9.jpg">
+<meta property="og:image" content="http://blog.100dos.com/images/11-important-database-designing-rules-which-I-follow/a10.jpg">
+<meta property="og:image" content="http://blog.100dos.com/images/11-important-database-designing-rules-which-I-follow/a11.jpg">
+<meta property="og:image" content="http://blog.100dos.com/images/11-important-database-designing-rules-which-I-follow/a12.jpg">
+<meta property="og:image" content="http://blog.100dos.com/images/11-important-database-designing-rules-which-I-follow/a13.jpg">
+<meta property="og:image" content="http://blog.100dos.com/images/11-important-database-designing-rules-which-I-follow/a14.jpg">
+<meta property="og:image" content="http://blog.100dos.com/images/11-important-database-designing-rules-which-I-follow/a16.jpg">
+<meta property="og:image" content="http://blog.100dos.com/images/11-important-database-designing-rules-which-I-follow/a17.jpg">
+<meta property="og:image" content="http://blog.100dos.com/images/11-important-database-designing-rules-which-I-follow/a18.jpg">
+<meta property="og:updated_time" content="2017-03-14T02:25:20.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="11 个我遵循的重要数据库设计原则">
+<meta name="twitter:description" content="简介在你阅读这篇文章之前，需要先提醒你，我并不是数据库设计方面的专家。以下的11个原则，都是我从具体的项目中总结而来，都是以往项目开发经验和书中的所看所学。在做数据库设计时，觉得对我个人来说还是有很大帮助的。同时也非常欢迎指出文章中有问题的地方。
+原则一：要知道你设计的应用程序的本质要实现的功能是什么？（OLTP 或 OLAP）当你开始做数据库设计时，第一件事应该是分析你将要开发的应用程序的本质是">
+<meta name="twitter:image" content="http://blog.100dos.com/images/11-important-database-designing-rules-which-I-follow/a2.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"hide"},
+    fancybox: true,
+    motion: true
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://blog.100dos.com/2016/07/16/11-important-database-designing-rules-which-I-follow/"/>
+
+
+  <title> 11 个我遵循的重要数据库设计原则 | 百作坊 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?e70448447504ef27f728084c8f2978ea";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="site-title">百作坊</span>
+    </a>
+  </div>
+  <p class="site-subtitle">100dos.com</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+    </ul>
+  
+
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                11 个我遵循的重要数据库设计原则
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-16T16:15:01+08:00" content="2016-07-16">
+              2016-07-16
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Mysql-DB/" itemprop="url" rel="index">
+                    <span itemprop="name">Mysql&DB</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>在你阅读这篇文章之前，需要先提醒你，我并不是数据库设计方面的专家。以下的11个原则，都是我从具体的项目中总结而来，都是以往项目开发经验和书中的所看所学。在做数据库设计时，觉得对我个人来说还是有很大帮助的。同时也非常欢迎指出文章中有问题的地方。</p>
+<h2 id="原则一：要知道你设计的应用程序的本质要实现的功能是什么？（OLTP-或-OLAP）"><a href="#原则一：要知道你设计的应用程序的本质要实现的功能是什么？（OLTP-或-OLAP）" class="headerlink" title="原则一：要知道你设计的应用程序的本质要实现的功能是什么？（OLTP 或 OLAP）"></a>原则一：要知道你设计的应用程序的本质要实现的功能是什么？（OLTP 或 OLAP）</h2><p>当你开始做数据库设计时，第一件事应该是分析你将要开发的应用程序的本质是要实现什么样的功能，是事物性的，还是分析性的。很多开发者都会忽略应用程序的本质，默认就去用数据库设计的范式来开始设计，紧接着性能问题和特殊定制问题随之而来。如上所述，应用程序可以大致分为俩类：事物性质和分析性质。可以按照下面的方式理解：</p>
+<ul>
+<li>事物性质：在这类程序中，你的终端用户更多操作的是CURD。比如：创建、读取、更新和删除表中的记录。这种数据库的比较官方说法是 OLTP。</li>
+<li>分析性质：在这类程序中，你的终端用户更多操作的是分析、报告、预报等。这类数据库的插入和查询操作很少。更快的查询和分析数据是首要考虑的问题。这种数据库的比较官方说法是 OLAP。</li>
+</ul>
+<p><img src="/images/11-important-database-designing-rules-which-I-follow/a2.jpg" alt=""></p>
+<p>换句话来说，在数据库设计中，如果你认为插入、更新和删除更加显著，就选择标准化（根据数据库设计范式）的表设计。反之，就选择非标准化的数据库结构。</p>
+<p>下面的简单图标显示了如何把左侧的标准化的表（包括用户名和地址），变成右侧非标准化结构的扁平的数据表结构。</p>
+<p><img src="/images/11-important-database-designing-rules-which-I-follow/a3.jpg" alt=""></p>
+<h2 id="原则二：把数据拆分到多个逻辑碎片，变得更简单"><a href="#原则二：把数据拆分到多个逻辑碎片，变得更简单" class="headerlink" title="原则二：把数据拆分到多个逻辑碎片，变得更简单"></a>原则二：把数据拆分到多个逻辑碎片，变得更简单</h2><p>该原则实际上就是1NF范式的第一条原则。违反这个原则的标志是当你的查询使用了很多字符串格式化的函数，像 substring、charindex等，这时就要考虑使用这个原则了。</p>
+<p>例如，能看到下面表的有学生的名字。如果你想查询学生的名字中有“Koirala”并且没有“Harisingh”，你可以想像最后写出来的查询会是什么样子。</p>
+<p>所以，最好的方案是把这个学生姓名字段拆分到几个字段，这样的话写入表哥也会更清晰，查询也会更佳理想。</p>
+<p><img src="/images/11-important-database-designing-rules-which-I-follow/a4.jpg" alt=""></p>
+<h2 id="原则三：对于原则二的不能使用过度"><a href="#原则三：对于原则二的不能使用过度" class="headerlink" title="原则三：对于原则二的不能使用过度"></a>原则三：对于原则二的不能使用过度</h2><p>程序员都是非常可爱的动物。如果你告诉他们这样一个方法，他们就会按照这个方法不管不顾的一直认真的执行下去。然而，他们过分的如是操作，必定会得到不被希望的后果。这个规律同样适用以上提到的原则二。当你想到分解拆分时，先停下来，问一下自己是否真的需要这样做？就像上文提到的，分析是需要符合业务逻辑的。</p>
+<p>例如，你能看到电话号码字段。很少会有需求把电话号码拆分开来使用，除非你的程序有特殊需求。否则拆分出来会导致更复杂的问题，那还是放着不动比较好。</p>
+<p><img src="/images/11-important-database-designing-rules-which-I-follow/a5.jpg" alt=""></p>
+<h2 id="原则四：把重复、不统一的数据当作你最大的敌人"><a href="#原则四：把重复、不统一的数据当作你最大的敌人" class="headerlink" title="原则四：把重复、不统一的数据当作你最大的敌人"></a>原则四：把重复、不统一的数据当作你最大的敌人</h2><p>关注并且重构冗余的数据。我个人担心冗余数据并不是因为它会占用磁盘空间，而是它带来的困惑。</p>
+<p>例如，在下表中，你可以看到“5th Standard” 和“Fifth standard”表达的是同一个意思。由于垃圾数据或者输入验证没有做好，这些数据才会进入到数据表中来。如果用这个数据导出报表给用户看，相信用户一定会晕掉。</p>
+<p><img src="/images/11-important-database-designing-rules-which-I-follow/a6.jpg" alt=""></p>
+<p>有一个办法是，就是把这些数据放到另外一张表，然后用外键做关联。看下面图表的演示，创建另外一张表叫做年级表（Standards Table），然后用简单的外键关联起来。</p>
+<p><img src="/images/11-important-database-designing-rules-which-I-follow/a7.jpg" alt=""></p>
+<h2 id="原则五：小心那些用分隔符分割的数据"><a href="#原则五：小心那些用分隔符分割的数据" class="headerlink" title="原则五：小心那些用分隔符分割的数据"></a>原则五：小心那些用分隔符分割的数据</h2><p>第1NF范式的第二条原则说要避免重复组（原子性）。下面的图表既是重复组的一个小例子。仔细观察“Syllabus”（教学大纲）字段，这个字段被塞入了很多的课程名称，这种类似的字段就可以被叫称为“重复组”。一旦我们要操作这个字段，查询会变的非常复杂，效率一定不高。</p>
+<p><img src="/images/11-important-database-designing-rules-which-I-follow/a8.jpg" alt=""></p>
+<p>这种被塞满用分隔符分开的数据字段必须要引起重视。一个好的办法是把这些内容拆开，放到不同的表中，并用外键关联。</p>
+<p><img src="/images/11-important-database-designing-rules-which-I-follow/a9.jpg" alt=""></p>
+<p>现在就能套用1NF方式的第二原则：所有的属性均有原子性，既所有的属性均不可被再分割。正如上面的图表中所示，我创建了一个单独的表“Syllabus”（教学大纲）。并于“Subject”（课程）表建立了多对多的关系。</p>
+<p>这样在原来表中的教学大纲字段就不会再重复，当然也就不必再用分隔符来分开数据了。</p>
+<h2 id="原则六：小心部分关联"><a href="#原则六：小心部分关联" class="headerlink" title="原则六：小心部分关联"></a>原则六：小心部分关联</h2><p><img src="/images/11-important-database-designing-rules-which-I-follow/a10.jpg" alt=""></p>
+<p>小心那些只是部分关联主键的字段。例如上图，能看到主键被创建在“Roll No”和年级（Standard）字段上。现在仔细观察教学大纲字段（Syllabus）。教学大纲字段和年级是有关联的，但是跟学生没有关联。</p>
+<p>教学大纲跟学生正在上课和学习的年级有关，但是跟学生没有直接的关系。所以如果是按照上表的设计结构，如果我们明天要更新教学大纲，我们就必须要更新每个学生的信息。这显然很麻烦，而且不合逻辑。更加明智的做法是把教学大纲字段拿出去放倒另外的表中，然后让这张表跟年级相关联。</p>
+<p>上图能看到我们的操作，把教学大纲字段提出来，附属于年级表。</p>
+<p>这个原则正式 第2NF范式：如果依赖于主键，则需要依赖于所有主键，不能存在依赖部分主键的情况。</p>
+<h2 id="原则七：谨慎的选择创建派生字段"><a href="#原则七：谨慎的选择创建派生字段" class="headerlink" title="原则七：谨慎的选择创建派生字段"></a>原则七：谨慎的选择创建派生字段</h2><p><img src="/images/11-important-database-designing-rules-which-I-follow/a11.jpg" alt=""></p>
+<p>如果正在开发的是 OLTP 的应用程序，应该避免创建派生字段，除非真的有极特殊因为性能的原因。在OLAP程序中，我们会做许多的求和、计算，这些派生的字段会大大提升性能。</p>
+<p>在上图表中，平均值字段的值是通过总分除以科目数量得出来的。这也是冗余中的一种。所以对于这些根据其他字段派生出来的字段，一定要考虑清楚是否真的需要？</p>
+<p>这个原则也就是低3NF范式：一个数据库表中不包含已在其它表中已包含的非主关键字信息（不得存在传递式依赖）。按照我个人的理解，不要盲目的遵从这个原则，要看具体场景，并不是所有的冗余数据都是不好的。如果冗余数据是计算得出的，要看具体场景，然后决定是否要遵从第3NF范式。</p>
+<h2 id="原则八：如果性能是关键的话，就不用太关注去避免冗余"><a href="#原则八：如果性能是关键的话，就不用太关注去避免冗余" class="headerlink" title="原则八：如果性能是关键的话，就不用太关注去避免冗余"></a>原则八：如果性能是关键的话，就不用太关注去避免冗余</h2><p><img src="/images/11-important-database-designing-rules-which-I-follow/a12.jpg" alt=""></p>
+<p>不需要过于严格的去遵守避免冗余数据的原则。如果非常迫切的需要性能，就考虑下非原则性的东西吧。在考虑原则的时候，查询可能需要联合查询好多张表。但是如果不考虑原则，联合查询减少了，这样性能和效率也就能够得到提升。</p>
+<h2 id="原则九：多维数据非常可怕"><a href="#原则九：多维数据非常可怕" class="headerlink" title="原则九：多维数据非常可怕"></a>原则九：多维数据非常可怕</h2><p>OLAP 的程序通常有要处理多维数据的问题。例如看下图表，现在想要得到每个国家、用户、日期的销售额。简单来说，就是这三个交叉维度的销售额。</p>
+<p><img src="/images/11-important-database-designing-rules-which-I-follow/a13.jpg" alt=""></p>
+<p>这种情况下一个“维度＋事实”的设计是一个不错的方法。简单来说，创建一个以销售数据为中心的表，然后让该表用外键关联所有的维度。</p>
+<p><img src="/images/11-important-database-designing-rules-which-I-follow/a14.jpg" alt=""></p>
+<h2 id="原则十：以键值为中心的表结构设计"><a href="#原则十：以键值为中心的表结构设计" class="headerlink" title="原则十：以键值为中心的表结构设计"></a>原则十：以键值为中心的表结构设计</h2><p>很多时候，我们会遇到名称和值的表。名称和值表示它有键和并且有一些数据关联这个键。例如下图表，有一张现金表（Currency）和国家表。如果仔细观察我们它们实际上只有一个键和一个值。</p>
+<p><img src="/images/11-important-database-designing-rules-which-I-follow/a16.jpg" alt=""></p>
+<p>对于这样的一些表，创建一个中心化的表，然后用一个类型（type）字段来区分不同类型的数据更合理一些。</p>
+<h2 id="原则十一：使用自引用-PK-和-FK-实现无穷尽的父子结构"><a href="#原则十一：使用自引用-PK-和-FK-实现无穷尽的父子结构" class="headerlink" title="原则十一：使用自引用 PK 和 FK 实现无穷尽的父子结构"></a>原则十一：使用自引用 PK 和 FK 实现无穷尽的父子结构</h2><p>很多时候，我们会遇到无穷父子结构的数据。例如，考虑一下传销模型，一个传销下面还可以有多个传销，然后这多个传销的每个人下面还有多个传销。这个场景下，使用一个自引用的主键和外键就能够帮助我们实现这个功能。</p>
+<p><img src="/images/11-important-database-designing-rules-which-I-follow/a17.jpg" alt=""></p>
+<p>最后，这篇文章并不是要告诉大家不要遵从数据库设计范式，而是说不要“盲目”的去遵从数据库的设计范式。在数据库设计之前，首先多看看你的应用程序本质上要实现的功能，和你要处理的数据类型。</p>
+<p><img src="/images/11-important-database-designing-rules-which-I-follow/a18.jpg" alt=""></p>
+<p>原文链接：<a href="http://www.codeproject.com/Articles/359654/11-important-database-designing-rules-which-I-follow" target="_blank" rel="external">11 important database designing rules which I follow</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/qrcode_for_gh_b81f9d06ec2e_258.jpg" alt="小弟 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>扫一下呗，反正我也不怎么发～</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数据库/" rel="tag">#数据库</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/07/11/thinking-about-technical-leadership/" rel="next" title="关于技术领导力的思考">
+                <i class="fa fa-chevron-left"></i> 关于技术领导力的思考
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/07/25/kong-introduction/" rel="prev" title="Kong 介绍">
+                Kong 介绍 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+  </div>
+
+
+          </div>
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://tva1.sinaimg.cn/crop.0.0.414.414.180/62d98a55jw1e6lb32mfm7j20bo0bo0to.jpg"
+               alt="小弟" />
+          <p class="site-author-name" itemprop="name">小弟</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">160</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">67</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+        
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/jixiaod" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/jixiaod" target="_blank" title="Code">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  Code
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.douban.com/people/ttihgiesr" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2008 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="author" itemprop="copyrightHolder"> 『百作坊』 Generated by <a href="https://hexo.io">Hexo</a> & Theme by <a href="https://github.com/jixiaod/hexo-theme-next">Next</a> & Public by <a href="https://pages.github.com">Github Pages</a>.</span>
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+</body>
+</html>

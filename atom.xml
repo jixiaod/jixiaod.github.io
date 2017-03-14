@@ -1,0 +1,1697 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>百作坊</title>
+  <subtitle>100dos.com</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://blog.100dos.com/"/>
+  <updated>2017-03-14T02:25:20.000Z</updated>
+  <id>http://blog.100dos.com/</id>
+  
+  <author>
+    <name>小弟</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Centos7 安装 Gitlab-CE</title>
+    <link href="http://blog.100dos.com/2017/03/03/installing-gitlab-ce-on-centos7/"/>
+    <id>http://blog.100dos.com/2017/03/03/installing-gitlab-ce-on-centos7/</id>
+    <published>2017-03-03T03:30:02.000Z</published>
+    <updated>2017-03-14T02:25:20.000Z</updated>
+    
+    <content type="html"><![CDATA[<ol>
+<li>安装配置依赖项<br>如想使用Postfix来发送邮件,在安装期间请选择’Internet Site’. 您也可以用sendmai或者 配置SMTP服务 并 使用SMTP发送邮件.<br>在 Centos 6 和 7 系统上, 下面的命令将在系统防火墙里面开放HTTP和SSH端口.</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">sudo yum install curl policycoreutils openssh-server openssh-clients</div><div class="line">sudo systemctl enable sshd</div><div class="line">sudo systemctl start sshd</div><div class="line">sudo yum install postfix</div><div class="line">sudo systemctl enable postfix</div><div class="line">sudo systemctl start postfix</div><div class="line">sudo firewall-cmd --permanent --add-service=http</div><div class="line">sudo systemctl reload firewalld</div></pre></td></tr></table></figure>
+<p>如果提示防火墙没打开，执行<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">systemctl start firewalld</div></pre></td></tr></table></figure></p>
+<ol>
+<li>添加GitLab仓库,并安装到服务器上<br>curl -sS <a href="http://packages.gitlab.cc/install/gitlab-ce/script.rpm.sh" target="_blank" rel="external">http://packages.gitlab.cc/install/gitlab-ce/script.rpm.sh</a> | sudo bash<br>sudo yum install gitlab-ce</li>
+</ol>
+<ol>
+<li><p>启动GitLab</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">sudo gitlab-ctl reconfigure</div></pre></td></tr></table></figure>
+</li>
+<li><p>使用浏览器访问GitLab</p>
+</li>
+</ol>
+<p>首次访问GitLab,系统会让你重新设置管理员的密码,设置成功后会返回登录界面.<br>默认的管理员账号是root,如果你想更改默认管理员账号,请输入上面设置的新密码登录系统后修改帐号</p>
+<p>5.配置域名访问<br>以上基本是官方内容，以下配置自己的域名。首先添加 godaddy的域名 A 记录到服务器IP。</p>
+<p>在文件<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">vi /etc/gitlab/gitlab.rb</div></pre></td></tr></table></figure></p>
+<p>找到nginx的配置文件位置，并修改默认域名为自己的域名。</p>
+<p>更多可官方安装文档 ：<a href="https://www.gitlab.cc/downloads/#centos7" target="_blank" rel="external">https://www.gitlab.cc/downloads/#centos7</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;ol&gt;
+&lt;li&gt;安装配置依赖项&lt;br&gt;如想使用Postfix来发送邮件,在安装期间请选择’Internet Site’. 您也可以用sendmai或者 配置SMTP服务 并 使用SMTP发送邮件.&lt;br&gt;在 Centos 6 和 7 系统上, 下面的命令将在系统防火墙里面开放H
+    
+    </summary>
+    
+    
+      <category term="gitlab" scheme="http://blog.100dos.com/tags/gitlab/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>CentOS 7 从零开始搭建 LNMP 环境（nginx/1.10.3 PHP/7.1.2 Mysql/5.7.17）</title>
+    <link href="http://blog.100dos.com/2017/03/03/installing-centos7-nginx1-10-3-php7-mysql5-7/"/>
+    <id>http://blog.100dos.com/2017/03/03/installing-centos7-nginx1-10-3-php7-mysql5-7/</id>
+    <published>2017-03-03T02:10:36.000Z</published>
+    <updated>2017-03-14T02:25:20.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近买了 Linode VPS 服务。5刀每月，只有1G的内存，编译 Mysql 内存溢出，然后升级到2G内存的版本，每月10刀……以下纪录 LNMP 环境安装过程：</p>
+<h2 id="安装-Nginx"><a href="#安装-Nginx" class="headerlink" title="安装 Nginx"></a>安装 Nginx</h2><figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">~<span class="comment"># yum install wget</span></div><div class="line">~<span class="comment"># wget http://nginx.org/download/nginx-1.10.3.tar.gz</span></div><div class="line">~<span class="comment"># tar zxf nginx-1.10.3.tar.gz</span></div><div class="line">~<span class="comment"># cd nginx-1.10.3</span></div><div class="line"></div><div class="line">~<span class="comment"># yum install pcre-devel pcre openssl openssl-devel</span></div><div class="line">~<span class="comment"># yum install gcc</span></div><div class="line">~<span class="comment"># ./configure --prefix=/opt/nginx</span></div><div class="line">~<span class="comment"># make &amp; make install</span></div></pre></td></tr></table></figure>
+<p>修改配置文件，启动 Nginx服务<br><figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">~<span class="comment"># /opt/nginx/sbin/nginx</span></div></pre></td></tr></table></figure></p>
+<p>重启<br><figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">~<span class="comment"># /opt/nginx/sbin/nginx -s reload</span></div></pre></td></tr></table></figure></p>
+<h2 id="安装-PHP"><a href="#安装-PHP" class="headerlink" title="安装 PHP"></a>安装 PHP</h2><figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">~<span class="comment"># wget http://jp2.php.net/get/php-7.1.2.tar.gz/from/this/mirror</span></div><div class="line">~<span class="comment"># tar zxf mirror</span></div><div class="line">~<span class="comment"># cd php-7.1.2</span></div></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">~<span class="comment"># yum install zlib-devel zlib libxml2 libxml2-devel  libpng libpng-devel libcurl-devel curl libcurl libzip-devel libzip gd bzip2-devel bzip2</span></div><div class="line"></div><div class="line">~<span class="comment"># ./configure --prefix=/opt/php  --enable-fpm --with-openssl  --with-zlib  --with-mysqli=mysqlnd  --enable-pcntl --enable-soap --enable-zip --enable-sockets --enable-mbstring  --with-curl --with-pcre-regex  --with-bz2 --with-gd  --with-pdo-mysql=mysqlnd  --with-mysqli=mysqlnd   --enable-maintainer-zts</span></div><div class="line"></div><div class="line">~<span class="comment"># make &amp; make install</span></div></pre></td></tr></table></figure>
+<p>启动 php-fpm，使用默认的配置文件<br><figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">~<span class="comment"># cd /opt/php</span></div><div class="line">~<span class="comment"># mv etc/php-fpm.conf.default etc/php-fpm.conf</span></div><div class="line">~<span class="comment"># mv etc/php-fpm.d/www.conf.default etc/php-fpm.d/www.conf</span></div><div class="line">~<span class="comment"># sbin/php-fpm -y etc/php-fpm.conf</span></div></pre></td></tr></table></figure></p>
+<h2 id="安装-Mysql"><a href="#安装-Mysql" class="headerlink" title="安装 Mysql"></a>安装 Mysql</h2><figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">~<span class="comment"># wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.17.tar.gz</span></div><div class="line">~<span class="comment"># tar zxf mysql-5.7.17.tar.gz</span></div><div class="line">~<span class="comment"># cd mysql-5.7.17</span></div><div class="line"></div><div class="line">// cmake安装mysql，会自行下载并安装boost</div><div class="line"></div><div class="line">~<span class="comment"># yum install  cmake gcc gcc-c++ ncurses-devel cmake libaio  bison</span></div><div class="line"></div><div class="line">~<span class="comment"># cmake . -DCMAKE_INSTALL_PREFIX=/opt/mysql -DWITH_BOOST=/opt/boost/ -DMYSQL_DATADIR=/opt/mysql/data -DWITH_INNOBASE_STORAGE_ENGINE=1 -DMYSQL_UNIX_ADDR==/opt/mysql/mysql.sock -DMYSQL_USER=mysql -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci</span></div><div class="line"></div><div class="line">~<span class="comment"># make &amp; make install</span></div></pre></td></tr></table></figure>
+<p>创建 Mysql 账户<br><figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">~<span class="comment"># groupadd mysql</span></div><div class="line">~<span class="comment"># useradd -r -g mysql -s /bin/false mysql</span></div><div class="line">~<span class="comment"># chown -R mysql .</span></div><div class="line">~<span class="comment"># chgrp -R mysql .</span></div></pre></td></tr></table></figure></p>
+<p>启动 Mysql 服务</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">//生成初始化 Mysql 帐号root 密码</div><div class="line">[root@li1571-79 mysql]<span class="comment"># bin/mysqld --initialize --user=mysql</span></div><div class="line">2017-03-03T02:59:23.230496Z 0 [Warning] TIMESTAMP with implicit DEFAULT value is deprecated. Please use --explicit_defaults_for_timestamp server option (see documentation <span class="keyword">for</span> more details).</div><div class="line">2017-03-03T02:59:23.576085Z 0 [Warning] InnoDB: New <span class="built_in">log</span> files created, LSN=45790</div><div class="line">2017-03-03T02:59:23.628088Z 0 [Warning] InnoDB: Creating foreign key constraint system tables.</div><div class="line">2017-03-03T02:59:23.685971Z 0 [Warning] No existing UUID has been found, so we assume that this is the first time that this server has been started. Generating a new UUID: 67ce62cb-ffbd-11e6<span class="_">-a</span>9b9<span class="_">-f</span>23c91e57db2.</div><div class="line">2017-03-03T02:59:23.688763Z 0 [Warning] Gtid table is not ready to be used. Table <span class="string">'mysql.gtid_executed'</span> cannot be opened.</div><div class="line">2017-03-03T02:59:23.690301Z 1 [Note] A temporary password is generated <span class="keyword">for</span> root@localhost: &amp;H4FpSyD/b6&lt;</div></pre></td></tr></table></figure>
+<p>最后的 <code>&amp;H4FpSyD/b6&lt;</code> 即是生成的临时账户，启动 Mysql 服务<br><figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">~<span class="comment"># cp support-files/mysql.server /opt/mysql/bin</span></div><div class="line">~<span class="comment"># cd /opt/mysql</span></div><div class="line">~<span class="comment"># bin/mysql.server start</span></div></pre></td></tr></table></figure></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">[root@li1571-79 mysql]<span class="comment"># bin/mysql -uroot -p -h127.0.0.1 -P3306</span></div><div class="line">Enter password:</div><div class="line">输入临时帐号密码，即可进入mysql 客户端。第一次登录，强制需要修改临时密码</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">mysql&gt; alter user &apos;root&apos;@&apos;localhost&apos; identified by &apos;123abc&apos;;</div><div class="line">Query OK, 0 rows affected (0.01 sec)</div><div class="line"></div><div class="line">mysql&gt; show databases;</div><div class="line">+--------------------+</div><div class="line">| Database           |</div><div class="line">+--------------------+</div><div class="line">| information_schema |</div><div class="line">| mysql              |</div><div class="line">| performance_schema |</div><div class="line">| sys                |</div><div class="line">+--------------------+</div><div class="line">4 rows in set (0.01 sec)</div></pre></td></tr></table></figure>
+<p>到这里，LNMP 到这里LNMP 初始默认环境搭建完成。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;最近买了 Linode VPS 服务。5刀每月，只有1G的内存，编译 Mysql 内存溢出，然后升级到2G内存的版本，每月10刀……以下纪录 LNMP 环境安装过程：&lt;/p&gt;
+&lt;h2 id=&quot;安装-Nginx&quot;&gt;&lt;a href=&quot;#安装-Nginx&quot; class=&quot;head
+    
+    </summary>
+    
+    
+      <category term="lnmp" scheme="http://blog.100dos.com/tags/lnmp/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>进程和线程</title>
+    <link href="http://blog.100dos.com/2017/02/27/processes-and-threads/"/>
+    <id>http://blog.100dos.com/2017/02/27/processes-and-threads/</id>
+    <published>2017-02-27T03:11:14.000Z</published>
+    <updated>2017-03-14T02:25:20.000Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="https://zh.wikipedia.org/wiki/行程" target="_blank" rel="external">进程</a>（process）是计算机中已运行程序的实体。关于进程需要知道的几点：</p>
+<ul>
+<li>进程是程序的基本执行实体。</li>
+<li>在面向线程设计的系统（如当代多数操作系统、Linux 2.6及更新的版本）中，进程本身不是基本运行单位，而是线程的容器。</li>
+<li>程序本身只是指令、数据及其组织形式的描述，进程才是程序（那些指令和数据）的真正运行实例。</li>
+<li>若干进程有可能与同一个程序相关系，且每个进程皆可以同步（循序）或异步（平行）的方式独立运行。</li>
+<li>现代计算机系统可在同一段时间内以进程的形式将多个程序加载到存储器中，并借由时间共享（或称时分复用），以在一个处理器上表现出同时（平行性）运行的感觉。</li>
+<li>同样的，使用多线程技术（多线程即每一个线程都代表一个进程内的一个独立执行上下文）的操作系统或计算机架构，同样程序的平行线程，可在多CPU主机或网络上真正同时运行（在不同的CPU上）。</li>
+<li>进程需要一些资源才能完成工作，如CPU使用时间、存储器、文件以及I/O设备，且为依序逐一进行，也就是每个CPU核心任何时间内仅能运行一项进程。</li>
+<li>进程在运行时，状态（state）会改变。进城的状态包括：<ul>
+<li>新生（new）：进程新产生中。</li>
+<li>运行（running）：正在运行。</li>
+<li>等待（waiting）：等待某事发生，例如等待用户输入完成。亦称“阻塞”（blocked）</li>
+<li>就绪（ready）：排班中，等待CPU。</li>
+<li>结束（terminated）：完成运行。</li>
+</ul>
+</li>
+<li>进程间通信（IPC Inter-process communication）:每个进程都有自己的一部分独立的系统资源，彼此是隔离的。为了能使不同的进程互相访问资源并进行协调工作，才有了进程间通信。</li>
+<li>进程控制块是操作系统能够支持多进程和提供多处理的结构。 </li>
+<li>当操作系统做进程切换时，它会执行两步操作，一是中断当前处理器中的进程，二是执行下一个进程。 不管是中断还是执行，进程控制块中的程序计数器、上下文数据和进程状态都会发生变化。</li>
+</ul>
+<p>在 PHP 中的 <a href="http://php.net/manual/zh/book.pcntl.php" target="_blank" rel="external">PCNTL</a> 扩展实现了Unix方式的进程创建，程序执行，信号处理以及进程的中断。但是只能 CLI 环境下使用，且在 Windows 平台不可用。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"></div><div class="line">$pid = pcntl_fork();</div><div class="line"><span class="comment">//父进程和子进程都会执行下面代码</span></div><div class="line"><span class="keyword">if</span> ($pid == <span class="number">-1</span>) &#123;</div><div class="line">    <span class="comment">//错误处理：创建子进程失败时返回-1.</span></div><div class="line">     <span class="keyword">die</span>(<span class="string">'could not fork'</span>);</div><div class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> ($pid) &#123;</div><div class="line">     <span class="comment">//父进程会得到子进程号，所以这里是父进程执行的逻辑</span></div><div class="line">     pcntl_wait($status); <span class="comment">//等待子进程中断，防止子进程成为僵尸进程。</span></div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">     <span class="comment">//子进程得到的$pid为0, 所以这里是子进程执行的逻辑。</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><a href="https://zh.wikipedia.org/wiki/线程" target="_blank" rel="external">线程</a>（thread）是操作系统能够进行运算调度的最小单位。</p>
+<ul>
+<li>它被包含在进程之中，是进程中的实际运作单位。</li>
+<li>一条线程指的是进程中一个单一顺序的控制流，一个进程中可以并发多个线程，每条线程并行执行不同的任务。</li>
+<li>在Unix System V及SunOS中也被称为轻量进程（lightweight processes），但轻量进程更多指内核线程（kernel thread），而把用户线程（user thread）称为线程。</li>
+<li>线程是独立调度和分派的基本单位。线程可以操作系统内核调度的内核线程，如Win32线程；由用户进程自行调度的用户线程，如Linux平台的POSIX Thread；或者由内核与用户进程，如Windows 7的线程，进行混合调度。</li>
+<li>同一进程中的多条线程将共享该进程中的全部系统资源，如虚拟地址空间，文件描述符和信号处理等等。但同一进程中的多个线程有各自的调用栈（call stack），自己的寄存器环境（register context），自己的线程本地存储（thread-local storage）。</li>
+<li>一个进程可以有很多线程，每条线程并行执行不同的任务。</li>
+<li>线程的四种基本状态：<ul>
+<li>产生（spawn）</li>
+<li>中断（block）</li>
+<li>非中断（unblock）</li>
+<li>结束（finish）</li>
+</ul>
+</li>
+</ul>
+<p>在PHP中有 <a href="http://php.net/manual/zh/intro.pthreads.php" target="_blank" rel="external">pthreads</a> 多线程扩展，实现了面向对象的 多线程 API。可以创建、读取、写入以及执行多线程应用，并可以在多个线程之间进行同步控制。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">workerThread</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($num)</span></span>&#123;</div><div class="line">        <span class="keyword">$this</span>-&gt;num = $num;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">run</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">while</span>(<span class="keyword">true</span>)&#123;</div><div class="line">            <span class="keyword">echo</span> <span class="keyword">$this</span>-&gt;num . <span class="string">"\n"</span>;</div><div class="line">            sleep(<span class="number">1</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">for</span> ($i=<span class="number">0</span>; $i &lt; <span class="number">50</span>; $i++)&#123;</div><div class="line">    $workers[$i] = <span class="keyword">new</span> workerThread($i);</div><div class="line">    $workers[$i]-&gt;start();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>线程较之进程，其优势在于一个快，不管是创建新的线程还是终止一个线程；或者是线程间的切换还是线程间共享数据或通信，其速度与进程相比都有较大的优势。进程和线程区别：</p>
+<ul>
+<li>线程是在一个进程内的，可以共享内存变量实现线程间通信。<ul>
+<li>而进程间通信是要借助于<a href="https://zh.wikipedia.org/wiki/行程間通訊" target="_blank" rel="external">进程间通信（IPC）</a>，文件、管道、消息队列等等。</li>
+</ul>
+</li>
+<li>线程比进程更轻量级，开大量进程会比线程消耗更多系统资源。<ul>
+<li>比如 PHP-FPM 模块。通常情况下，一个PHP-FPM 进程占用的内存为10M左右，假如支持10000并发，就需要100G的内存。一台物理机的资源是有限的，就那么多CPU和内存，决定了单独依靠 PHP-FPM 不可能开发出单机百万级并发的系统。</li>
+</ul>
+</li>
+</ul>
+<p>我们用多进程和多线程的很大因素是为了解决并发问题，先理清一个概念并发和并行是不是一个意思？</p>
+<blockquote>
+<p>并发和并行的区别就是一个处理器同时处理多个任务和多个处理器或者是多核的处理器同时处理多个不同的任务。 前者是逻辑上的同时发生（simultaneous），而后者是物理上的同时发生。</p>
+</blockquote>
+<p>由于进程的性能问题，我们觉得并发使用的更多的线程，而不是进程。在处理网络请求时，多线程模型下，可以采用一个独立线程接受请求然后派发到各个 worker 线程的方式。但是使用多线程也存在一些问题：</p>
+<ul>
+<li>线程读写变量存在同步问题，需要加锁</li>
+<li>锁的粒度过大会有性能问题，可能会导致只有1个线程在运行，其他线程都在等待锁。这样就不是并行了</li>
+<li>同时使用多个锁，逻辑复杂，一旦某个锁没被正确释放，可能会发生线程死锁</li>
+<li>某个线程发生致命错误会导致整个进程崩溃</li>
+</ul>
+<p>多进程方式更加稳定，另外利用进程间通信（IPC）也可以实现数据共享。至于为什么进程想对安全稳定，主要是依靠进程<a href="https://zh.wikipedia.org/zh-cn/沙盒_(電腦安全" target="_blank" rel="external">沙箱</a>)，可以查看这篇文章<a href="http://zkread.com/article/584903.html" target="_blank" rel="external">《为什么浏览器采用多进程模型》</a>。</p>
+<ul>
+<li>共享内存，这种方式和线程间读写变量是一样的，需要加锁，会有同步、死锁问题。</li>
+<li>消息队列，可以采用多个子进程抢队列模式，性能很好</li>
+<li>PIPE，UnixSock，TCP，UDP。可以使用read/write来传递数据，TCP/UDP方式使用socket来通信，子进程可以分布运行</li>
+</ul>
+<p>Swoole 框架的多进程和多线程的设计实用就非常合理，在需要稳定的时候使用进程，在需要效率的时候使用线程。盗个图</p>
+<p><img src="/images/swoole-process-threads.png" alt=""></p>
+<p>Swoole 中 worker/task 进程都是由 Manager 进程 Fork 并管理的。</p>
+<ul>
+<li>子进程结束运行时，Manager 进程负责回收此子进程，避免成为僵尸进程。并创建新的子进程</li>
+<li>服务器关闭时，Manager 进程将发送信号给所有子进程，通知子进程关闭服务</li>
+<li>服务器 reload 时，Manager进程会逐个关闭/重启子进程</li>
+</ul>
+<p>Swoole 提供了完善的进程管理机制，当Worker进程异常退出，如发生PHP的致命错误、被其他程序误杀，或达到 max_request 次数之后正常退出。主进程会重新拉起新的 Worker 进程。 Worker 进程内可以像普通的 apache+php 或者 php-fpm 中写代码。不需要像 Node.js 那样写异步回调的代码。</p>
+<p>Swoole 的Master主进程是一个多线程的程序，其中一组很重要的是Reactor线程。Swoole 在接收到一个请求连接之后，将这个链接分配给一个固定的Reactor线程，并由这个线程来监听socket。在socket可读时读取数据，并进行协议解析，将请求投递到Worker进程。在socket可写时将数据发送给TCP客户端。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;a href=&quot;https://zh.wikipedia.org/wiki/行程&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;进程&lt;/a&gt;（process）是计算机中已运行程序的实体。关于进程需要知道的几点：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;进程是程序的基本
+    
+    </summary>
+    
+    
+      <category term="进程" scheme="http://blog.100dos.com/tags/%E8%BF%9B%E7%A8%8B/"/>
+    
+      <category term="线程" scheme="http://blog.100dos.com/tags/%E7%BA%BF%E7%A8%8B/"/>
+    
+      <category term="swoole" scheme="http://blog.100dos.com/tags/swoole/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>8w+拉勾网招聘数据帮你查询 - 家附近的工作</title>
+    <link href="http://blog.100dos.com/2017/02/09/nearby-jobs/"/>
+    <id>http://blog.100dos.com/2017/02/09/nearby-jobs/</id>
+    <published>2017-02-09T06:25:08.000Z</published>
+    <updated>2017-03-14T02:25:20.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>从<a href="https://www.lagou.com/" target="_blank" rel="external">拉勾网</a>抓取的 86341 条招聘企业数据，企业地址匹配 LBS 经纬度取自<a href="http://lbs.amap.com/console/show/picker" target="_blank" rel="external">高德开放平台API</a>，成功匹配到 83090 条经纬度数据。没有做详细做企业主正在招聘岗位的数据，所以很大可能情况会遇到附近的公司没有招聘信息的情况，但是某些方面还是能大概了解自己附近有什么值得考虑的公司，有一定参考价值。</p>
+<h2 id="查询附近的工作"><a href="#查询附近的工作" class="headerlink" title="查询附近的工作"></a>查询附近的工作</h2><p>Github地址: <a href="https://github.com/jixiaod/NearbyJobs" target="_blank" rel="external">https://github.com/jixiaod/NearbyJobs</a></p>
+<h3 id="下载-mongo-数据包"><a href="#下载-mongo-数据包" class="headerlink" title="下载 mongo 数据包"></a>下载 mongo 数据包</h3><p><a href="https://github.com/jixiaod/NearbyJobs/blob/master/jobs.tar.gz" target="_blank" rel="external">https://github.com/jixiaod/NearbyJobs/blob/master/jobs.tar.gz</a></p>
+<h3 id="导入-mongo-数据"><a href="#导入-mongo-数据" class="headerlink" title="导入 mongo 数据"></a>导入 mongo 数据</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~# tar zxf jobs.tar.gz</div><div class="line">~# mongoimport -d jobs -c company --upsert jobs.json</div></pre></td></tr></table></figure>
+<h3 id="geo-查询"><a href="#geo-查询" class="headerlink" title="geo 查询"></a>geo 查询</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">// 进入mongodb，我的是默认环境</div><div class="line">~# mongo</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&gt; use jobs</div><div class="line">// 创建索引</div><div class="line">&gt; db.company.createIndex(&#123; &quot;loc&quot;: &quot;2d&quot; &#125;)</div><div class="line">// 查询附近的工作，自己的坐标可以从[高德开放平台API]获得。</div><div class="line">&gt; db.company.find(&#123;&quot;loc&quot;:&#123;&quot;$near&quot;:[116.673886,39.943799]&#125;&#125;,&#123;&quot;short_name&quot;:1, &quot;address&quot;:1&#125;)</div></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/jixiaod/NearbyJobs/master/nearby-jobs.png" alt=""></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;从&lt;a href=&quot;https://www.lagou.com/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;拉勾网&lt;/a&gt;抓取的 86341 条招聘企业数据，企业地址匹配 LBS 经纬度取自&lt;a href=&quot;http://lbs.amap.com/co
+    
+    </summary>
+    
+    
+      <category term="mongo" scheme="http://blog.100dos.com/tags/mongo/"/>
+    
+      <category term="lbs" scheme="http://blog.100dos.com/tags/lbs/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>扫雷 - 微信小程序</title>
+    <link href="http://blog.100dos.com/2017/01/19/minesweeper-on-wechat-app/"/>
+    <id>http://blog.100dos.com/2017/01/19/minesweeper-on-wechat-app/</id>
+    <published>2017-01-19T02:55:08.000Z</published>
+    <updated>2017-03-14T02:25:20.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>微信小程序这几天很火，9号正式发布，今天19号过了10天，到现在略有降温的趋势。个大厂商对微信小程序的态度很不看好，最激进的要数[罗辑思维]，直接下架了自己的[得到APP]。滴滴、京东等APP也只保留了最精简的功能，某些担心过于完善的功能会抢夺APP本身的用户。不过这也印证了小程序的初衷，小而精、用完即走。（并不否认腾讯微信平台确实流氓的事实）</p>
+<blockquote>
+<p>PS：墨迹天气也开发了微信小程序版本，并且在1月9号第一时间发布，欢迎使用。</p>
+</blockquote>
+<p>作为技术人员，怎能不亲手试试小程序开发呢？扫雷 Minesweeper</p>
+<h2 id="实现思路："><a href="#实现思路：" class="headerlink" title="实现思路："></a>实现思路：</h2><ul>
+<li>如果不了解扫雷的游戏规则，请自行 Google</li>
+<li>绘制一张 10*10 的地图，并且标注地雷和非地雷，并且需要用数字表示每个点周围地雷的数量</li>
+<li>用 mineMap[x][y] 表示一个点位<ul>
+<li>mineMap[x][y] &lt; 0 (代码中 == -1) 初始状态</li>
+<li>0 &lt; mineMap[x][y] &lt; 9 该点周围地雷的数量</li>
+<li>mineMap[x][y] == 9 表示该点是地雷</li>
+<li>mineMap[x][y] &gt; 9 （代码中 == 10）表示该点插旗</li>
+</ul>
+</li>
+</ul>
+<h2 id="Github"><a href="#Github" class="headerlink" title="Github"></a>Github</h2><ul>
+<li><a href="https://github.com/jixiaod/wechat-app-minesweeper" target="_blank" rel="external">https://github.com/jixiaod/wechat-app-minesweeper</a></li>
+</ul>
+<h2 id="如何跑起来？"><a href="#如何跑起来？" class="headerlink" title="如何跑起来？"></a>如何跑起来？</h2><ul>
+<li>下载 &amp; 安装 <a href="https://mp.weixin.qq.com/debug/wxadoc/dev/devtools/download.html" target="_blank" rel="external">微信小程序开发工具</a> </li>
+<li>配置 wechat-app-minesweeper 代码目录到开发工具即可</li>
+</ul>
+<h2 id="玩法"><a href="#玩法" class="headerlink" title="玩法"></a>玩法</h2><ul>
+<li>需要注意的是，由于没有鼠标右键标记Flag，简单做了 Flag 切换，开启后，方可标记Flag</li>
+<li>最初的想法是通过 tap 和 longtap 来区分扫雷和Flag，但是开发工具不能区分这俩个事件，只能作罢</li>
+</ul>
+<p><img src="/images/wechat-minesweeper.png" alt=""></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;微信小程序这几天很火，9号正式发布，今天19号过了10天，到现在略有降温的趋势。个大厂商对微信小程序的态度很不看好，最激进的要数[罗辑思维]，直接下架了自己的[得到APP]。滴滴、京东等APP也只保留了最精简的功能，某些担心过于完善的功能会抢夺APP本身的用户。不过这也印证
+    
+    </summary>
+    
+    
+      <category term="微信小程序" scheme="http://blog.100dos.com/tags/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/"/>
+    
+      <category term="Javascript" scheme="http://blog.100dos.com/tags/Javascript/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>［读书笔记］－ 《大清相国》</title>
+    <link href="http://blog.100dos.com/2016/12/27/reading-note-the-trime-minister-of-qing-dynasty/"/>
+    <id>http://blog.100dos.com/2016/12/27/reading-note-the-trime-minister-of-qing-dynasty/</id>
+    <published>2016-12-27T11:18:35.000Z</published>
+    <updated>2017-03-14T02:25:20.000Z</updated>
+    
+    <content type="html"><![CDATA[<p><strong>很多事情不像表面上那么简单，尤其是在官场，要考虑点更多。</strong>发生的时间、涉及的官员、所涉及到官员之间的关系、地位、各自的立场。</p>
+<p>皇上：要顾全皇族的利益，凡事涉及皇族，一定是要偏袒皇族，照顾其颜面。朝中大臣以和为贵，可以接受做官贪赃枉法，但是对上对皇上要有敬畏之心，对下对百姓不能做太过分出格。</p>
+<p>陈廷敬：心怀天下百姓，一心要肃清官场腐败。</p>
+<p>鳌拜／明珠／索额图：一人之下，万人之上。任人唯亲，独揽大权。</p>
+<p>高士其：墙头草，唯利是图。</p>
+<p>等等……</p>
+<p>书中围绕陈廷敬一生为官，发生的诸多故事展开。故事的来龙去脉都大同小异，朝廷出了什么事（比如大户统筹案、宝泉局毁钱鬻铜案等），然后派陈廷敬微服私访查明真相，结果又查出来了个大贪官，然后最终如何处置这点事儿。</p>
+<p>事故虽然不算太精彩，但更精彩的部分是揣摩为官的道理。如何看准官场的风向，想要参人，也要看这个人是参得参不得。皇上用的人参不得，皇上宠信的大臣参不得，皇上宠信的大臣的人也要看情况是不是可以参。总之要先摸清皇上的意思，最简单的情况，皇上示意可以参，你参就一点毛病没有。</p>
+<p><strong>身为人臣，最忌讳功高盖主。</strong>虽然在书的最后章节里，皇上对陈廷敬的评价是“宽大老成，几近完人！”，但是请注意也只是“几近”哦，因为完人只有皇帝他老人家而已。此时陈廷敬也已是七旬老人，事君也已有四十八年，可又能怎样呢？得到皇上嘉许时不也还要赶忙连连扣头谢恩。所以你陈廷敬如果是完人，那皇上又是什么呢？</p>
+<p>陈廷敬一心要肃清官场，整天参来参去。弄的皇帝很不开心，但是陈廷敬为官清廉，又没有确着的罪证。皇上只好让张英随便编个理由参他，导致陈廷敬第一次被贬。连明珠后来都跟萨穆哈都说：“你以为陈廷敬真的有罪？他根本就没罪！”。</p>
+<p>后来，陈廷敬自己也有所悟：“我让皇上知道天下没几个好官了，我就完了；我让天下人知道大清没几个清官了，天下就完了。”</p>
+<p><strong>皇上也得哄着。</strong>如果让皇上觉得你认为他是傻逼，你就完了！！！你只能比皇上更傻逼……</p>
+<p>最终，陈廷敬用“等”、“忍”、“稳”、“恨”四字诀，扳倒了明珠和索额图，坐上了大清相国的位置。等待时机，逆境要忍，做事要稳，下手要狠。</p>
+<p>好吧，挺难的，突然想到冯小刚给广告词：“做人做事，安全第一……”。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;strong&gt;很多事情不像表面上那么简单，尤其是在官场，要考虑点更多。&lt;/strong&gt;发生的时间、涉及的官员、所涉及到官员之间的关系、地位、各自的立场。&lt;/p&gt;
+&lt;p&gt;皇上：要顾全皇族的利益，凡事涉及皇族，一定是要偏袒皇族，照顾其颜面。朝中大臣以和为贵，可以接受做官贪赃
+    
+    </summary>
+    
+    
+      <category term="读书笔记" scheme="http://blog.100dos.com/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>癌症离我们不远</title>
+    <link href="http://blog.100dos.com/2016/12/14/cancer-is-not-far-from-us/"/>
+    <id>http://blog.100dos.com/2016/12/14/cancer-is-not-far-from-us/</id>
+    <published>2016-12-14T10:10:51.000Z</published>
+    <updated>2017-03-14T02:25:20.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>前几天知道了妈得了癌症的消息，原来新闻里、电视里不相干的陌生人得的病，也来到了我的身边。原来癌症离我也并不远……</p>
+<p>刚知道的时候心情不免低落，一个是为老妈难过，刚到60便染此恶疾，虽有希望治愈，治疗过程不免受苦；在一个也为自己难过，刚刚步入正轨的生活，又被被打乱了。本来还打算着让老妈过来帮带带孩子呢，结果计划全变了……孩子还未满月，老婆尚未做完月子。家里出了这么大的事情，也不敢告诉她。怕月子里身子虚，心情压抑，对恢复有影响。</p>
+<p>上周末已回老家抚顺看过，现在在抚顺矿务局医院（当地三甲）接受治疗。老妈的状态还不错，些许安慰。刚做完化疗，吃不下东西。中午一家人吃了点东西，都吐了。晚上还好，因为打了抗呕吐的针，而且是上周五最后做的化疗，已隔了2天，身体已无太大反应。</p>
+<p>最近看了好多关于癌症的资料，老妈得得是鼻癌（鼻咽癌）。很是吃紧，离大脑太近，后期如果癌细胞扩散到脑腔，就会引发头痛，而且是痛的要撞墙的那种。据老妈自己说，最近感觉还好，感觉肿块相比之前软了许多，或许治疗起作用了。今天电话又说，做了放疗，并无大碍。而且吃饭很好，吃了一碗。</p>
+<p>在医院时候陪父母跟老婆和孩子视频聊天，老人家很开心，这个时间段，让老人保持心情舒畅很重要。也告诉老爸钱方面不要担心，更不要在老妈面前提钱字。老爸也确实很上火，家里确实不太富裕。不过我觉得还好吧，毕竟有三个子女，看病的话大家分担一下，压力还没有那么大。病还是要治的，就算治不好，多活一年是一年。也能多陪老爸一年，老伴老伴，到老了才是伴。假如说老妈真的没了，老爸难免会孤单。</p>
+<p>今天又跟家里视频，老人家，总是看见孩子就很开心。孩子这时候真是法宝，且当作你奶奶的开心果吧……</p>
+<p>琢磨着过年时偶接老俩口过来住几天，看看孩子。</p>
+<p>查看癌症资料，无意间看到了一位癌症患者的博客，<a href="http://xin-sheng.hxwk.org/" target="_blank" rel="external">辛声文集</a>，翻看了很多篇文章。甚是佩服博主的乐观态度，但是停更很久了，不知道现在是否安好。</p>
+<p>健康生活很重要，乐观的生活态度也少不了。猜测老妈大概就是因为心情长期压抑导致的癌症，总是看不惯这个那个，埋怨这个那个。可能有点像姥姥，不过姥姥倒是活了很大年纪，所以也吃不太准，也可能是姥姥比较善忘的缘故。老妈可能一件烦心事可以憋很久吧。本身老人都是农村人，体力活干过不少，身体应该还是不错的。总之，癌症又有点来的不明所以。</p>
+<p>病既来之，只好安之……</p>
+<p>老爸那边更多的是需要宽慰、开导，老妈那边要多多的哄她开心。毕竟也刚刚 60 出头，刚刚结束了一辈子的辛苦，还没有开始享受生活。</p>
+<p>同时告诫自己：锻炼身体、保持健康、凡事轻看、心情愉悦，还有多多赚钱……</p>
+<p>如果你也在看，共勉之。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;前几天知道了妈得了癌症的消息，原来新闻里、电视里不相干的陌生人得的病，也来到了我的身边。原来癌症离我也并不远……&lt;/p&gt;
+&lt;p&gt;刚知道的时候心情不免低落，一个是为老妈难过，刚到60便染此恶疾，虽有希望治愈，治疗过程不免受苦；在一个也为自己难过，刚刚步入正轨的生活，又被被打乱
+    
+    </summary>
+    
+    
+      <category term="癌症" scheme="http://blog.100dos.com/tags/%E7%99%8C%E7%97%87/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>告别 斯蒂芬·杰拉德</title>
+    <link href="http://blog.100dos.com/2016/12/13/say-goodbye-to-stevengerrard/"/>
+    <id>http://blog.100dos.com/2016/12/13/say-goodbye-to-stevengerrard/</id>
+    <published>2016-12-13T09:47:55.000Z</published>
+    <updated>2017-03-14T02:25:20.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>杰拉德退役的消息出来好几天了，想想还是写一篇吧。以纪念我浦最伟大的队长……</p>
+<blockquote>
+<p>一个人守护一座城，一座城守护一个人 – 杰拉德和利物浦</p>
+</blockquote>
+<p><img src="/images/steven-gerrard.jpg" alt=""></p>
+<p>我看球应该算是比较晚的，02年世界杯因为中国队杀入了世界杯决赛圈，大家都在看球。那时候不太懂，就跟着一起瞎看，人都认不全，什么是越位都不懂……大概也就知道足球，只能用脚，不能用手吧。</p>
+<p>记得小时候有一件T恤，上面印的是［迈克 欧文］，我当时也不知道。后来有别的小朋友看见我穿那件衣服，问到：你喜欢欧文啊？我哪里知道谁是欧文，只是怕跌了面子，直道：我喜欢欧文，欧文是我偶像！</p>
+<p>至于欧文是［英格兰］的球员，在［利物浦足球俱乐部］踢球都是后话了。再后来又认识了杰拉德，并不喜欢他的风格，因为他跑起来的样子怪怪的……虽然速度很快。</p>
+<p>真正接触足球源于《实况足球》这款游戏，游戏里让我认识了很多球员。玩的时候大家都会自己的主队，巴西、意大利、法国……他们跳差不多了，我当然不能跟他们一样，英格兰的整体能力也是不错的，而且“欧文是我偶像”，就选了英格兰做主队。</p>
+<p>游戏里每个球员都有能力值，80以上就是能力很不错的球员了。杰拉德就是能力非常全面的球员，各项能力都是80+。射门精度和射门力量90+，速度也要比［双德］之一的兰帕德要快。甚是喜欢，那时候还没怎么看过利物浦的比赛，对于杰拉德的印象就是在游戏中，反正很屌！</p>
+<p>高中生活很是压抑，平时的消遣就是晚自习看《足球周刊》和《体坛周报》，比看课本都认真，真可以说咬文嚼字。周末休息也要去［PS房］踢几局实况（就是出租Play Station的小店，当时玩一个小时4块钱，当时PS2代），我几乎就选英格兰踢，上课上自习也没事研究英格兰阵型，我主打442，中场菱形站位。我认为菱形站位比平行站位，进攻和防守都会更加均衡一些。中场如果对方有速度快的前锋，就杰拉德拖后，速度快、身体平衡高，回追一追一个准，否则，就兰帕德拖后。除非遇到巴西阿德里亚诺那种，就只能上中后卫坎贝尔的了……</p>
+<blockquote>
+<p>锋线：欧文、鲁尼<br>中场：乔 科尔、杰拉德、兰帕德、贝克汉姆<br>后卫：阿什利 科尔、费迪南德、坎贝尔、加里 内维尔<br>门将：罗宾逊<br>替补：迪福、克劳奇、唐宁、列侬、哈格里弗斯、特里、卡拉格、詹姆斯</p>
+</blockquote>
+<p>这大概是06年世界杯时期的阵容吧，忘却了……06年英格兰有实力拼一下世界杯冠军的。可惜欧文开场没多久莫名其妙自己拉伤，可惜英格兰对阵葡萄牙又输在了12码线……</p>
+<p>那一年杰拉德也是正直巅峰，26岁的年纪，04/05年伊斯坦布尔之夜过去没多久。好像是宿命，英格兰同利物浦一样沉沦了……都是在苦苦挣扎，利物浦慢慢掉队，从欧洲冠军到进不了欧冠。</p>
+<p>但是杰拉德一直没有离开，用他的忠诚捍卫着利物浦的荣耀。五冠王之后，青训同伴欧文 04 年就转投到皇马。好友阿隆索、金童托雷斯，直道苏牙相继离开，只有杰拉德抵挡住了金钱的诱惑，更多的是忍受没有冠军的寂寞。</p>
+<p>2014年，杰对拼着老脸说服苏牙再留下一年，曾经离冠军如此之近，最后俩轮仍然保持着领先优势。直到杰拉德滑倒的一瞬间，整个世界都黑暗了。很久之后，有记者提到当时那个球，杰拉德依然无法释怀，注定是杰队一辈子的痛……</p>
+<p>最后一个赛季，杰队无法接受罗杰斯只能坐冷板凳的安排，转投美国大联盟踢了自己的最后一个赛季。</p>
+<p>渣叔临危受命利物浦，带领球队踢得越来越好，现排名英超老二。然而我们的老队长杰拉德宣布退役了……</p>
+<p>80年出生，36岁的年纪。作为利物浦青训体系自己培养的青年才俊，18岁进入一线队，直到退役。虽然最后一个赛季到美国大联盟，但是那是唯一不可能与利物浦为敌的地方。杰拉得把最好的岁月献给了利物浦，把他最坏的记忆也留在了利物浦。</p>
+<blockquote>
+<p>我们记住的是他永远的全力以赴<br>我们记住的是无数的炮弹般的大力远射<br>我们记住的是无数鼓励队友的士气的画面<br>我们记住的是高举欧冠奖杯利物浦队长<br>我们记住的是那个初出茅庐的青涩少年<br>我记不住的是何时变成了利物浦死忠、杰拉德的死忠。</p>
+</blockquote>
+<p>只奢望年华和青春永不逝去。最好的现在就在，最好的过去就在，最好的永远都在。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;杰拉德退役的消息出来好几天了，想想还是写一篇吧。以纪念我浦最伟大的队长……&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;一个人守护一座城，一座城守护一个人 – 杰拉德和利物浦&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;img src=&quot;/images/steven-gerra
+    
+    </summary>
+    
+    
+      <category term="足球" scheme="http://blog.100dos.com/tags/%E8%B6%B3%E7%90%83/"/>
+    
+      <category term="利物浦" scheme="http://blog.100dos.com/tags/%E5%88%A9%E7%89%A9%E6%B5%A6/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>How to C in 2016</title>
+    <link href="http://blog.100dos.com/2016/12/05/how-to-c-in-2016/"/>
+    <id>http://blog.100dos.com/2016/12/05/how-to-c-in-2016/</id>
+    <published>2016-12-05T03:23:52.000Z</published>
+    <updated>2017-03-14T02:25:20.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>英文原文：<a href="https://matt.sh/howto-c" target="_blank" rel="external">https://matt.sh/howto-c</a></p>
+<p>这原本是一篇我写在 2015 年没有发布出来的草稿。为了让大家也能受益，我决定把它从我的草稿文件夹里拿出来。并且基本是原文，未做过多修改。大概只是把年份改了一下，2015 改成了 2016。</p>
+<p>如有任何修正／改进／意见，请发送邮件到 matt@matt.sh</p>
+<p>C 的第一条规则：如果能避免用C实现，就不要用C。<br>如果你必须要用C，你就必须要遵守C的最新规定。</p>
+<p>在<a href="https://www.bell-labs.com/usr/dmr/www/chist.html" target="_blank" rel="external">1970年代早期</a>，C 就开始流行起来。人们跟随着C语言的发展革新“学习 C 语言”的各种各样的要点，然后你学会的这些知识开始欺骗你。每个人都坚持的认为自己最开始学习部分才是正确的，这样使得写C的开发人员对C语言的开发有着不同的理解。</p>
+<p>重要的是，不要让“80年代～90年代学习C的旧思维和老观念”束缚住你的手脚。</p>
+<p>这篇文章首先假设读者是在当前最新的平台且使用最新的标准，没有多度的需要对一些过时的东西的兼容需求。我们不应该完全的去使用过时的标准，因为确实有一些公司拒绝去更新已经用了20年的老系统。</p>
+<h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><p>C99标准（C99 的意思是“1999年的 C 语言标准”；C11 是“2011年定义的 C 语言标准，所以 11 &gt; 99”）。</p>
+<ul>
+<li>clang, default<ul>
+<li>clang 是一个C11的默认扩展版本（<code>GNU C11 模式</code>），所以对最新的特征编译不需要额外的参数配置。</li>
+<li>如果希望用C11标准，需要添加 <code>-std=c11</code>；如果想要使用C99，使用 <code>-std=c99</code></li>
+<li>clang 编译源代码会比 gcc 要快。</li>
+</ul>
+</li>
+<li>gcc 需要指定 <code>-std=c99</code> 或者 <code>-std=c11</code><ul>
+<li>gcc 编译源文件比 clang 要慢，但是有时会生成更快的代码。性能对比和回归测试很重要。</li>
+<li>gcc-5 默认是指 <code>GNU C11 模式</code>（跟 clang 一样），但是如果需要确切的 C11 或者 C99，需要加上参数 <code>-std=c11</code> 或 <code>-std-c99</code></li>
+</ul>
+</li>
+</ul>
+<p>优化</p>
+<ul>
+<li>-O2, -O3<ul>
+<li>通常情况下需要 <code>-O2</code>，有时需要 <code>-O3</code>。俩个级别都做测试（使用不同的编译器程序），然后保留性能最好的二进制文件。</li>
+</ul>
+</li>
+<li>-Os<ul>
+<li><code>-Os</code> 如果你写代码时，有考虑到缓存效率的话，会有帮助。</li>
+</ul>
+</li>
+</ul>
+<p>警告</p>
+<ul>
+<li><code>-Wall -Wextra -pedantic</code><ul>
+<li><a href="https://twitter.com/oliviergay/status/685389448142565376" target="_blank" rel="external">更新版本的编译器</a>已经有 <code>-Wpedantic</code>，同时这些编译器还在支持 <code>-pedantic</code> 以保证向后的兼容性。</li>
+</ul>
+</li>
+<li>测试时，所有平台都要加上 <code>-Werror</code> 和 <code>-Wshadow</code> <ul>
+<li>如果在最终的正式代码编译时加上 <code>-Werror</code>，情况会变得很微妙。因为不同的平台、编译器和类库会提示不同的警告。因为不同平台GCC版本问题，出现一些意想不到的提示，让编译到一半的程序终止是大家都不想看到的。</li>
+</ul>
+</li>
+<li>其他的不错的选项，<code>-Wstrict-overflow</code> <code>-fno-strict-aliasing</code><ul>
+<li>要么指明 <code>-fno-strict-aliasing</code>，要么确定访问的指针从它们创建开始类型一值不变。使用 <code>-fno-strict-aliasing</code> 是更佳稳妥的方式，因为现存的C代码中，用到强制类型转换的地方还是挺多的。［注：Strict aliasing 是C或C++编译器的一种假设：不同类型的指针绝对不会指向同一块内存区域。可参考进一步了解］</li>
+</ul>
+</li>
+<li>现在，Clang 对于一些正当的语法也会报警告，所以你需要添加 <code>-Wno-missing-field-initalizers</code><ul>
+<li>GCC 在 4.7.0 版本之后修正了这些不必要的警告。</li>
+</ul>
+</li>
+</ul>
+<p>构建</p>
+<ul>
+<li>隔离原则 (Compilation units 编译单元)<ul>
+<li>构建C项目的通常办法是拆分每一个源文件编译成一个个目标文件，最后再把所有的目标文件link到一起。这个做在进行开发时是非常好的方法，但是对于代码的性能和优化就不太友好了。用这种方法，编译器不能发现一些存在在文件边界之间的潜在优化点。</li>
+</ul>
+</li>
+<li>LTO - Link Time Optimisation （链接时的优化）<ul>
+<li>LTO 解决了“被分离的源代码文件分析和优化的问题”。通过中间语言来标注编译生成的目标文件，所以LTO能够在链接的时候实现代码优化。</li>
+<li>LTO 明显的降低了链接过程的速度，但是使用 make -j 可以有所改善，如果你的构建的的文件包含很多并不相互依赖的目标文件（.a, .so, .dylib, 测试可执行文件，应用程序可执行文件等）</li>
+<li><a href="http://llvm.org/docs/LinkTimeOptimization.html" target="_blank" rel="external">clang LTO</a> (<a href="http://llvm.org/docs/GoldPlugin.html" target="_blank" rel="external">guide</a>)</li>
+<li><a href="https://gcc.gnu.org/onlinedocs/gccint/LTO-Overview.html" target="_blank" rel="external">gcc LTO</a></li>
+<li>在2016年，clang 和 gcc 支持 LTO 只需要在编译目标文件和最终链接库和程序时，加上 <code>-flto</code> 到命令行的选项。</li>
+<li><code>LTO</code> 仍然需要被细心看管。有时，你的程序有部分代码被当作附加库，没有被直接使用。在链接时，LTO 会放弃部分函数或代码，因为LTO检查到这些代码没有被使用，不需要被包含到最终的链接结果中。<br>架构</li>
+</ul>
+</li>
+<li><code>-march=native</code><ul>
+<li>给予编译器使用所有的CPU特性的权限。</li>
+<li>再一次强调，性能测试和回归测试很重要（比较不同编译器且不同编译器版本的性能）。确保性能提升的同时没有带来问题。</li>
+</ul>
+</li>
+<li><code>-msse2</code> 和 <code>-msse4.2</code> 如果你需要的编译结果不是根据“你自己编译环境”的特征。</li>
+</ul>
+<h1 id="写代码"><a href="#写代码" class="headerlink" title="写代码"></a>写代码</h1><h2 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h2><p>如果你写C代码还是使用 <code>char</code>、<code>int</code>、<code>short</code>、<code>long</code>、<code>unsigned</code>，那么你已经是在犯错误了。</p>
+<p>现如今，你应该使用 <code>#include &lt;stdint.h&gt;</code>，然后使用标准的类型。</p>
+<p>更多细节，请参考 <a href="http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/stdint.h.html" target="_blank" rel="external">sdtint.h specification</a></p>
+<p>常用的标准类型如下：</p>
+<ul>
+<li><code>int8_t</code>, <code>int16_t</code>, <code>int32_t</code>, <code>int64_t</code>  — 有符号的整型</li>
+<li><code>uint8_t</code>, <code>uint16_t</code>, <code>uint32_t</code>, <code>uint64_t</code> — 无符号的整型</li>
+<li><code>float</code> — 标准的32位浮点数</li>
+<li><code>double</code> — 标准的64位浮点数</li>
+</ul>
+<p>注意，<code>char</code> 已经不存在了。<code>char</code> 在C语言中经常是一个误称，且被误用了。</p>
+<p>开发者通常会滥用 <code>char</code> 去表示“字节”，即使是去做无符号的字节操作。当要表示无符号的字节或8位字节值时应该使用 <code>uint8_t</code>。当要表示无符号的字节序列或一串字节值应该使用 <code>uint8_t *</code>。</p>
+<h3 id="特殊的标准类型"><a href="#特殊的标准类型" class="headerlink" title="特殊的标准类型"></a>特殊的标准类型</h3><p>作为标准固定长度的 <code>uint16_t</code> 和 <code>int32_t</code>，我们也有 <strong>fast</strong> 和 <strong>least</strong> 类型，可以在 <a href="http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/stdint.h.html" target="_blank" rel="external">stdint.h specification</a> 看到他们的定义。</p>
+<p>有以下的<strong>快速类型</strong>：</p>
+<ul>
+<li>有符号的整型：<code>int_fast8_t</code>，<code>int_fast16_t</code>，<code>int_fast32_t</code>，<code>int_fast64_t</code> </li>
+<li>无符号的整型：<code>uint_fast8_t</code>，<code>uint_fast16_t</code>，<code>uint_fast32_t</code>，<code>uint_fast64_t</code> </li>
+</ul>
+<p>快速类型提供了一个最小的占用 <code>X</code>位的字节数，但是没有办法真正需要的存储大小是多少。如果在你的目标平台有更大的类型被更好的支持，<code>fast</code>类型将会自动去选择这个的更大类型。</p>
+<p>有个非常好的例子，在一些 64 位系统中，当你需要 <code>uint_fast16_t</code>，最终会使用 <code>uint64_t</code>。因为处理一个字量长度的整型将会比操作32位一半（16位）的整型要快得多。</p>
+<p>但是并不是在所有的系统，都这样遵循 <em>fast</em> 类型的原则。 OSX 就是一个特例，<em>fast</em> 类型被<a href="https://opensource.apple.com/source/xnu/xnu-1456.1.26/EXTERNAL_HEADERS/stdint.h" target="_blank" rel="external">定义成跟他对应的固定长度小大是一致的</a>。</p>
+<p>快速类型在自描述代码中也是有用的。如果你知道你的计数器只需要16位，但是你更希望你的计算能够使用64位。因为64位在你的平台速度更快，这是使用<code>uint_fast16_t</code> 就会很有用。在64位 Linux 平台下，<code>uint_fast16_t</code> 会实际使用更快的64位计数器，而在代码层面“这里只需要16位”。</p>
+<p>关于快速类型还需要注意的是：它会影响一些测试用例。如果你需要测试存储位宽的情况，使用 <code>uint_fast16_t</code> 会增加你需要测试通过的平台数量（以保证测试覆盖），在一些平台（OS X）是16位，另外一些平台（Linux）是64位。</p>
+<p>快速类型和 <code>int</code> 一样，在不同平台，有不确定的标准长度。但是对于快速类型，你能够在代码中限制这种不确定性到安全位置（计数器、有边界检测的临时变量）。</p>
+<p><strong>最小类型</strong>有：</p>
+<ul>
+<li>有符号整型：<code>int_least8_t</code>, <code>int_least16_t</code>,  <code>int_least32_t</code>,  <code>int_least64_t</code></li>
+<li>无符号的整型：<code>uint_least8_t</code>,  <code>uint_least16_t</code>,  <code>uint_least32_t</code>,  <code>uint_least64_t</code></li>
+</ul>
+<p>最小类型提供给你申请类型的最紧凑的字节位。</p>
+<p>事实上，最小类型规范是指最小类型只是定义标准固定宽度类型，因为标准款度类型已经提供了确切的对应的最小字节数。</p>
+<h3 id="要不要使用-int-类型"><a href="#要不要使用-int-类型" class="headerlink" title="要不要使用 int 类型"></a>要不要使用 <em>int</em> 类型</h3><p>一些读者也表达了他们对 int 的真爱，至死方休。我想指出的是，如果你使用的类型的长度是不可控的话，这样在技术上是不可能正确的。</p>
+<p>同见 <a href="http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/inttypes.h.html#tag_13_19_06" target="_blank" rel="external">RATIONALE</a> 中的 <a href="http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/inttypes.h.html" target="_blank" rel="external">inttypes.h</a>，就是为了解决非固定位宽度的不安全问题。如果你真的足够聪明理解在开发过程中， <code>int</code> 在一些平台是16位，在其他平台是32位。同时在所有使用 <code>int</code> 的地方都对16位和32位的边界进行了测试，那么请放心使用<code>int</code>。</p>
+<p>对于那些其他hold不住所有多层决策树平台规范结构的人，我们可以使用固定宽度的类型。这样就能写出更加正确的代码，减少需要理解概念的困扰，并且减少需要做过多测试的麻烦。</p>
+<p>或者，规范中更简明的说明：“IOS C 标准整型提升规则能够造成不可预期的静默修改。”</p>
+<p>祝你好运。</p>
+<h3 id="永远不要使用-char-的一个特例"><a href="#永远不要使用-char-的一个特例" class="headerlink" title="永远不要使用 char 的一个特例"></a>永远不要使用 <em>char</em> 的一个特例</h3><p>在 2016 年，唯一接受使用 <code>char</code> 类型的场景是，加入已经存在的 API 需要 <code>char</code> 类型（例如<code>strncat</code>、printf函数中的“%s”占位符等）或者如果在初始化只读字符串（例如 <code>const char *hello = &quot;hello&quot;;</code>），因为字符串（<code>&quot;hello&quot;</code>）的 C 类型是 <code>char []</code>。</p>
+<p>而且：在C11中增加了本地 unicode 支持，对于像 <code>const char *abcgrr = u8&quot;abc&quot;;</code>多字节UTF-8字符串<br>类型仍然是 <code>char []</code> 。</p>
+<h3 id="永远不要使用-int，long等-的一个特例"><a href="#永远不要使用-int，long等-的一个特例" class="headerlink" title="永远不要使用{int，long等}的一个特例"></a>永远不要使用{<em>int</em>，<em>long</em>等}的一个特例</h3><p>如果你调用函数时使用它其作为原本的返回类型或原本的参数，参照使用函数原型或API文档中说明的类型。</p>
+<h3 id="符号"><a href="#符号" class="headerlink" title="符号"></a>符号</h3><p>任何情况下，都不应该在代码中输入 <code>unsigned</code> 字符。我们现在可以在写代码时改掉使用丑陋的多词组合类型的习惯，它既影响代码的可读性，也影响使用。当你能使用 <code>uint64_t</code>时，谁还想去输入 <code>unsigned long long int</code>？<code>stdint.h</code> 头文件中的类型更加明确，表达也更准确，传达意图也更好，而且代码排版使用更好，可读性更强。</p>
+<h3 id="整型指针"><a href="#整型指针" class="headerlink" title="整型指针"></a>整型指针</h3><p>但是，你可能会说，“在脏指针运算时，我需要把指针转换给 <code>long</code> 类型！”</p>
+<p>你可以这么说，但你完全错了。</p>
+<p>运算时，正确的指针类型是定义在 <code>&lt;stdint.h&gt;</code> 头文件中的 <code>uintptr_t</code>，同时也可以用 <a href="http://pubs.opengroup.org/onlinepubs/7908799/xsh/stddef.h.html" target="_blank" rel="external">stddef.h</a> 头文件中的 <code>ptrdiff_t</code>。</p>
+<p>不要使用</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">long</span> diff = (<span class="keyword">long</span>)ptrOld - (<span class="keyword">long</span>)ptrNew;</div></pre></td></tr></table></figure>
+<p>使用</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">ptrdiff_t</span> diff = (<span class="keyword">uintptr_t</span>)ptrOld - (<span class="keyword">uintptr_t</span>)ptrNew;</div></pre></td></tr></table></figure>
+<p>或者使用</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="built_in">printf</span>(<span class="string">"%p is unaligned by %"</span> PRIuPTR <span class="string">" bytes.\n"</span>, (<span class="keyword">void</span> *)p, ((<span class="keyword">uintptr_t</span>)somePtr &amp; (<span class="keyword">sizeof</span>(<span class="keyword">void</span> *) - <span class="number">1</span>)));</div></pre></td></tr></table></figure>
+<h3 id="系统相关的类型"><a href="#系统相关的类型" class="headerlink" title="系统相关的类型"></a>系统相关的类型</h3><p>如果继续争论，“在32位平台我要使用32位long类型，64位平台我要使用64位long类型！”</p>
+<p>如果我们先忽略你在不同平台使用不同大小的类型的动机时，你也许是故意给编写代码制造困难，但你依然不希望为了系统相关类型去使用 <code>long</code> 类型。</p>
+<p>在这种情况下，你应该使用 <code>intptr_t</code> 当前平台存储一个指针值的整型类型。</p>
+<p>在现代的32位平台，<code>intptr_t</code> 是 <code>int32_t</code> 类型。</p>
+<p>在现代的64位平台，<code>intptr_t</code> 是 <code>int63_t</code> 类型。</p>
+<p>还有，<code>intptr_t</code> 对应 <code>uintptr_t</code> 类型。</p>
+<p>对于指针便宜量，我们有一个更适合的类型 <code>ptrdiff_t</code>，它是存储指针差值的正确类型。</p>
+<h3 id="最大值存储问题"><a href="#最大值存储问题" class="headerlink" title="最大值存储问题"></a>最大值存储问题</h3><p>你是否需要一个能存储任何整数的整型类型吗？</p>
+<p>此时，人们倾向于使用已知类型中的最大类型，比如转换较小的无符号类型到 <code>uint64_t</code>，但是有更多的技术上正确的方法来确保一个值可以存储为另一个值。</p>
+<p>对于任意的整数，最安全的容器就是 <code>intmax_t</code> (<code>uintmax_t</code>也可以)。你能够在不损失精读的情况下，赋值或转换有符号的整数为 <code>intmax_t</code>。并且也能够在不损失精读的情况下，赋值或转换无符号的整数为<code>uintmax_t</code>。</p>
+<h3 id="其他类型"><a href="#其他类型" class="headerlink" title="其他类型"></a>其他类型</h3><p>应用最广泛的系统相关类型是 <code>size_t</code>， 它由 <a href="http://pubs.opengroup.org/onlinepubs/7908799/xsh/stddef.h.html" target="_blank" rel="external">stddef.h</a> 头文件提供。</p>
+<p><code>size_t</code> 基本表示为“能够存储数组最大索引的整数”，同时它也表示程序中能够存储内的存最大偏移量。</p>
+<p>在实际应用中，<code>size_t</code> 是 <code>sizeof</code> 操作符的返回类型。</p>
+<p>无论在哪种情况下：在所有平台，<code>size_t</code> 实际上的定义都跟 <code>uintptr_t</code> 是一样的，所以在32位平台 <code>size_t</code> 是 <code>uint32_t</code>，在64位平台 <code>size_t</code> 是 <code>uint64_t</code>。</p>
+<p>还有 <code>ssize_t</code>，它表示一个有符号的 <code>size_t</code>，用于库函数的返回值，出错时返回 -1。（注意： <code>ssize_t</code> 是 POSIX 中的定义，在windows接口中不可用。）</p>
+<p>那么，我们可以在任意的系统相关类型的函数参数中都使用 <code>size_t</code> 吗？技术上来说，<code>size_t</code> 是 <code>sizeof</code> 的返回类型，所以任何接受字节数大小值的函数都可以使用 <code>size_t</code>。</p>
+<p>还有其他的一些使用方法：<code>size_t</code> 可以是malloc的参数，并且 <code>ssize_t</code> 是 <code>read()</code>和 <code>write()</code> 的返回类型（除了windows平台，<code>ssize_t</code> 不存在，返回值只是 <code>int</code>）。</p>
+<h3 id="打印类型"><a href="#打印类型" class="headerlink" title="打印类型"></a>打印类型</h3><p>在打印时，不能做类型转换。</p>
+<p>通常需要选择使用正确的说明符，在 <a href="http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/inttypes.h.html" target="_blank" rel="external">inttypes.h</a> 中被定义。</p>
+<p>包括，但不限于：</p>
+<ul>
+<li>size_t - %zu</li>
+<li>ssize_t - %zd</li>
+<li>ptrdiff_t - %td</li>
+<li>原始指针的值 - %p （现代的编译器中打印16进制；先转换指针为 <code>(void *)</code>）</li>
+<li>int64_t - “%” PRId64</li>
+<li>uint64_t - “%” PRIu64<ul>
+<li>64位类型打印时，只需要使用 <code>PRI[udixXo]64</code> 的宏打印。</li>
+<li>Why？<ul>
+<li>在一些平台下，64位值是 <code>long</code> 类型，然而在一些其他的平台上是 <code>long long</code>。这些宏提供正确的跨平台规定的格式规范。</li>
+<li>如果不使用这些宏，事实上是不可能指定一个正确的跨平台格式化字符串的，因为类型类型发生了变化。因为类型变换（然后，请记住，打印之前转换值类型是不安全的，也不和逻辑）。</li>
+</ul>
+</li>
+<li><code>intptr_t</code> - “%” PRIdPTR</li>
+<li><code>uintptr_t</code> - “%” PRIuPTR</li>
+<li><code>intmax_t</code> - “%” PRIdMAX</li>
+<li><code>uintmax_t</code> - “%” PRIuMAX</li>
+</ul>
+</li>
+</ul>
+<p>关于 <code>PRI*</code> 格式说明符的一个注释：它们是宏，并且宏在特定平台上扩展为正确的 printf 类型说明符。这意味着你不能做：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="built_in">printf</span>(<span class="string">"Local number: %PRIdPTR\n\n"</span>, someIntPtr);</div></pre></td></tr></table></figure>
+<p>但是因为它们是宏，你可以：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="built_in">printf</span>(<span class="string">"Local number: %"</span> PRIdPTR <span class="string">"\n\n"</span>, someIntPtr);</div></pre></td></tr></table></figure>
+<p>注意你需要把 <code>%</code> 写在格式字符串文字中，但是类型说明符是在格式字符串文字之外。因为所有相邻字符串被预处理器连接成一个最终的字符串。</p>
+<h2 id="C99-允许在任何地方定义变量"><a href="#C99-允许在任何地方定义变量" class="headerlink" title="C99 允许在任何地方定义变量"></a>C99 允许在任何地方定义变量</h2><p>所以，不要这么写代码：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">test</span><span class="params">(<span class="keyword">uint8_t</span> input)</span> </span>&#123;</div><div class="line">    <span class="keyword">uint32_t</span> b;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (input &gt; <span class="number">3</span>) &#123;</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    b = input;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>要这么写代码：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">test</span><span class="params">(<span class="keyword">uint8_t</span> input)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (input &gt; <span class="number">3</span>) &#123;</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">uint32_t</span> b = input;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>警告：如果代码中有紧密的循环，要检查你初始化的位置。有时分散的声明可能会导致意外的性能变差。对于常规非快速路径代码（这是普遍情况），变量定义最好尽可能清晰，并且将定义放到初始化语句旁边能很大提高代码可读性。</p>
+<h2 id="C99-允许在-for-循环中定义计数器"><a href="#C99-允许在-for-循环中定义计数器" class="headerlink" title="C99 允许在 for 循环中定义计数器"></a>C99 允许在 <em>for</em> 循环中定义计数器</h2><p>所以，不要这样写：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">uint32_t</span> i;</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)</div></pre></td></tr></table></figure>
+<p>要这么写：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">for</span> (<span class="keyword">uint32_t</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)</div></pre></td></tr></table></figure>
+<p>例外的情况是：当你需要在循环结束时还要复用计数器，显然你不能把计数器定义在循环作用域内部。</p>
+<h2 id="现代的编译器支持-pragma-once"><a href="#现代的编译器支持-pragma-once" class="headerlink" title="现代的编译器支持 #pragma once"></a>现代的编译器支持 <em>#pragma once</em></h2><p>所以，不要这么写：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> PROJECT_HEADERNAME</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> PROJECT_HEADERNAME</span></div><div class="line">.</div><div class="line">.</div><div class="line">.</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span> <span class="comment">/* PROJECT_HEADERNAME */</span></span></div></pre></td></tr></table></figure>
+<p>要这么写：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">pragma</span> once</span></div></pre></td></tr></table></figure>
+<p><code>#pragma once</code> 告诉编译器只引入头文件一次，你不再需要用头文件中的三行预处理命令来确保。pragma 预处理命令已经被所有平台所有编译器支持，推荐使用。</p>
+<p>更多细节，参见 <a href="https://en.wikipedia.org/wiki/Pragma_once" target="_blank" rel="external">pragma once</a> 中支持的预处理器列表。</p>
+<h2 id="C-允许静态自动分配初始化数组"><a href="#C-允许静态自动分配初始化数组" class="headerlink" title="C 允许静态自动分配初始化数组"></a>C 允许静态自动分配初始化数组</h2><p>所以，不要这么写：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">uint32_t</span> numbers[<span class="number">64</span>];</div><div class="line">    <span class="built_in">memset</span>(numbers, <span class="number">0</span>, <span class="keyword">sizeof</span>(numbers));</div></pre></td></tr></table></figure>
+<p>这么写：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">uint32_t</span> numbers[<span class="number">64</span>] = &#123;<span class="number">0</span>&#125;;</div></pre></td></tr></table></figure>
+<h2 id="C-允许静态自动分配初始化结构体"><a href="#C-允许静态自动分配初始化结构体" class="headerlink" title="C 允许静态自动分配初始化结构体"></a>C 允许静态自动分配初始化结构体</h2><p>所以，不要这么写：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">struct</span> thing &#123;</div><div class="line">        <span class="keyword">uint64_t</span> index;</div><div class="line">        <span class="keyword">uint32_t</span> counter;</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    <span class="keyword">struct</span> thing localThing;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">initThing</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</div><div class="line">        <span class="built_in">memset</span>(&amp;localThing, <span class="number">0</span>, <span class="keyword">sizeof</span>(localThing));</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>这么写：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">struct</span> thing &#123;</div><div class="line">    <span class="keyword">uint64_t</span> index;</div><div class="line">    <span class="keyword">uint32_t</span> counter;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">struct</span> thing localThing = &#123;<span class="number">0</span>&#125;;</div></pre></td></tr></table></figure>
+<p>   <strong>重要提示</strong>：如果结构体有填充，<code>{0}</code> 将不能把多余的填充字节置为零。举例来说，<code>stuct thing</code> 在 <code>counter</code> 之后有4字节填充（在64位平台），因为结构体被按照字节大小来填充。如果需要使整个结构体置为零，包括未使用的填充字节，使用 <code>memset(&amp;localThing, 0, sizeof(localThing))</code>，因为<code>sizeof(localThing) == 16 bytes</code>，即使可寻址内容只有 <code>8 + 4 = 12 bytes</code>。</p>
+<p>如果需要重新初始化一个已经分配内存的结构体，可以定义一个全局的空结构体，然后赋值：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">struct</span> thing &#123;</div><div class="line">        <span class="keyword">uint64_t</span> index;</div><div class="line">        <span class="keyword">uint32_t</span> counter;</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">struct</span> thing localThingNull = &#123;<span class="number">0</span>&#125;;</div><div class="line">    .</div><div class="line">    .</div><div class="line">    .</div><div class="line">    <span class="keyword">struct</span> thing localThing = &#123;.counter = <span class="number">3</span>&#125;;</div><div class="line">    .</div><div class="line">    .</div><div class="line">    .</div><div class="line">    localThing = localThingNull;</div></pre></td></tr></table></figure>
+<p>如果你运气不错在C99（或更新）环境，可以使用复合字面量来代替保存一个全局空结构体。（参见2001年的 <a href="http://www.drdobbs.com/the-new-c-compound-literals/184401404" target="_blank" rel="external">The New C: Compound Literals</a>）。</p>
+<p>复合字面量允许你的编译器自动的创建临时匿名结构体，然后复制它们给一个目标值。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line">localThing = (<span class="keyword">struct</span> thing)&#123;<span class="number">0</span>&#125;;</div></pre></td></tr></table></figure>
+<h2 id="C99-增加可变长数组支持（C11-将其设置为可选）"><a href="#C99-增加可变长数组支持（C11-将其设置为可选）" class="headerlink" title="C99 增加可变长数组支持（C11 将其设置为可选）"></a>C99 增加可变长数组支持（C11 将其设置为可选）</h2><p>所以，不要这么做（如果你知道你的数组很小，或者只是在做一个快速测试代码）：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">uintmax_t</span> arrayLength = strtoumax(argv[<span class="number">1</span>], <span class="literal">NULL</span>, <span class="number">10</span>);</div><div class="line">  <span class="keyword">void</span> *<span class="built_in">array</span>[];</div><div class="line"></div><div class="line">  <span class="built_in">array</span> = <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(*<span class="built_in">array</span>) * arrayLength);</div><div class="line"></div><div class="line">  <span class="comment">/* remember to free(array) when you're done using it */</span></div></pre></td></tr></table></figure>
+<p>要这么写：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">uintmax_t</span> arrayLength = strtoumax(argv[<span class="number">1</span>], <span class="literal">NULL</span>, <span class="number">10</span>);</div><div class="line">    <span class="keyword">void</span> *<span class="built_in">array</span>[arrayLength];</div><div class="line"></div><div class="line">    <span class="comment">/* no need to free array */</span></div></pre></td></tr></table></figure>
+<p><strong>重要警告</strong>：可变长数组跟普通数组一样（通常）是分配在栈上的。如果你不能静态的创建一个300w个元素的常规数组，那么也不要在运行时用这个语法尝试创建一个300w个元素的数组。它们不是可扩展的 python/ruby 的自增长列表。如果你定义了一个运行时的数组，并且数组长度对于当前栈太大，应用程序将会发生可怕的事情（崩溃、安全问题）。可变数组适合长度小、单一用途场景，但是不应该在生产软件时大规模应用。如果有时，你需要一个3个元素的数组，其他时候需要300w元素的数组，绝不要使用可变长数组。</p>
+<p>万一你遇见VLA，知道它是 VLA（variable length arrays 可变长数组）语法还是有用的（或者想做快速一次性测试）。但是它经常被认为是 <a href="https://twitter.com/grynspan/status/685509158024691712" target="_blank" rel="external">危险反模式</a>，因为你可以非常简单的让你的程序崩溃，忘记检查元素长度边界，或者是忘记你正在一个没有剩余栈空间的奇怪的目标平台。</p>
+<p>注意：必须要确保 <code>arrayLength</code> 在一个合理的大小。（例如，小于几KB，有时在某些平台，最大栈大小只有4KB）。你不能在栈上分配巨大的数组（百万级别），但是如果你知道是有限制的大小，使用 <a href="https://en.wikipedia.org/wiki/Variable-length_array" target="_blank" rel="external">C99 VLA</a> 就相对于人工在堆上请求内存会更加方便。</p>
+<p>更加需要注意的是：上面的代码中没有输入检查，所以用户可以通过分配一个巨大的可变长数组，让应用程序崩溃。<a href="https://twitter.com/comex/status/685423016981966848" target="_blank" rel="external">有些人</a>声称可变长数组是反模式，但是如果你能够加强边界检查，它在一些场景下是可以略胜一筹的。</p>
+<h2 id="C99-允许标注非重叠指针参数"><a href="#C99-允许标注非重叠指针参数" class="headerlink" title="C99 允许标注非重叠指针参数"></a>C99 允许标注非重叠指针参数</h2><p>参见 <a href="https://en.wikipedia.org/wiki/Restrict" target="_blank" rel="external">restrict keyword</a> （通常为 <code>__restrict</code>）</p>
+<h2 id="参数类型"><a href="#参数类型" class="headerlink" title="参数类型"></a>参数类型</h2><p>如果一个函数接受任意的输入数据和将要执行的长度，则不要限制参数类型。</p>
+<p>所以，不要这么写：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">processAddBytesOverflow</span><span class="params">(<span class="keyword">uint8_t</span> *bytes, <span class="keyword">uint32_t</span> len)</span> </span>&#123;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">uint32_t</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;</div><div class="line">        bytes[<span class="number">0</span>] += bytes[i];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>要这么写：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">processAddBytesOverflow</span><span class="params">(<span class="keyword">void</span> *input, <span class="keyword">uint32_t</span> len)</span> </span>&#123;</div><div class="line">    <span class="keyword">uint8_t</span> *bytes = input;</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">uint32_t</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;</div><div class="line">        bytes[<span class="number">0</span>] += bytes[i];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>函数的输入类型描述了代码的接口，而不是代码如何处理这些参数。上面代码中的接口表示“接受一个字节数组和数组的长度”，所以不用限制调用者只能传入 uint8_t 字节流。或许用户甚至希望能够传入更老的 <code>char *</code> 类型或者其他不能预期的值。</p>
+<p>通过声明输入类型为 <code>void *</code>，然后在函数内部重新赋值，重新转换成期望实际类型，可以减少函数调用者对函数内部抽象的猜想。</p>
+<p>一些读者已经指出对齐问题，但是我们正在访问输入的单字节元素，所以没问题。如果我们要转换输入为更宽的类型，我们就需要注意对齐问题了。对于处理跨平台对齐问题的不同的详细描述，参考 <a href="https://www.kernel.org/doc/Documentation/unaligned-memory-access.txt" target="_blank" rel="external">Unaligned Memory Access</a>（未对齐内存访问）。（提醒：该文章的主要内容不实关于C语言跨硬件架构的复杂性，因此要完全理解示例，需要一些外部知识和经验。）</p>
+<h2 id="返回参数类型"><a href="#返回参数类型" class="headerlink" title="返回参数类型"></a>返回参数类型</h2><p>C99 提供了强大的头文件 <code>&lt;stdbool.h&gt;</code>，其中定义了 <code>true</code> 是 <code>1</code>， <code>false</code> 是 <code>0</code> 。</p>
+<p>对于成功／失败的返回类型，函数需要返回 <code>true</code> 或 <code>false</code>，而不是人为的指定一个<code>1</code>或<code>0</code>的 <code>int32_t</code> 的返回类型（或者更糟糕，<code>1</code> 和 <code>-1</code>（或 <code>0</code> 代表成功，<code>1</code> 代表失败？或 <code>0</code> 代表成功，<code>-1</code> 代表失败？））。</p>
+<p>如果函数会在参数无效的范围内修改了输入参数，而不是返回修改后的指针。那么应该将整个API中可能会被修改成无效的参数都强制使用双指针。在大规模使用中，用“对于某些接口，返回值使输入无效”的方式写代码，非常容易出错。</p>
+<p>因此，不要这么写代码：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> *<span class="title">growthOptional</span><span class="params">(<span class="keyword">void</span> *grow, <span class="keyword">size_t</span> currentLen, <span class="keyword">size_t</span> newLen)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (newLen &gt; currentLen) &#123;</div><div class="line">        <span class="keyword">void</span> *newGrow = <span class="built_in">realloc</span>(grow, newLen);</div><div class="line">        <span class="keyword">if</span> (newGrow) &#123;</div><div class="line">            <span class="comment">/* resize success */</span></div><div class="line">            grow = newGrow;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="comment">/* resize failed, free existing and signal failure through NULL */</span></div><div class="line">            <span class="built_in">free</span>(grow);</div><div class="line">            grow = <span class="literal">NULL</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> grow;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>应该这么写：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">/* Return value:</span></div><div class="line">*  - 'true' if newLen &gt; currentLen and attempted to grow</div><div class="line">*    - 'true' does not signify success here, the success is still in '*_grow'</div><div class="line">*  - 'false' if newLen &lt;= currentLen */</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">growthOptional</span><span class="params">(<span class="keyword">void</span> **_grow, <span class="keyword">size_t</span> currentLen, <span class="keyword">size_t</span> newLen)</span> </span>&#123;</div><div class="line">    <span class="keyword">void</span> *grow = *_grow;</div><div class="line">    <span class="keyword">if</span> (newLen &gt; currentLen) &#123;</div><div class="line">        <span class="keyword">void</span> *newGrow = <span class="built_in">realloc</span>(grow, newLen);</div><div class="line">        <span class="keyword">if</span> (newGrow) &#123;</div><div class="line">            <span class="comment">/* resize success */</span></div><div class="line">            *_grow = newGrow;</div><div class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">/* resize failure */</span></div><div class="line">        <span class="built_in">free</span>(grow);</div><div class="line">        *_grow = <span class="literal">NULL</span>;</div><div class="line"></div><div class="line">        <span class="comment">/* for this function,</span></div><div class="line">         * 'true' doesn't mean success, it means 'attempted grow' */</div><div class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>或者，更好的方式是这么写：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">enum</span> growthResult &#123;</div><div class="line">    GROWTH_RESULT_SUCCESS = <span class="number">1</span>,</div><div class="line">    GROWTH_RESULT_FAILURE_GROW_NOT_NECESSARY,</div><div class="line">    GROWTH_RESULT_FAILURE_ALLOCATION_FAILED</div><div class="line">&#125; growthResult;</div><div class="line"></div><div class="line"><span class="function">growthResult <span class="title">growthOptional</span><span class="params">(<span class="keyword">void</span> **_grow, <span class="keyword">size_t</span> currentLen, <span class="keyword">size_t</span> newLen)</span> </span>&#123;</div><div class="line">    <span class="keyword">void</span> *grow = *_grow;</div><div class="line">    <span class="keyword">if</span> (newLen &gt; currentLen) &#123;</div><div class="line">        <span class="keyword">void</span> *newGrow = <span class="built_in">realloc</span>(grow, newLen);</div><div class="line">        <span class="keyword">if</span> (newGrow) &#123;</div><div class="line">            <span class="comment">/* resize success */</span></div><div class="line">            *_grow = newGrow;</div><div class="line">            <span class="keyword">return</span> GROWTH_RESULT_SUCCESS;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">/* resize failure, don't remove data because we can signal error */</span></div><div class="line">        <span class="keyword">return</span> GROWTH_RESULT_FAILURE_ALLOCATION_FAILED;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> GROWTH_RESULT_FAILURE_GROW_NOT_NECESSARY;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="格式"><a href="#格式" class="headerlink" title="格式"></a>格式</h2><p>代码风格非常重要，同时又完全没什么价值。</p>
+<p>如果你的项目有50页的代码风格指南，没人会帮助你。但是，如果你的代码可读性很差，也没人想要去帮助你。</p>
+<p>通常的解决方法是使用自动的代码格式化工具。</p>
+<p>2016年唯一可用的C格式化工具是 <a href="http://clang.llvm.org/docs/ClangFormat.html" target="_blank" rel="external">clang-format</a>。clang-format 拥有最好的自动C格式化的默认参数，并且现在仍然处于活跃的开发阶段。</p>
+<p>下面是我个人惯用的运行clang-format 的脚本，包含一些不错的参数：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line"><span class="meta">#!/usr/bin/env bash</span></div><div class="line"></div><div class="line">clang-format -style=<span class="string">"&#123;BasedOnStyle: llvm, IndentWidth: 4, AllowShortFunctionsOnASingleLine: None, KeepEmptyLinesAtTheStartOfBlocks: false&#125;"</span> <span class="string">"<span class="variable">$@</span>"</span></div></pre></td></tr></table></figure>
+<p>然后调用这个脚本（假设这个脚本文件命名为 <code>cleanup-format</code>）：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">matt@foo:~/repos/badcode% cleanup-format -i *.&#123;c,h,cc,cpp,hpp,cxx&#125;</div></pre></td></tr></table></figure>
+<p>参数 -i 会将格式化后的内容覆盖原文件，而不是写入新文件或创建备份文件。</p>
+<p>如果有很多文件，你可以并行的递归处理整个源码树：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line"><span class="meta">#!/usr/bin/env bash</span></div><div class="line"></div><div class="line"><span class="comment"># <span class="doctag">note:</span> clang-tidy only accepts one file at a time, but we can run it</span></div><div class="line"><span class="comment">#       parallel against disjoint collections at once.</span></div><div class="line">find . \( -name \*.c -or -name \*.cpp -or -name \*.cc \) |xargs -n1 -P4 cleanup-tidy</div><div class="line"></div><div class="line"><span class="comment"># clang-format accepts multiple files during one run, but let's limit it to 12</span></div><div class="line"><span class="comment"># here so we (hopefully) avoid excessive memory usage.</span></div><div class="line">find . \( -name \*.c -or -name \*.cpp -or -name \*.cc -or -name \*.h \) |xargs -n12 -P4 cleanup-format -i</div></pre></td></tr></table></figure>
+<p>现在，有一个新的 cleanup-tidy 脚本，内容如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line"><span class="meta">#!/usr/bin/env bash</span></div><div class="line"></div><div class="line">clang-tidy \</div><div class="line">    -fix \</div><div class="line">    -fix-errors \</div><div class="line">    -header-filter=.* \</div><div class="line">    --checks=readability-braces-around-statements,misc-macro-parentheses \</div><div class="line">    <span class="variable">$1</span> \</div><div class="line">    -- -I.</div></pre></td></tr></table></figure>
+<p><a href="http://clang.llvm.org/extra/clang-tidy/" target="_blank" rel="external">clang-tidy</a> 是策略驱动的代码重构工具，上面示例代码中开启了俩个修复项：</p>
+<ul>
+<li><code>readability-braces-around-statements</code> - 强制 <code>if / while / for</code> 所有语句都使用大括号包起来<ul>
+<li>C 允许循环和条件后的单语句用“可选大括号”是一个历史事故。现在写代码时，循环和条件语句之后不使用大括号是不可原谅的事情。不要用“但是，编译器允许啊！”的借口争辩，对于代码可读性、可维护性、可理解性和可跳过性没有任何好处。你写代码不是为了取悦编译器，而是为了将来维护你代码的人，那时他们并不知道当时你为什么会存在这样的代码。</li>
+</ul>
+</li>
+<li><code>misc-macro-parentheses</code> - 自动为宏中使用的所有参数加上括号。</li>
+</ul>
+<p><code>clang-tidy</code> 非常好用，但是对于一些复杂的代码可能会有问题。还有，<code>clang-tidy</code> 并没有做格式化的工作，所以你需要在整理代码之后，运行 <code>clang-format</code> 来整理新的大括号和重新推到宏。</p>
+<h2 id="可读性"><a href="#可读性" class="headerlink" title="可读性"></a>可读性</h2><p>这里开始，写作速度好像慢下来了……</p>
+<h3 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h3><p>代码逻辑应该包含在代码文件中。</p>
+<h3 id="文件结构"><a href="#文件结构" class="headerlink" title="文件结构"></a>文件结构</h3><p>源码文件尽量限制行数在1000行以内（1500行就已经是很糟糕的情况了）。如果也包含在原文件中（为了测试静态函数等），尽量调整这种情况。</p>
+<h2 id="杂项的想法"><a href="#杂项的想法" class="headerlink" title="杂项的想法"></a>杂项的想法</h2><h3 id="永远不要使用-malloc"><a href="#永远不要使用-malloc" class="headerlink" title="永远不要使用 malloc"></a>永远不要使用 <code>malloc</code></h3><p>尽量使用 <code>calloc</code>，获取零内存没有性能损失。如果你不喜欢 <code>calloc(object count, size per object)</code> 的函数原型，可以封装下 <code>#define mycalloc(N) calloc(1, N)</code>。</p>
+<p>摘取读者的一些评论如下：</p>
+<ul>
+<li><code>calloc</code> 申请巨大内存时，会有性能影响。</li>
+<li><code>calloc</code> 在一些奇怪的平台有性能问题（最小的嵌入式系统、游戏机、30年前的老硬件）。</li>
+<li>总是封装 <code>calloc(element count, size of each element)</code> 不是个好主意。</li>
+<li>避免使用 <code>malloc</code> 的一个不错的理由是它不做整型溢出检查，这是个潜在安全问题。</li>
+<li><code>calloc</code> 分配内存能够避免 valgrind 对于潜在的读或复制未初始化内存时的警告，因为分配内存时会自动初始化为0。</li>
+</ul>
+<p>以上都是非常好的点，然后我们还必须要做性能测试和回归测试，以保证跨编译器、平台、操作系统和硬件设备上的性能。</p>
+<p>不像 <code>malloc()</code>，<code>calloc()</code> 可以检查整型溢出是它的一个优势，因为它会将其参数做乘法，以确认最终需要分配的内存大小。如果只是需要分配很小的内存，对 <code>calloc()</code> 封装没有问题。如果是药分配潜在无边界的数据流数据的内存，你可能需要使用原生的常规方法 <code>calloc(element count, size of each element)</code>，以方便实用。</p>
+<p>没有任何建议是万事皆准的，但是试图给出完美的通用建议，最终会像读一本语言说明文档。</p>
+<p>有关 <code>calloc()</code> 如何为你干净内存的参考，可以阅读以下文章：</p>
+<ul>
+<li><a href="https://blogs.fau.de/hager/archives/825" target="_blank" rel="external">Benchmarking fun with calloc() and zero pages (2007)</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Copy-on-write#Copy-on-write_in_virtual_memory_management" target="_blank" rel="external">Copy-on-write in virtual memory management</a> </li>
+</ul>
+<p>在2016年的大部分场景下，我仍旧坚持推荐使用 <code>calloc()</code> （假设：x64目标的平台，人性化的数据，不包括人类基因数量级别的数据）。任何与“期望”的偏离都会让我们陷入“领域知识”的绝望之中，这不是我们当下要讨论的问题。</p>
+<p>子注：<code>calloc()</code> 传递给你的预先清零的内存是一次性处理的。如果使用 <code>realloc()</code> 来扩展你使用 <code>calloc()</code> 分配的内存，扩展的内存是没有清零的内存。如果需要将 realloc 分配的内存清零，必须要针对扩展的内存手动的调用 <code>memset()</code> 。</p>
+<h3 id="永远不要使用-memset（如果你可以避免的话）"><a href="#永远不要使用-memset（如果你可以避免的话）" class="headerlink" title="永远不要使用 memset（如果你可以避免的话）"></a>永远不要使用 memset（如果你可以避免的话）</h3><p>当你能够静态的初始化一个结构体（或数组）为零（或者通过内连复合字面量赋值它为零，或者通过结构体外的一个预先置零全局变量赋值），就不要使用 <code>memset(ptr, 0, len)</code>。</p>
+<p>尽管如此，如果你需要将结构体包括他的填充字节置零，<code>memset()</code> 是唯一的方法（因为 <code>{0}</code> 只能设置定义的字段，而不能填充未定义的偏移量）。</p>
+<h2 id="了解更多"><a href="#了解更多" class="headerlink" title="了解更多"></a>了解更多</h2><p>参见 <a href="http://en.cppreference.com/w/c/types/integer" target="_blank" rel="external">Fixed width integer types (since C99)</a></p>
+<p>参见苹果的  <a href="https://developer.apple.com/library/mac/documentation/Darwin/Conceptual/64bitPorting/MakingCode64-BitClean/MakingCode64-BitClean.html" target="_blank" rel="external">Making Code 64-Bit Clean</a></p>
+<p>参见 sizes of <a href="https://www.securecoding.cert.org/confluence/pages/viewpage.action?pageId=4374" target="_blank" rel="external">C types across architectures</a>  除非你能为了每一行代码记住那么长的表的内容，需要明确定义整型的宽度，绝对不要使用 char/short/int/long 这些内置存储类型。</p>
+<p>参见 <a href="http://www.viva64.com/en/a/0050/" target="_blank" rel="external">size_t and ptrdiff_t</a></p>
+<p>参见 <a href="https://www.securecoding.cert.org/confluence/display/c/SEI+CERT+C+Coding+Standard" target="_blank" rel="external">Secure Coding</a>。如果你真心希望能够写出完美的代码，只需要简单记住其中上千个简单示例。</p>
+<p>参见来自 Inria 的 Jens Gustedt 编写的 <a href="http://icube-icps.unistra.fr/img_auth.php/d/db/ModernC.pdf" target="_blank" rel="external">Modern C</a>。</p>
+<p>参见 <a href="http://www.dotslashzero.net/2014/08/22/understanding-characterstring-literals-in-cc/" target="_blank" rel="external">Understanding Character/String Literals in C/C++</a> 了解更多在C11中的 Unicode 支持的内容。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>大规模的编写正确的代码本质上是不可能的。我们有多种炒作系统、运行时环境、程序库和硬件平台要考虑，更不用说像RAM中的随机位反转和块设备故障这些未知的问题。</p>
+<p>我们能做的最好的是编写简单、易懂的代码，尽量减少间接代码和未注视的魔术代码。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;英文原文：&lt;a href=&quot;https://matt.sh/howto-c&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://matt.sh/howto-c&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;这原本是一篇我写在 2015 年没有发布出来的草稿。为了让大家也
+    
+    </summary>
+    
+    
+      <category term="C" scheme="http://blog.100dos.com/tags/C/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>商城抢购/秒杀模块设计</title>
+    <link href="http://blog.100dos.com/2016/10/27/seckill-on-e-shop/"/>
+    <id>http://blog.100dos.com/2016/10/27/seckill-on-e-shop/</id>
+    <published>2016-10-27T10:37:48.000Z</published>
+    <updated>2017-03-14T02:25:20.000Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote>
+<p>抢购是指在某一个时间段内商家低价甚至免费销售商品，消费者突发性的集中投入购买力，大批量的、超常规的购买某种或某类商品的现象。</p>
+</blockquote>
+<p>总结来说有以下俩个特点：</p>
+<ul>
+<li>商品数量有限，比如设置此次抢购一共1000个商品，抢完即结束</li>
+<li>时间受限，比如会定义从何时开始，到何时结束</li>
+</ul>
+<p>14年的8月份，墨迹商城做了几次抢一毛钱抢毛巾、后续的每周蓝色星期二是抢空气果的抢购活动，当时非常火爆。墨迹本身的用户量就很大（目前有6亿用户），而且之前做了很久的宣传。大量的用户（想占便宜抢一毛钱毛巾的用户和对我们当时的新产品空气果发烧的用户）一拥而入。1毛钱抢毛巾的活动，一瞬间 1 万条毛巾就被抢光了。可以想象当时的疯狂程度……</p>
+<h3 id="简单抢购需求描述／抢购流程描述"><a href="#简单抢购需求描述／抢购流程描述" class="headerlink" title="简单抢购需求描述／抢购流程描述"></a>简单抢购需求描述／抢购流程描述</h3><p>1.商品详情页显示商品信息。没有开始的抢购之前，抢购按钮为灰色且不可点击。按钮显示提示文字“马上开抢”，并显示抢购开始倒计时间；<br>2.抢购倒计时结束，抢购按钮方可点击，并显示“抢购”；<br>3.用户抢购商品成功，跳转到确认订单页面，完成下单、支付流程；<br>4.抢购失败，跳转到抢购失败页面；<br>5.已抢光的商品显示“已抢光”，抢购时间结束的商品显示“已结束”；<br>6.抢购流程结束。</p>
+<h3 id="根据需求我们需要解决以下几个问题："><a href="#根据需求我们需要解决以下几个问题：" class="headerlink" title="根据需求我们需要解决以下几个问题："></a>根据需求我们需要解决以下几个问题：</h3><p>1、抢购之前用户会不停的刷新商品详情页面，怎么办？</p>
+<p>答：商品详情页面静态化，包括页面中引用的静态文件、图片等都缓存到CDN节点上。至于页面中显示的倒计时，由于要抢购时间同步，所以不能使用客户端的时间。服务器完成一个简单时间接口即可，返回Json格式时间。单机 1w以上 QPS 应该没什么问题，因为本身不涉及复杂业务逻辑。在自己的 Mac Pro上测试，用 Openresty 实现的获取系统时间，能做到 7157 的QPS，服务器性一定会能更高。</p>
+<p>2、抢购开始倒计时结束，大量用户同时抢购商品，如何应对流量暴增，是平实的几倍、几十倍？</p>
+<p>答：肯定不能让大量的并发请求（并且是写请求）直接落到 Mysql，我们考虑用队列来实现。优先写入抢购队列，然后慢慢的写入Mysql，这样一台数据库服务器也就就够了。</p>
+<p><img src="/images/seckill-on-e-shop/1.png" alt=""></p>
+<p>抢购／秒杀，手快就能抢到，手慢就抢不到。所以为了减轻服务器的压力，也给用户好的体验。对于如果队列中抢购请求过多，远远超过抢购商品数的情况下，将直接返回“抢购失败”给用户。比如这次一共抢购100件商品，此时队列中已经有了10w个抢购请求。为了用户体验，再进来的抢购请求直接返回抢购失败。不让用户等待太久的时间（即使进入队列，很长时间才执行到，也早早的就已经没有可抢的商品了）。</p>
+<p>3、如何限制抢购商品数量（库存）？</p>
+<p>答：需要记录一个商品本次抢购的个数 N。每当从队列透过一个抢购请求到 DB，则 N - 1，直到 N = 0 商品被抢光。且为了保持系统简单。有用户抢购成功，但是不付款的情况，也不再考虑从新“回仓”的问题。如果考虑回仓的话，比如半个小时以后用户仍没有付款，则视为用户放弃购买这次抢购的商品。商品库存 +1，这时再去抢购仍然能抢到。就像12306抢车票设置的是45分钟后不付款，回仓，如果是老司机这个时候回去看看兴许真的还能买到票。</p>
+<h3 id="详细设计"><a href="#详细设计" class="headerlink" title="详细设计"></a>详细设计</h3><p>略……</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;抢购是指在某一个时间段内商家低价甚至免费销售商品，消费者突发性的集中投入购买力，大批量的、超常规的购买某种或某类商品的现象。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;总结来说有以下俩个特点：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;商品数量有限，比如设置此次抢
+    
+    </summary>
+    
+    
+      <category term="系统设计" scheme="http://blog.100dos.com/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>CentOS 6.6 安装 mysql 5.7</title>
+    <link href="http://blog.100dos.com/2016/10/14/centsos6.6-mysql5.7-install/"/>
+    <id>http://blog.100dos.com/2016/10/14/centsos6.6-mysql5.7-install/</id>
+    <published>2016-10-14T04:05:45.000Z</published>
+    <updated>2017-03-14T02:25:20.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>在 CentOS 的 yum 默认安装的是 mysql 5.5 版本，由于开发需要 5.6 以上版本，索性就装个 5.7。</p>
+<p>到官网下载对应的 rpm buddle 包，CentOS 6 选择选择如下对应的版本</p>
+<blockquote>
+<p><em>Red Hat Enterprise Linux 6 / Oracle Linux 6 (x86, 64-bit), RPM Bundle    5.7.15    440.2M</em><br><em>(mysql-5.7.15-1.el6.x86_64.rpm-bundle.tar)</em></p>
+</blockquote>
+<p>安装前，如果已经安装了 Mysql 5.5， 需要卸载旧版的 Mysql。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@v194 ~]# rpm -qa |grep mysql</div><div class="line">mysql-libs-5.1.73-7.el6.x86_64</div><div class="line">mysql-community-libs-5.6.33-2.el6.x86_64</div><div class="line">mysql-5.1.73-7.el6.x86_64</div><div class="line">mysql-community-server-5.6.28-2.el6.x86_64</div><div class="line"></div><div class="line">[root@v194 ~]# rpm -e --nodeps mysql-libs-5.1.73-7.el6.x86_64</div><div class="line">[root@v194 ~]# rpm -e --nodeps mysql-community-libs-5.6.33-2.el6.x86_64 mysql-5.1.73-7.el6.x86_64 mysql-community-server-5.6.28-2.el6.x86_64</div></pre></td></tr></table></figure>
+<p>删除旧的Mysql目录，不删会有问题。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@v194 ~]# ls  -l  /var/lib|grep mysql</div><div class="line">drwxr-xr-x  5 mysql    mysql    4096 11月 17 2015 mysql</div><div class="line">[root@v194 ~]# rm -rf /var/lib/mysql</div></pre></td></tr></table></figure>
+<p>解压安装下载的 bundle 包。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~# tar xf mysql-5.7.15-1.el6.x86_64.rpm-bundle.tar</div><div class="line">~# cd mysql-5.7.15-1</div></pre></td></tr></table></figure>
+<p><strong>按照common-&gt;libs-&gt;client-&gt;server 的顺序安装</strong>。</p>
+<p>[root@v194 ~]# rpm -ivh mysql-community-common-5.7.15-1.el6.x86_64.rpm<br>[root@v194 ~]# rpm -ivh mysql-community-libs-5.7.15-1.el6.x86_64.rpm<br>[root@v194 ~]# rpm -ivh mysql-community-client-5.7.15-1.el6.x86_64.rpm<br>[root@v194 ~]# rpm -ivh mysql-community-server-5.7.15-1.el6.x86_64.rpm</p>
+<p>启动 mysqld</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@v194 ~]# service mysqld start</div></pre></td></tr></table></figure>
+<p>找到临时登录密码</p>
+<p>Mysql 5.7 的密码不在是默认为空，而是在安装的log中。查找文件内容中的临时密码，密码为 yQO64H%Khrts</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@v194 ~]# vim /var/log/mysqld.log</div><div class="line">……</div><div class="line">2016-10-11T07:03:47.910712Z 1 [Note] A temporary password is generated for root@localhost: yQO64H%Khrts</div><div class="line">……</div></pre></td></tr></table></figure>
+<p>登录 Mysql 客户端<br>[root@v194 ~]# /usr/bin/mysql -uroot -pyQO64H%Khrts -h127.0.0.1 -P3306</p>
+<p>Mysql 5.7 必须要修改root 密码，<strong>并且 root 密码必须包含大写字母、数字和特殊字符</strong>。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">mysql&gt; alter user &apos;root&apos;@&apos;localhost&apos; identified by &apos;123abc!@#testABC&apos;;</div><div class="line">Query OK, 0 rows affected (0.00 sec)</div></pre></td></tr></table></figure>
+<p>…………</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在 CentOS 的 yum 默认安装的是 mysql 5.5 版本，由于开发需要 5.6 以上版本，索性就装个 5.7。&lt;/p&gt;
+&lt;p&gt;到官网下载对应的 rpm buddle 包，CentOS 6 选择选择如下对应的版本&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;em&gt;R
+    
+    </summary>
+    
+      <category term="Linux" scheme="http://blog.100dos.com/categories/Linux/"/>
+    
+    
+      <category term="mysql" scheme="http://blog.100dos.com/tags/mysql/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>PHP 中的 Lambdas 和 Closures</title>
+    <link href="http://blog.100dos.com/2016/09/30/Lambdas-and-Closures-in-PHP/"/>
+    <id>http://blog.100dos.com/2016/09/30/Lambdas-and-Closures-in-PHP/</id>
+    <published>2016-09-30T07:14:55.000Z</published>
+    <updated>2017-03-14T02:25:20.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>PHP 5.3 开始，添加了 Lambdas（匿名函数）和 CLosures（闭包）这俩个新的特性。函数式编程也越来越能够得到程序员的追捧。其他语言，比如 Javascript 或 Ruby 中也经常能看到匿名函数的实现。</p>
+<p>那么什，么是 Lambda 函数？</p>
+<p>一个匿名函数可以简单理解为一个没有被定义的函数。</p>
+<p>没有名字函数，允许临时创建一个没有指定命名的函数。最经常用作回调函数（callback）参数的值。当然，也有其它应用的情况。</p>
+<p>比如我们定义一个正式的函数定义，可能是下面这个样子：</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">greeting</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">     <span class="keyword">return</span> <span class="string">"Hello world."</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// call function</span></div><div class="line"><span class="keyword">echo</span> greeting();</div></pre></td></tr></table></figure>
+<p>一个 lambda 函数</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span><span class="params">()</span> </span>&#123;</div><div class="line">     <span class="keyword">return</span> <span class="string">"Hello world."</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>因为 lambda 函数没有命名，不能像正式的函数那样调用。需要把它赋值给一个变量。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line">$greeting = <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>&#123;</div><div class="line">     <span class="keyword">return</span> <span class="string">"Hello world."</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// call function</span></div><div class="line"><span class="keyword">echo</span> $greeting();</div></pre></td></tr></table></figure>
+<p>或者把 lambda 函数作为另一个函数的参数。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">function shout ($message)</div><div class="line">&#123;</div><div class="line">     echo $message();</div><div class="line">&#125;</div><div class="line"></div><div class="line">shout(function()&#123;</div><div class="line">     return ‘Hello world.&apos;;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>为什么要使用 lambda 函数？</p>
+<p>通常使用匿名函数可以让我们摆脱那些在程序中只会调用一次的函数。很多时候，我们需要定义一个函数来执行一项任务，但并不意味着我们需要一直需要该函数，也不需要它之后还能被调用。这种时候，我们就可以使用匿名函数。</p>
+<p>在函数式编程中，lambdas 被称为一流的函数，因为它们能够：</p>
+<ul>
+<li>作为参数来传递。</li>
+<li>可在运行过程中创建并使用。</li>
+<li>从函数返回。</li>
+<li>分配给变量。</li>
+</ul>
+<p>可以使用内置函数 <code>create_function</code> ，作用是一样的。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line">$greeting = create_function(<span class="string">''</span>, <span class="string">'echo "Hello world."'</span>);</div><div class="line"></div><div class="line">$greeting();</div></pre></td></tr></table></figure>
+<p>但是 <code>create_function</code> 的语法很繁琐。一方面，该代码是在一个大引证字符串中。因此，不要期望从 PHP 编辑器获得帮助，而且不要忘了尽量避免使用该代码串。此外，<code>create_function</code> 的代码是在执行时进行编译，而且结果函数无法被缓存。</p>
+<p>什么是 Closure ？</p>
+<p>如果 Lambdas 是没有名字的函数，那么 Closures 仅比 Lambdas 多一个上下文。就是说，Closure 是个匿名函数，在其创建时，将来自创建该函数的代码范围内得变量值附加到它本身。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="comment">// Create a user</span></div><div class="line">$user = <span class="string">"Philip"</span>;</div><div class="line"></div><div class="line"><span class="comment">// Create a Closure</span></div><div class="line">$greeting = <span class="function"><span class="keyword">function</span><span class="params">()</span> <span class="title">use</span> <span class="params">($user)</span> </span>&#123;</div><div class="line">     <span class="keyword">echo</span> <span class="string">"Hello $user"</span>;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">// Greet the user</span></div><div class="line">$greeting(); <span class="comment">// Returns "Hello Philip"</span></div></pre></td></tr></table></figure>
+<p>从上面的例子能看到，在 Closure 定义中，通过 <code>use</code> 语句传递了 $user 变量, 所以 Closure 内部能够访问到 <code>$user</code> 。但是如果在 Closure 作用域内修改变量 <code>$user</code> 的值，并不会修改父作用域的 <code>$user</code> 值。如果希望修改父作用域的 <code>$user</code>，可以传递变量的引用 <code>&amp;$user</code> 给 Closure   。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="comment">// Set counter</span></div><div class="line">$i = <span class="number">0</span>;</div><div class="line"></div><div class="line"><span class="comment">// Increase counter within the scope</span></div><div class="line"><span class="comment">// of the function</span></div><div class="line">$closure = <span class="function"><span class="keyword">function</span> <span class="params">()</span> <span class="title">use</span> <span class="params">($i)</span></span>&#123; $i++; &#125;;</div><div class="line"></div><div class="line"><span class="comment">// Run the function</span></div><div class="line">$closure();</div><div class="line"><span class="comment">// The global count hasn't changed</span></div><div class="line"><span class="keyword">echo</span> $i; <span class="comment">// Returns 0</span></div><div class="line"></div><div class="line"><span class="comment">// Reset count</span></div><div class="line">$i = <span class="number">0</span>;</div><div class="line"></div><div class="line"><span class="comment">// Increase counter within the scope</span></div><div class="line"><span class="comment">// of the function but pass it as a reference</span></div><div class="line">$closure = <span class="function"><span class="keyword">function</span> <span class="params">()</span> <span class="title">use</span> <span class="params">(&amp;$i)</span></span>&#123; $i++; &#125;;</div><div class="line"></div><div class="line"><span class="comment">// Run the function</span></div><div class="line">$closure();</div><div class="line"><span class="comment">// The global count has increased</span></div><div class="line"><span class="keyword">echo</span> $i; <span class="comment">// Returns 1</span></div></pre></td></tr></table></figure>
+<p>Closure 在作为回调函数的参数时，非常有用，比如 <code>array_map</code>、<code>array_filter</code>、<code>array_reduce</code>、<code>array_walk</code>等。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="comment">// An array of names</span></div><div class="line">$users = <span class="keyword">array</span>(<span class="string">"John"</span>, <span class="string">"Jane"</span>, <span class="string">"Sally"</span>, <span class="string">"Philip"</span>);</div><div class="line"></div><div class="line"><span class="comment">// Pass the array to array_walk</span></div><div class="line">array_walk($users, <span class="function"><span class="keyword">function</span> <span class="params">($name)</span> </span>&#123;</div><div class="line">  <span class="keyword">echo</span> <span class="string">"Hello $name&lt;br&gt;"</span>;</div><div class="line">&#125;);</div><div class="line"><span class="comment">// Returns</span></div><div class="line"><span class="comment">// -&gt; Hello John</span></div><div class="line"><span class="comment">// -&gt; Hello Jane</span></div><div class="line"><span class="comment">// -&gt; ..</span></div></pre></td></tr></table></figure>
+<p>同样的，可通过 <code>use</code> 语句把父作用变量传递到 Closure 中。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="comment">// Set a multiplier</span></div><div class="line">$multiplier = <span class="number">3</span>;</div><div class="line"></div><div class="line"><span class="comment">// Create a list of numbers</span></div><div class="line">$numbers = <span class="keyword">array</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>);</div><div class="line"></div><div class="line"><span class="comment">// Use array_walk to iterate</span></div><div class="line"><span class="comment">// through the list and multiply</span></div><div class="line">array_walk($numbers, <span class="function"><span class="keyword">function</span><span class="params">($number)</span> <span class="title">use</span><span class="params">($multiplier)</span></span>&#123;</div><div class="line">  <span class="keyword">echo</span> $number * $multiplier;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>在目前流行的 laravel 框架中，能看到如下处理路由的方法。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line">Route::get(<span class="string">'user/(:any)'</span>, <span class="function"><span class="keyword">function</span><span class="params">($name)</span></span>&#123;</div><div class="line">  <span class="keyword">return</span> <span class="string">"Hello "</span> . $name;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>有没有觉得非常的简洁和清晰。利用这俩个新的特性，可以尝试重构之前的老代码，使得代码更简洁、更直观、更容易理解。也可以进一步学习函数式编程，感受新的开发模式和打破原有编码习惯。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;PHP 5.3 开始，添加了 Lambdas（匿名函数）和 CLosures（闭包）这俩个新的特性。函数式编程也越来越能够得到程序员的追捧。其他语言，比如 Javascript 或 Ruby 中也经常能看到匿名函数的实现。&lt;/p&gt;
+&lt;p&gt;那么什，么是 Lambda 函数？&lt;
+    
+    </summary>
+    
+      <category term="PHP" scheme="http://blog.100dos.com/categories/PHP/"/>
+    
+    
+      <category term="Lambdas" scheme="http://blog.100dos.com/tags/Lambdas/"/>
+    
+      <category term="Closures" scheme="http://blog.100dos.com/tags/Closures/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>理解 select、poll 和 epoll</title>
+    <link href="http://blog.100dos.com/2016/09/25/understanding-select-poll-epoll-io-mutiplexing/"/>
+    <id>http://blog.100dos.com/2016/09/25/understanding-select-poll-epoll-io-mutiplexing/</id>
+    <published>2016-09-25T07:26:48.000Z</published>
+    <updated>2017-03-14T02:25:20.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>select、poll 和 epoll 都是 Linux API 提供的 IO 复用方式。<em>IO多路复用是指内核一旦发现进程指定的一个或者多个IO条件准备读取，它就通知该进程。</em><a href="http://www.zhihu.com/question/32163005/answer/55772739" target="_blank" rel="external">知乎上的回答</a> 非常好的解释了什么事IO多路复用，用机场航班调度问题的解释的非常清晰，看完之后豁然开朗。</p>
+<p>select、poll 和 epoll 都是阻塞的，用 select 来举例，写法大概是这样：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">while</span> <span class="literal">true</span> &#123;</div><div class="line">    select(fds[])</div><div class="line">    <span class="keyword">for</span> i in fds[] &#123;</div><div class="line">        <span class="keyword">if</span> i has data <span class="comment">// 事件是否就绪</span></div><div class="line">            read until unavailable</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面的代码在执行到 select 时，会阻塞整个程序执行，直到有就绪的描述符才会返回，从而继续向下执行程序。现在如果把上面为代码中的 select 那一行删除，那么程序就会一直循环确认程序中是否准备好的文件描述符。这样在高程序在大量并发连接中只有少量活跃的情况下的系统，就浪费了非常多的CPU资源。现在通过IO复用，在没有就绪的描述符准备好时，就暂时将程序阻塞，从而提高了CPU的利用率。</p>
+<p>但是 select 的返回时，我们仅仅是知道有IO事件发生，但并不知道是那个或那几个事件准备好了？于是我们只能轮询所有的描述符，查找到具体就绪可以操作的描述符，然后再进行操作处理。</p>
+<blockquote>
+<p>传统的 select/poll 另一个致命弱点就是当你拥有一个很大的 socket 集合，不过由于网络延时，任一时间只有部分的 socket 是“活跃”的，但是 select/poll 每次调用都会线性扫描全部的集合，导致效率呈现线性下降。但是epoll不存在这个问题，它只会对“活跃”的 socket 进行操作 — 这是因为在内核实现中 epoll 是根据每个 fd 上面的 callback 函数实现的。那么，只有“活跃”的 socket 才会主动的去调用 callback 函数，其他 idle 状态 socket 则不会，在这点上，epoll 实现了一个“伪”AIO，因为这时候推动力在 OS 内核。</p>
+</blockquote>
+<p>epoll 可以理解为 event poll，基于事件驱动。<code>epoll_ctl</code>注册事件并注册 <code>callback</code> 回调函数，<code>epoll_wait</code>只返回发生的事件。不同于 select 和 poll，把哪个描述符发生了怎样的 IO 事件返回，这样就避免了像 select/poll 对所有的事件的轮询操作。复杂度降低到了O(1)。epoll 的伪代码如下：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">while</span> <span class="literal">true</span> &#123;</div><div class="line">    ready_events[] = epoll_wait(epollfd)</div><div class="line">    <span class="keyword">for</span> i in ready_events[] &#123;</div><div class="line">        read or write till</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>epoll是Linux内核为处理大批量文件描述符而作了改进的poll，是Linux下多路复用IO接口select/poll的增强版本，它能显著提高程序在大量并发连接中只有少量活跃的情况下的系统CPU利用率。另一点原因就是获取事件的时候，它无须遍历整个被侦听的描述符集，只要遍历那些被内核IO事件异步唤醒而加入Ready队列的描述符集合就行了。epoll除了提供select/poll那种IO事件的水平触发（Level Triggered）外，还提供了边缘触发（Edge Triggered），这就使得用户空间程序有可能缓存IO状态，减少epoll_wait/epoll_pwait的调用，提高应用程序效率。</p>
+</blockquote>
+<p>使用 epoll 的优点有：</p>
+<p>使用 epoll 的优点有：</p>
+<ul>
+<li>select 最不能忍受的是一个进程所打开的FD是有一定限制的，由 FD_SETSIZE 设置，默认是 1024。这对于连接数量比较大的服务器来说根本不能满足。虽然也可以选择多进程的解决方案( Apache 就是这样实现的)，不过虽然 linux 上面创建进程的代价比较小，但仍旧是不可忽视的，加上进程间数据同步远比不上线程间同步的高效，所以也不是一种完美的方案。不过 epoll 没有这个限制，监视的描述符数量不受限制，它所支持的 fd 上限是最大可以打开文件的数目，这个数字一般远大于 2048,举个例子,在 1GB 内存的机器上大约是 10 万左右，具体数目可以 cat /proc/sys/fs/file-max 察看,一般来说这个数目和系统内存关系很大。</li>
+<li>IO 的效率不会随着监视 fd 的数量的增长而下降。epoll 不同于 select 和 poll 轮询的方式，而是通过每个 fd 定义的回调函数来实现的。只有就绪的 fd 才会执行回调函数。</li>
+<li>epoll除了提供select/poll那种IO事件的水平触发（Level Triggered）外，还提供了边缘触发（Edge Triggered），这就使得用户空间程序有可能缓存IO状态，减少epoll_wait/epoll_pwait的调用，提高应用程序效率。<ul>
+<li>水平触发模式，文件描述符状态发生变化后，如果没有采取行动，它将后面反复通知，这种情况下编程相对简单，libevent 等开源库很多都是使用的这种模式。</li>
+<li>边沿触发模式，只告诉进程哪些文件描述符刚刚变为就绪状态，只说一遍，如果没有采取行动，那么它将不会再次告知。理论上边缘触发的性能要更高一些，但是代码实现相当复杂（Nginx 使用的边缘触发）。</li>
+</ul>
+</li>
+<li>mmap 加速内核与用户空间的信息传递。无论是 select，poll 还是 epoll 都需要内核把FD消息通知给用户空间，如何避免不必要的内存拷贝就很重要，在这点上，epoll 是通过内核与用户空间 mmap 同一块内存实现的。而如果你像我一样从2.5内核就关注 epoll 的话，一定不会忘记手工 mmap 这一步的。</li>
+</ul>
+<p>最后，自己之前理解的 Nginx 中只支持 epoll也是不对的。Nginx 封装了很多事件方法，epoll 只是其支持的一种方式，在linux系统中应用最广。还支持select、poll、kqueue等方式，在配置文件中也可以配置处理请求的方式选择哪种，见<a href="http://nginx.org/en/docs/events.html" target="_blank" rel="external">Connection processing methods</a></p>
+<p>epoll 仅是在 linux 下支持 IO 复用技术，比如我的 Mac OS 的Unix 系统就不支持epoll。Windows下 IOCP 和 BSD 的 kqueue。Libevent 将不同平台的 IO 复用技术封装统一的接口，使程序可以跨平台。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;select、poll 和 epoll 都是 Linux API 提供的 IO 复用方式。&lt;em&gt;IO多路复用是指内核一旦发现进程指定的一个或者多个IO条件准备读取，它就通知该进程。&lt;/em&gt;&lt;a href=&quot;http://www.zhihu.com/question/32
+    
+    </summary>
+    
+      <category term="Nginx" scheme="http://blog.100dos.com/categories/Nginx/"/>
+    
+    
+      <category term="epoll" scheme="http://blog.100dos.com/tags/epoll/"/>
+    
+      <category term="IO" scheme="http://blog.100dos.com/tags/IO/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>事务的四个隔离级别</title>
+    <link href="http://blog.100dos.com/2016/09/19/the-four-levels-of-database-isolation-for-transactions/"/>
+    <id>http://blog.100dos.com/2016/09/19/the-four-levels-of-database-isolation-for-transactions/</id>
+    <published>2016-09-19T03:09:40.000Z</published>
+    <updated>2017-03-14T02:25:20.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Mysql/InnoDB 支持四个事务隔离级别，默认是可重复读（REPEATABLE-READ）。四个事务级别逐渐增强，保证数据有更高的一致性。但级别越高，性能越差。</p>
+<table>
+<thead>
+<tr>
+<th>隔离级别</th>
+<th>脏读</th>
+<th>不可重复读</th>
+<th>幻读</th>
+<th>锁</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>未提交读(Read uncommitted)</td>
+<td>可能</td>
+<td>可能</td>
+<td>可能</td>
+<td>不锁表，隔离级别最低，并发性能高</td>
+</tr>
+<tr>
+<td>提交读(Read commited)</td>
+<td>不可能</td>
+<td>可能</td>
+<td>可能</td>
+<td>锁定正在读取的行</td>
+</tr>
+<tr>
+<td>可重复读(Repeatable read)</td>
+<td>不可能</td>
+<td>不可能</td>
+<td>可能</td>
+<td>锁定所读取的所有行</td>
+</tr>
+<tr>
+<td>串行读(Serializable)</td>
+<td>不可能</td>
+<td>不可能</td>
+<td>不可能</td>
+<td>锁表</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>未提交读：允许脏读，也就是可能读取到其他会话中未提交的事务修改的数据。</li>
+<li>提交读：只能读到已经提交的数据。（不重复读）</li>
+<li>可重复读：在同一个事务内的查询都是事务开始时刻是一致的，InnoDB的默认级别。在SQL标准中，该隔离级别消除了不可重复读，但是还是存在幻读。</li>
+<li>串行读：完全串行化的读，每次读都需要获得表级共享锁，读写相互都会阻塞。</li>
+</ul>
+<p>脏读(dirty read)：指当一个事务正在访问数据，并且对数据进行了修改，而该次修改还没有提交到数据库中。这时，另一个事务也访问这个数据，然后使用了这个数据。</p>
+<p>不可重复读(nonrepeatable read)：指在一个事务内，多次读同一数据。在这个事务还没有结束时，另一个事务也访问该同一数据。那么，在第一个事务中的俩次读数据之间，由于第二个事务的修改，和第一个事务读取到的数据可能是不一样的。这样就发生了在一个事务内俩次读到的数据是不一样的，因此称为不可重复读。（不可重复读在于修改同样条件的数据）</p>
+<p>幻读(phantom read)：第一个事务对一个表中的数据做了修改，这个修改涉及到表中的全部数据行。同时，第二个事务也修改这个表中的数据，插入一行新的数据。那么，以后就会发生操作第一个事务的用户发现表中还有没有修改的数据行，就好象发生了幻觉一样。（幻读是在于新增或删除表中数据）</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Mysql/InnoDB 支持四个事务隔离级别，默认是可重复读（REPEATABLE-READ）。四个事务级别逐渐增强，保证数据有更高的一致性。但级别越高，性能越差。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;隔离级别&lt;/th&gt;
+&lt;th&gt;脏读&lt;/th&gt;
+&lt;t
+    
+    </summary>
+    
+      <category term="Mysql&amp;DB" scheme="http://blog.100dos.com/categories/Mysql-DB/"/>
+    
+    
+      <category term="事务" scheme="http://blog.100dos.com/tags/%E4%BA%8B%E5%8A%A1/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>［读书笔记］－ 《人类简史》</title>
+    <link href="http://blog.100dos.com/2016/09/02/reading-note-brief-history-of-humankind/"/>
+    <id>http://blog.100dos.com/2016/09/02/reading-note-brief-history-of-humankind/</id>
+    <published>2016-09-02T11:48:47.000Z</published>
+    <updated>2017-03-14T02:25:20.000Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote>
+<p>究竟为什么要学历史？历史不像是物理学或经济学，目的不在于做出准预测。我们之所以研究历史，不是为了要知道未来，而是要拓展视野，要了解现在的种种绝非“自然”，也并非无可避免。未来的可能性远超过我们的想象。举例来说，研究欧洲人究竟是如何控制了非洲人，我们就知道种族歧视绝非自然或无可避免，而且知道世界大有可能是完全不同的样貌。</p>
+</blockquote>
+<p>最早的人类是250万年前从东非开始，我想那时候的人类应该还是浑身是毛，估计跟黑猩猩站在一起，差别也不太大。经过了漫长的历史历程：认知革命、农业革命、工业革命，还有我们正在进行中的信息革命，才变成今天的模样。</p>
+<p>在“认知革命”中，作者举了一个“标致汽车”公司的例子。标致公司是一家跨国公司，全球有20多万的员工，2008年标志制造了超过150万辆汽车，营收超过550亿欧元。究竟是什么让20万人能够互相协作，而且多半员工互相不认识。但是这些员工又能非常有效率的合作，完成汽车生产、销售等工作。对于工作了6年的我来说，因为公司给我发工资啊，我付出我的专业劳动就好。那么这里有几个问题：什么是公司？为什么我相信公司会给我每个月发工资？</p>
+<p>首先，公司不是一个实体的存在，是人类的一个集体的想象，这种想象在法律上被称为“法律拟定”。于是公司就能受到国家法律的管辖，可以建立银行账户，而且需要向国家纳税（国家其实也可以说是一个虚拟出来的概念）。人类的“认知”从真实存在的实体，到人类臆想、虚拟出来的概念。而且我们达成共识，都认同它（公司）的存在，然后我跟公司签署了劳动合同，为公司工作，而公司付给我相应的薪资。其实我们静下来想一想，日常生活和工作中是不是虚拟的概念有很多？金钱、公司、国家、人权……</p>
+<p>所以不要嘲笑痴迷二次元的小年轻，我们原本就是生活在虚拟的现实中啊！</p>
+<blockquote>
+<p>多年来，人类已经编织出了一个极其复杂的故事网络。在这个网络中，像标致公司这种虚构的故事不仅存在，而且力量强大。</p>
+</blockquote>
+<p>就像现在的创业者一样，要会讲故事。要让投资人相信你的故事，要让员工相信你的故事，要让用户也相信你的故事。这样就算是成功了。</p>
+<blockquote>
+<p>资本和财富是俩个不同的概念。资本是指投入生产的各种金钱、物品和资源。而财富是的则是那些埋在地下或是浪费在非生产性活动的金钱、物品和资源。</p>
+</blockquote>
+<p>书中对于信贷又一个非常简单的解释。有一家银行A，建筑商B和面包师傅C。建筑商有100万的美金的现金存入到了银行A，这时A就有了100万美元的资金。面包师傅C看好了一个商机，想开自己一家面包店，但是自己没有足够的资金。于是找到银行A，用生动的故事打动了A，说服A投资自己 100万美金。然后C找到建筑商B来盖他的面包店，价格又刚好是100万美金，C 用银行转账的方式把100万打给了B。于是B的户头就有了200万美金，而银行其实有的还只是100万美金的资金。这100万美金现金从来没出过银行，只是一个数字而已。可以理解银行的钱十有八九只是数字，银行帐目上并没有那么多钱。</p>
+<p>假如所有的储户如果同时忽然要求从银行把自己的储蓄去走，世界上任何一家银行都拿不出可以结清的钱，全部都要倒闭。这真的就是一场骗局，但是如果没有信贷，近100年的世界经济也不会有如此大的增长。但是人们乐于相信对于C未来的投资，并且相信能够收回C的贷款。这样即使B想去走所有存款，银行A也就能办到。银行和创业者相信面包店能成功，建筑商也相信银行未来一定能把钱还给他。</p>
+<p>即使这的确是一场骗局，却给近百年来的经济带来了实实在在的增长。</p>
+<p>关于生命意义和快乐本身。</p>
+<blockquote>
+<p>正如尼采所言，只要有了活下去的理由，几乎什么都能忍受。生活有意义，就算在困境中也能甘之如饴；生活无意义，就算在顺境中也度日如年。</p>
+</blockquote>
+<p>这是西方哲学中的快乐，强调人的主观感受。就是快乐不在于外界因素，而是在于我们的内心。快乐关键在于追求真我、真正了解自己。</p>
+<p>我对快乐的看法是，它只是一种感受。关键是对于这件让你开心或者难过的事情看得清楚，这种主观感受是难免的。但是或者要有提前的准备，或者事后坦然面对。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;究竟为什么要学历史？历史不像是物理学或经济学，目的不在于做出准预测。我们之所以研究历史，不是为了要知道未来，而是要拓展视野，要了解现在的种种绝非“自然”，也并非无可避免。未来的可能性远超过我们的想象。举例来说，研究欧洲人究竟是如何控制了非洲人，我们
+    
+    </summary>
+    
+    
+      <category term="读书笔记" scheme="http://blog.100dos.com/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>如何调试 PHP 程序</title>
+    <link href="http://blog.100dos.com/2016/08/29/debug-in-php/"/>
+    <id>http://blog.100dos.com/2016/08/29/debug-in-php/</id>
+    <published>2016-08-29T09:52:26.000Z</published>
+    <updated>2017-03-14T02:25:20.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>对于大部分 PHP debug 问题来说，只要会 echo、var_dump 可能就够了。但是还有一些其他的函数方法和 PHP 调试相关的知识需要了解。</p>
+<h2 id="打印输出调试"><a href="#打印输出调试" class="headerlink" title="打印输出调试"></a>打印输出调试</h2><p><code>echo</code> 输出一个或多个字符串。</p>
+<p><code>print</code> 输出一个字符串。</p>
+<p><code>print_r</code> 跟 <code>var_dump</code> 类似，也是查看数组或对象时使用。不同的是，不会输出额外的数据类型，格式比较整齐。</p>
+<p><code>printf</code> 输出格式化字符串，比如要输出浮点数的时候，可以指定输出服点数的精确长度。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$float = (<span class="number">0.1</span>+<span class="number">0.7</span>) * <span class="number">10</span>;</div><div class="line">$int = (int) $float;</div><div class="line">var_dump($int);</div><div class="line">printf(<span class="string">"%.20f"</span>,$float);</div><div class="line"></div><div class="line"><span class="comment">// outputs</span></div><div class="line">int(<span class="number">7</span>)</div><div class="line"><span class="number">7.99999999999999911182</span></div></pre></td></tr></table></figure>
+<p><code>var_dump</code> 当查看数组或者对象时常用，会额外输出数据类型。</p>
+<p><code>var_export</code> 的输出可以直接当作php代码赋值个一个变量，而这个变量就会取得和被 <code>var_export</code> 一样的类型的值。需要注意的是，当变量类型为 resource 的时候， 是无法简单 copy 复制的。当 <code>var_export</code> 的变量是 resource 类型时， <code>var_export</code> 会返回 NULL。</p>
+<p><code>debug_zval_dump</code> 的输出跟 <code>var_dump</code> 类似，但是多了一个 refcount，记录一个变量被引用了多少次。</p>
+<p><code>debug_print_backtrace</code> 查看程序的调用栈，查找出错时的上下文。</p>
+<p>使用以上方法时，根据具体 debug 场景，选择最合适的打印方法即可。</p>
+<h2 id="错误输出控制"><a href="#错误输出控制" class="headerlink" title="错误输出控制"></a>错误输出控制</h2><p>在 php.ini 配置文件中，可以通过 <code>error_reporting</code>、<code>display_errors</code>、<code>display_startup_errors</code>、<code>log_error</code>、<code>track_errors</code>、<code>error_log</code>。</p>
+<p><code>error_reporting</code> 设置 PHP 的错误显示级别，PHP的错误显示级别的预定义常量：</p>
+<table>
+<thead>
+<tr>
+<th>值</th>
+<th>常量</th>
+<th>说明</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>E_ERROR (integer)</td>
+<td>致命的运行时错误。这类错误一般是不可恢复的情况，例如内存分配导致的问题。后果是导致脚本终止不再继续运行。</td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>E_WARNING (integer)</td>
+<td>运行时警告 (非致命错误)。仅给出提示信息，但是脚本不会终止运行。</td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td>E_PARSE (integer)</td>
+<td>编译时语法解析错误。解析错误仅仅由分析器产生。</td>
+<td></td>
+</tr>
+<tr>
+<td>8</td>
+<td>E_NOTICE (integer)</td>
+<td>运行时通知。表示脚本遇到可能会表现为错误的情况，但是在可以正常运行的脚本里面也可能会有类似的通知。</td>
+<td></td>
+</tr>
+<tr>
+<td>16</td>
+<td>E_CORE_ERROR (integer)</td>
+<td>在PHP初始化启动过程中发生的致命错误。该错误类似 E_ERROR，但是是由PHP引擎核心产生的。</td>
+<td>since PHP 4</td>
+</tr>
+<tr>
+<td>32</td>
+<td>E_CORE_WARNING (integer)</td>
+<td>PHP初始化启动过程中发生的警告 (非致命错误) 。类似 E_WARNING，但是是由PHP引擎核心产生的。</td>
+<td>since PHP 4</td>
+</tr>
+<tr>
+<td>64</td>
+<td>E_COMPILE_ERROR (integer)</td>
+<td>致命编译时错误。类似E_ERROR, 但是是由Zend脚本引擎产生的。</td>
+<td>since PHP 4</td>
+</tr>
+<tr>
+<td>128</td>
+<td>E_COMPILE_WARNING (integer)</td>
+<td>编译时警告 (非致命错误)。类似 E_WARNING，但是是由Zend脚本引擎产生的。</td>
+<td>since PHP 4</td>
+</tr>
+<tr>
+<td>256</td>
+<td>E_USER_ERROR (integer)</td>
+<td>用户产生的错误信息。类似 E_ERROR, 但是是由用户自己在代码中使用PHP函数 trigger_error()来产生的。</td>
+<td>since PHP 4</td>
+</tr>
+<tr>
+<td>512</td>
+<td>E_USER_WARNING (integer)</td>
+<td>用户产生的警告信息。类似 E_WARNING, 但是是由用户自己在代码中使用PHP函数 trigger_error()来产生的。</td>
+<td>since PHP 4</td>
+</tr>
+<tr>
+<td>1024</td>
+<td>E_USER_NOTICE (integer)</td>
+<td>用户产生的通知信息。类似 E_NOTICE, 但是是由用户自己在代码中使用PHP函数 trigger_error()来产生的。</td>
+<td>since PHP 4</td>
+</tr>
+<tr>
+<td>2048</td>
+<td>E_STRICT (integer)</td>
+<td>启用 PHP 对代码的修改建议，以确保代码具有最佳的互操作性和向前兼容性。</td>
+<td>since PHP 5</td>
+</tr>
+<tr>
+<td>4096</td>
+<td>E_RECOVERABLE_ERROR (integer)</td>
+<td>可被捕捉的致命错误。 它表示发生了一个可能非常危险的错误，但是还没有导致PHP引擎处于不稳定的状态。 如果该错误没有被用户自定义句柄捕获 (参见 set_error_handler())，将成为一个 E_ERROR　从而脚本会终止运行。</td>
+<td>since PHP 5.2.0</td>
+</tr>
+<tr>
+<td>8192</td>
+<td>E_DEPRECATED (integer)</td>
+<td>运行时通知。启用后将会对在未来版本中可能无法正常工作的代码给出警告。</td>
+<td>since PHP 5.3.0</td>
+</tr>
+<tr>
+<td>16384</td>
+<td>E_USER_DEPRECATED (integer)</td>
+<td>用户产少的警告信息。 类似 E_DEPRECATED, 但是是由用户自己在代码中使用PHP函数 trigger_error()来产生的。</td>
+<td>since PHP 5.3.0</td>
+</tr>
+<tr>
+<td>30719</td>
+<td>E_ALL (integer)</td>
+<td>E_STRICT出外的所有错误和警告信息。</td>
+<td>30719 in PHP 5.3.x, 6143 in PHP 5.2.x, 2047 previously</td>
+</tr>
+</tbody>
+</table>
+<p>即可以通过配置 php.ini 文件配置 <code>error_reporting</code> 等级，也可以通过内置函数<code>error_reporting()</code>来配置。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"></div><div class="line"><span class="comment">// Turn off all error reporting</span></div><div class="line">error_reporting(<span class="number">0</span>);</div><div class="line"></div><div class="line"><span class="comment">// Report simple running errors</span></div><div class="line">error_reporting(E_ERROR | E_WARNING | E_PARSE);</div><div class="line"></div><div class="line"><span class="comment">// Reporting E_NOTICE can be good too (to report uninitialized</span></div><div class="line"><span class="comment">// variables or catch variable name misspellings ...)</span></div><div class="line">error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);</div><div class="line"></div><div class="line"><span class="comment">// Report all errors except E_NOTICE</span></div><div class="line">error_reporting(E_ALL &amp; ~E_NOTICE);</div><div class="line"></div><div class="line"><span class="comment">// Report all PHP errors (see changelog)</span></div><div class="line">error_reporting(E_ALL);</div><div class="line"></div><div class="line"><span class="comment">// Report all PHP errors</span></div><div class="line">error_reporting(<span class="number">-1</span>);</div><div class="line"></div><div class="line"><span class="comment">// Same as error_reporting(E_ALL);</span></div><div class="line">ini_set(<span class="string">'error_reporting'</span>, E_ALL);</div><div class="line"></div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<p><code>display_errors</code> 设置是否将错误信息作为输出的一部分显示到屏幕，或者对用户隐藏而不显示。</p>
+<ul>
+<li>这是一个辅助开发的功能，建议不要在正式环境中使用；</li>
+<li>尽管 <code>display_errors</code> 也可以在运行时设置 (使用 ini_set())， 但是脚本出现致命错误时任何运行时的设置都是无效的。 因为在这种情况下预期运行的操作不会被执行；</li>
+<li>并且 <code>display_errors</code> 显示的错误信息内容是根据 <code>error_reporting</code> 设置的错误显示等级。</li>
+</ul>
+<p><code>display_startup_errors</code>  显示 PHP 启动过程中的错误信息。</p>
+<ul>
+<li>即使 <code>display_errors</code> 设置为开启, PHP 启动过程中的错误信息也不会被显示。强烈建议除了调试目的以外，将 <code>display_startup_errors</code> 设置为关闭。</li>
+</ul>
+<p><code>log_error</code> 设置是否将脚本运行的错误信息记录到服务器错误日志或者 <code>error_log</code> 之中。</p>
+<ul>
+<li>在正式环境，建议使用错误日志代替 <code>display_error</code>。以免打印错误信息，暴露服务器配置，且影响用户体验。</li>
+</ul>
+<p><code>track_errors</code> 记录最后一个警告／错误到变量 <code>$php_errormsg</code>中。</p>
+<p><code>error_log</code> 设置脚本错误将被记录到的日志文件。PHP 必须有改文件的写入权限，如果是 PHP-FPM 运行，则必须是 PHP-FPM 的运行用户有该文件的写入权限。</p>
+<p>综上，在本地的开发环境的配置建议为：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">error_reporting = E_ALL</div><div class="line">display_errors = On</div><div class="line">display_startup_errors = On</div><div class="line">log_errors = On</div><div class="line">track_errors = On</div><div class="line">error_log = /tmp/php_error.log</div></pre></td></tr></table></figure>
+<p>线上正式环境配置建议为：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">error_reporting = E_ALL &amp; ~E_DEPRECATED &amp; ~E_STRICT</div><div class="line">display_errors = Off</div><div class="line">display_startup_errors = Off</div><div class="line">log_errors = On</div><div class="line">track_errors = Off</div><div class="line">error_log = /tmp/php_error.log</div></pre></td></tr></table></figure>
+<h2 id="断点调试"><a href="#断点调试" class="headerlink" title="断点调试"></a>断点调试</h2><p>感兴趣的话，可以看看 Xdebug/DBGp 结合 Zend Studio 或 Eclipse 等 IDE。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;对于大部分 PHP debug 问题来说，只要会 echo、var_dump 可能就够了。但是还有一些其他的函数方法和 PHP 调试相关的知识需要了解。&lt;/p&gt;
+&lt;h2 id=&quot;打印输出调试&quot;&gt;&lt;a href=&quot;#打印输出调试&quot; class=&quot;headerlink&quot; tit
+    
+    </summary>
+    
+      <category term="PHP" scheme="http://blog.100dos.com/categories/PHP/"/>
+    
+    
+      <category term="debug" scheme="http://blog.100dos.com/tags/debug/"/>
+    
+      <category term="php" scheme="http://blog.100dos.com/tags/php/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>深入理解 PHP 中的浮点型</title>
+    <link href="http://blog.100dos.com/2016/08/23/deep-understanding-of-float-type-in-PHP/"/>
+    <id>http://blog.100dos.com/2016/08/23/deep-understanding-of-float-type-in-PHP/</id>
+    <published>2016-08-23T08:23:59.000Z</published>
+    <updated>2017-03-14T02:25:20.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>我们都知道 PHP 是一个弱类型的动态脚本语言，所谓弱类型是指不仅在声明变量时不需要指定它的类型，且运算时也不做类型验证。比如可以将一个整型和浮点数类型做加法操作。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$x = <span class="number">1</span>; <span class="comment">// $x 是整型</span></div><div class="line">$y = <span class="number">1.1</span>; <span class="comment">// $y 浮点数</span></div><div class="line">var_dump($x);</div><div class="line">var_dump($y);</div><div class="line"></div><div class="line">$z = $x + $y; <span class="comment">// $z 是浮点数</span></div><div class="line">var_dump($z);</div><div class="line"></div><div class="line"><span class="comment">// output</span></div><div class="line">int(<span class="number">1</span>)</div><div class="line">float(<span class="number">1.1</span>)</div><div class="line">float(<span class="number">2.1</span>)</div></pre></td></tr></table></figure>
+<p>并且上面的代码也可以注意到，在变量声明时也无需指定变量的类型，说明赋值是最简单的隐式的类型转换。然后把整型和浮点数相加得到了另一个浮点数。</p>
+<p>在 PHP 中，对于浮点数 <code>float</code> 同样也代表  <code>double</code> 双精度和 <code>real</code> 实数类型，在 php.net 上有如下关于浮点数精度的说明。</p>
+<h3 id="浮点数的精度问题"><a href="#浮点数的精度问题" class="headerlink" title="浮点数的精度问题"></a>浮点数的精度问题</h3><blockquote>
+<p>浮点数的精度有限。尽管取决于系统，PHP 通常使用 IEEE 754 双精度格式，则由于取整而导致的最大相对误差为 1.11e-16。非基本数学运算可能会给出更大误差，并且要考虑到进行复合运算时的误差传递。<br>此外，以十进制能够精确表示的有理数如 0.1 或 0.7，无论有多少尾数都不能被内部所使用的二进制精确表示，因此不能在不丢失一点点精度的情况下转换为二进制的格式。这就会造成混乱的结果：例如，floor((0.1+0.7)*10) 通常会返回 7 而不是预期中的 8，因为该结果内部的表示其实是类似 7.9999999999999991118…。</p>
+</blockquote>
+<p>那么 0.1 和 0.7 为什么转换为二进制时会产生误差呢？我们先只看 0.1 转换成二进制就好。十进制数值转换为二进制数值可以通过下面的方法：</p>
+<ul>
+<li>整数部分：连续用该整数除以2，取余数，然后商再除以2，直到商等于0为止。然后把得到的各个余数按相反的顺序排列 － 简称”除2取余法”。</li>
+<li>小数部分：十进制小数转换为二进制小数，采用”乘2取整，顺序排列”法。用2乘以十进制小数，将得到的整数部分取出，再用2乘余下的小数部分，然后再将积的整数部分取出，如此进行，直到积中的小数部分为 0 或者达到所要求的精度为止。然后把取出的整数部分按顺序排列起来，即先取出的整数部分作为二进制小数的高位，后取出的整数部分作为低位有效位 － 简称”乘2取整法”。</li>
+<li>含有小数的十进制数转换成二进制，整数、小数部分分别进行转换，然后相加。</li>
+</ul>
+<p>0.1 没有整数部分，所以只需要对小数部分做乘2取整。</p>
+<table>
+<thead>
+<tr>
+<th>运算</th>
+<th>乘积</th>
+<th>是否有整数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.1 * 2</td>
+<td>0.2</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0.2 * 2</td>
+<td>0.4</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0.4 * 2</td>
+<td>0.8</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0.8 * 2</td>
+<td>1.6</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0.6 * 2</td>
+<td>1.2</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0.2 * 2</td>
+<td>0.4</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0.4 * 2</td>
+<td>0.8</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0.8 * 2</td>
+<td>1.6</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0.6 * 2</td>
+<td>1.2</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0.2 * 2</td>
+<td>0.4</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0.4 * 2</td>
+<td>0.8</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0.8 * 2</td>
+<td>1.6</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0.6 * 2</td>
+<td>1.2</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0.2 * 2</td>
+<td>0.4</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0.4 * 2</td>
+<td>0.8</td>
+<td>0</td>
+</tr>
+<tr>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+</tbody>
+</table>
+<p>我们能看到最后永远重复 0011 的循环……</p>
+<h3 id="IEEE-754"><a href="#IEEE-754" class="headerlink" title="IEEE 754"></a>IEEE 754</h3><p>PHP 浮点数使用 IEEE 754 二进制浮点数算术标准来存储。</p>
+<p>sign：符号位（sign bit）；<br>exponent：“指数部分”，即次高有效的e个比特，存储指数部分；<br>fraction：最后剩下的f个低有效位的比特，存储“有效数”（significand）的小数部分。</p>
+<h4 id="32位单精度"><a href="#32位单精度" class="headerlink" title="32位单精度"></a>32位单精度</h4><p>单精度二进制小数，使用32个比特存储。</p>
+<table>
+<thead>
+<tr>
+<th>1</th>
+<th>8</th>
+<th>23</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S</td>
+<td>Exp</td>
+<td>Fraction</td>
+</tr>
+<tr>
+<td>31</td>
+<td>30至23 偏正值（实际的指数大小+127）</td>
+<td>22至0位编号（从右边开始为0）</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>S为符号位，Exp为指数字，Fraction为有效数字。 指数部分即使用所谓的偏正值形式表示，偏正值为实际的指数大小与一个固定值（32位的情况是127）的和。采用这种方式表示的目的是简化比较。因为，指数的值可能为正也可能为负，如果采用补码表示的话，全体符号位S和Exp自身的符号位将导致不能简单的进行大小比较。正因为如此，指数部分通常采用一个无符号的正数值存储。单精度的指数部分是−126～+127加上偏移值127，指数值的大小从1～254（0和255是特殊值）。浮点小数计算时，指数值减去偏正值将是实际的指数大小。</p>
+</blockquote>
+<h4 id="64位双精度"><a href="#64位双精度" class="headerlink" title="64位双精度"></a>64位双精度</h4><p>双精度二进制小数，使用64个比特存储。</p>
+<table>
+<thead>
+<tr>
+<th>1</th>
+<th>8</th>
+<th>23</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S</td>
+<td>Exp</td>
+<td>Fraction</td>
+</tr>
+<tr>
+<td>63</td>
+<td>62至52偏正值（实际的指数大小+1023）</td>
+<td>51至0位编号（从右边开始为0）</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>S为符号位，Exp为指数字，Fraction为有效数字。指数部分即使用所谓的偏正值形式表示，偏正值为实际的指数大小与一个固定值（64位的情况是1023）的和。采用这种方式表示的目的是简化比较。因为，指数的值可能为正也可能为负，如果采用补码表示的话，全体符号位S和Exp自身的符号位将导致不能简单的进行大小比较。正因为如此，指数部分通常采用一个无符号的正数值存储。双精度的指数部分是−1022～+1023加上1023，指数值的大小从1～2046（0（2进位全为0）和2047（2进位全为1）是特殊值）。浮点小数计算时，指数值减去偏正值将是实际的指数大小。</p>
+</blockquote>
+<p>参考IEEE 754 知道，对于单精度存储小数位至多保留23位。即 0.1 转换为二进制之后 0011 的无限循环只能保留23位，即使是双精度也只能保留52位，其余均要舍去。所以浮点数会出现精度的问题，转换结果可以根据浮点数转换工具查看。</p>
+<p>十进制 =&gt; 二进制 =&gt; 十六进制 =&gt; 转换后浮点数<br>0.1 =&gt; 00111101110011001100110011001101 =&gt; 0x3dcccccd =&gt; 0.10000000149011612<br>0.7 =&gt; 00111111001100110011001100110011 =&gt; 0x3f333333 =&gt; 0.699999988079071</p>
+<h3 id="浮点数的范围和精度"><a href="#浮点数的范围和精度" class="headerlink" title="浮点数的范围和精度"></a>浮点数的范围和精度</h3><p>浮点数计算公式如下：</p>
+<p>sign * 2<sup>exponent</sup> * fraction</p>
+<p>能看出浮点数的范围是由指数的位数来决定的。单精度的浮点数指数有8位，双精度有11位。于是，单精度的指数范围为-127~+128，而双精度的指数范围为-1023~+1024，并且指数位是按补码的形式来划分的。其中负指数决定了浮点数所能表达的绝对值最小的非零数；而正指数决定了浮点数所能表达的绝对值最大的数，也即决定了浮点数的取值范围。单精度的范围为-2<sup>128</sup> ~ +2<sup>128</sup>，也即-3.40E+38 ~ +3.40E+38；双精度的范围为-2<sup>1024</sup> ~ +2<sup>1024</sup>，也即-1.79E+308 ~ +1.79E+308。</p>
+<p>浮点数的精度是由尾数的位数来决定的，且尾数是按科学计数法来存储的，如 9.2233720368548E+18。</p>
+<ul>
+<li>单精度：2<sup>23</sup> = 8388608，一共7位，这意味着最多能有7位有效数字，但绝对能保证的为6位，也即 float 的精度为6~7位有效数字；</li>
+<li>双精度：2<sup>52</sup> = 4503599627370496，一共16位，所以精度为15~16位。</li>
+</ul>
+<h3 id="整型溢出"><a href="#整型溢出" class="headerlink" title="整型溢出"></a>整型溢出</h3><p>如果给定的一个数超出了 integer 的范围，将会被解释为 float。同样如果执行的运算结果超出了 integer 范围，也会返回 float。</p>
+<p>64 位系统下的整数溢出:</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$large_number = <span class="number">9223372036854775807</span>;</div><div class="line">var_dump($large_number);                     <span class="comment">// int(9223372036854775807)</span></div><div class="line"></div><div class="line">$large_number = <span class="number">9223372036854775808</span>;</div><div class="line">var_dump($large_number);                     <span class="comment">// float(9.2233720368548E+18)</span></div><div class="line"></div><div class="line">$million = <span class="number">1000000</span>;</div><div class="line">$large_number =  <span class="number">50000000000000</span> * $million;</div><div class="line">var_dump($large_number);                     <span class="comment">// float(5.0E+19)</span></div></pre></td></tr></table></figure>
+<h3 id="整型转换为浮点数"><a href="#整型转换为浮点数" class="headerlink" title="整型转换为浮点数"></a>整型转换为浮点数</h3><p>如果整型数字的精度可以保留，则结果值是最接近原值的一个近似值，否则这个值不确定。下面代码即是精度不能保留的例子，能够看到最后的结果值是用科学计数法表示，且保留的精度是14位。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="comment">// 64位系统，PHP 5.6 / PHP 7</span></div><div class="line">$int = <span class="number">9223372036854775807</span>;</div><div class="line">$float = (float)$int;</div><div class="line">var_dump($int);</div><div class="line">var_dump($float);</div><div class="line"></div><div class="line">output:</div><div class="line">int(<span class="number">9223372036854775807</span>)</div><div class="line">float(<span class="number">9.2233720368548E+18</span>)  <span class="comment">// 能够注意到保留的精度是 14 位</span></div></pre></td></tr></table></figure>
+<h3 id="浮点数转换为整型"><a href="#浮点数转换为整型" class="headerlink" title="浮点数转换为整型"></a>浮点数转换为整型</h3><p>从浮点数转换成整数时，将向下取整。</p>
+<blockquote>
+<p>向上取整：不管四舍五入的规则 只要后面有小数前面的整数就加1<br>向下取整：不管四舍五入的规则 只要后面有小数忽略小数</p>
+</blockquote>
+<p>如果浮点数超出了整数范围（32 位平台下通常为 +/- 2.15e+9 = 2<sup>31</sup>，64 位平台下通常为 +/- 9.22e+18 = 2<sup>63</sup>），则结果为未定义，因为没有足够的精度给出一个确切的整数结果。在此情况下没有警告，甚至没有任何通知！</p>
+<p>Warning : 决不要将未知的分数强制转换为 integer，这样有时会导致不可预料的结果。<br><figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"><span class="keyword">echo</span> (int) ( (<span class="number">0.1</span>+<span class="number">0.7</span>) * <span class="number">10</span> ); <span class="comment">// 显示 7!</span></div></pre></td></tr></table></figure></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;我们都知道 PHP 是一个弱类型的动态脚本语言，所谓弱类型是指不仅在声明变量时不需要指定它的类型，且运算时也不做类型验证。比如可以将一个整型和浮点数类型做加法操作。&lt;/p&gt;
+&lt;figure class=&quot;highlight php&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class
+    
+    </summary>
+    
+      <category term="PHP" scheme="http://blog.100dos.com/categories/PHP/"/>
+    
+    
+      <category term="float" scheme="http://blog.100dos.com/tags/float/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>HTTP Keep-Alive模式</title>
+    <link href="http://blog.100dos.com/2016/08/09/http-keepalive-model-md/"/>
+    <id>http://blog.100dos.com/2016/08/09/http-keepalive-model-md/</id>
+    <published>2016-08-09T03:19:48.000Z</published>
+    <updated>2017-03-14T02:25:20.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="1、什么是-Keep-Alive-模式？"><a href="#1、什么是-Keep-Alive-模式？" class="headerlink" title="1、什么是 Keep-Alive 模式？"></a>1、什么是 Keep-Alive 模式？</h2><p>我们知道 HTTP 协议采用“请求-应答”模式，当使用普通模式，即非KeepAlive模式时，每个请求/应答客户和服务器都要新建一个连接，完成之后立即断开连接（HTTP协议为无连接的协议）；当使用 Keep-Alive 模式（又称持久连接、连接重用）时，Keep-Alive 功能使客户端到服务器端的连接持续有效，当出现对服务器的后继请求时，Keep-Alive功能避免了建立或者重新建立连接。</p>
+<p>http 1.0 中默认是关闭的，需要在 http 头加入”Connection: Keep-Alive”，才能启用 Keep-Alive；http 1.1 中默认启用 Keep-Alive，如果加入”Connection: close “，才关闭。目前大部分浏览器都是用 http1.1 协议，也就是说默认都会发起 Keep-Alive 的连接请求了，所以是否能完成一个完整的 Keep-Alive 连接就看服务器设置情况。</p>
+<h2 id="2、启用-Keep-Alive-的优点"><a href="#2、启用-Keep-Alive-的优点" class="headerlink" title="2、启用 Keep-Alive 的优点"></a>2、启用 Keep-Alive 的优点</h2><p>从上面的分析来看，启用Keep-Alive模式肯定更高效，性能更高。因为避免了建立/释放连接的开销。下面是<a href="http://tools.ietf.org/html/rfc2616" target="_blank" rel="external">RFC 2616</a>上的总结：</p>
+<ul>
+<li>By opening and closing fewer TCP connections, CPU time is saved in routers and hosts (clients, servers, proxies, gateways, tunnels, or caches), and memory used for TCP protocol control blocks can be saved in hosts.</li>
+<li>HTTP requests and responses can be pipelined on a connection. Pipelining allows a client to make multiple requests without waiting for each response, allowing a single TCP connection to be used much more efficiently, with much lower elapsed time.</li>
+<li>Network congestion is reduced by reducing the number of packets caused by TCP opens, and by allowing TCP sufficient time to determine the congestion state of the network.</li>
+<li>Latency on subsequent requests is reduced since there is no time spent in TCP’s connection opening handshake.</li>
+<li>HTTP can evolve more gracefully, since errors can be reported without the penalty of closing the TCP connection. Clients using     future versions of HTTP might optimistically try a new feature, but if communicating with an older server, retry with old   semantics after an error is reported.</li>
+</ul>
+<p><a href="http://tools.ietf.org/html/rfc2616" target="_blank" rel="external">RFC 2616</a>（P47）还指出：单用户客户端与任何服务器或代理之间的连接数不应该超过2个。一个代理与其它服务器或代码之间应该使用超过 2 * N 的活跃并发连接。这是为了提高 HTTP 响应时间，避免拥塞（冗余的连接并不能代码执行性能的提升）。</p>
+<h2 id="3、回到我们的问题（即如何判断消息内容-长度的大小？）"><a href="#3、回到我们的问题（即如何判断消息内容-长度的大小？）" class="headerlink" title="3、回到我们的问题（即如何判断消息内容/长度的大小？）"></a>3、回到我们的问题（即如何判断消息内容/长度的大小？）</h2><p>Keep-Alive 模式，客户端如何判断请求所得到的响应数据已经接收完成（或者说如何知道服务器已经发完了数据）？我们已经知道了，Keep-Alive 模式发送玩数据, HTTP 服务器不会自动断开连接，所以不能再使用返回EOF（-1）来判断（当然你一定要这样使用也没有办法，可以想象那效率是何等的低）！下面我介绍两种来判断方法。</p>
+<h3 id="3-1、使用消息首部字段-Conent-Length"><a href="#3-1、使用消息首部字段-Conent-Length" class="headerlink" title="3.1、使用消息首部字段 Conent-Length"></a>3.1、使用消息首部字段 Conent-Length</h3><p>顾名思义，Conent-Length 表示实体内容长度，客户端（服务器）可以根据这个值来判断数据是否接收完成。但是如果消息中没有 Conent-Length，那该如何来判断呢？又在什么情况下会没有Conent-Length呢？请继续往下看……</p>
+<h3 id="3-2、使用消息首部字段-Transfer-Encoding"><a href="#3-2、使用消息首部字段-Transfer-Encoding" class="headerlink" title="3.2、使用消息首部字段 Transfer-Encoding"></a>3.2、使用消息首部字段 Transfer-Encoding</h3><p>当客户端向服务器请求一个静态页面或者一张图片时，服务器可以很清楚的知道内容大小，然后通过 Content-length 消息首部字段告诉客户端需要接收多少数据。但是如果是动态页面等时，服务器是不可能预先知道内容大小，这时就可以使用 Transfer-Encoding：chunk 模式来传输数据了。即如果要一边产生数据，一边发给客户端，服务器就需要使用 “Transfer-Encoding: chunked” 这样的方式来代替 Content-Length。</p>
+<p>chunk 编码将数据分成一块一块的发生。Chunked 编码将使用若干个 Chunk 串连而成，由一个标明长度为 0 的 chunk 标示结束。每个 Chunk 分为头部和正文两部分，头部内容指定正文的字符总数（十六进制的数字）和数量单位（一般不写），正文部分就是指定长度的实际内容，两部分之间用回车换行 (CRLF) 隔开。在最后一个长度为 0 的 Chunk 中的内容是称为 footer 的内容，是一些附加的 Header 信息（通常可以直接忽略）。</p>
+<p>Chunk编码的格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">Chunked-Body = *chunk</div><div class="line">                                    &quot;0&quot; CRLF</div><div class="line">                                    footer</div><div class="line">                                    CRLF</div><div class="line">chunk = chunk-size [ chunk-ext ] CRLF</div><div class="line">                  chunk-data CRLF</div><div class="line"></div><div class="line">hex-no-zero = &lt;HEX excluding &quot;0&quot;&gt;</div><div class="line"></div><div class="line">chunk-size = hex-no-zero *HEX</div><div class="line">chunk-ext = *( &quot;;&quot; chunk-ext-name [ &quot;=&quot; chunk-ext-value ] )</div><div class="line">chunk-ext-name = token</div><div class="line">chunk-ext-val = token | quoted-string</div><div class="line">chunk-data = chunk-size(OCTET)</div><div class="line"></div><div class="line">footer = *entity-header</div></pre></td></tr></table></figure>
+<p>即 Chunk 编码由四部分组成：</p>
+<ul>
+<li>0 至多个 chunk 块</li>
+<li>“0” CRLF</li>
+<li>footer</li>
+<li>CRLF</li>
+</ul>
+<p>而每个chunk块由：chunk-size、chunk-ext（可选）、CRLF、chunk-data、CRLF组成。</p>
+<h2 id="4、消息长度的总结"><a href="#4、消息长度的总结" class="headerlink" title="4、消息长度的总结"></a>4、消息长度的总结</h2><p>其实，上面 2 中方法都可以归纳为是如何判断 http 消息的大小、消息的数量。<a href="http://tools.ietf.org/html/rfc2616" target="_blank" rel="external">RFC 2616</a>对消息的长度总结如下：一个消息的 transfer-length（传输长度）是指消息中的 message-body（消息体）的长度。当应用了 transfer-coding（传输编码），每个消息中的 message-body（消息体）的长度（transfer-length）由以下几种情况决定（优先级由高到低）：</p>
+<ul>
+<li>任何不含有消息体的消息（如1XXX、204、304等响应消息和任何头(HEAD，首部)请求的响应消息），总是由一个空行（CLRF）结束。</li>
+<li>如果出现了 Transfer-Encoding 头字段 并且值为非“identity”，那么 transfer-length 由“chunked” 传输编码定义，除非消息由于关闭连接而终止。</li>
+<li>如果出现了 Content-Length 头字段，它的值表示 entity-length（实体长度）和 transfer-length（传输长度）。如果这两个长度的大小不一样（i.e.设置了 Transfer-Encoding 头字段），那么将不能发送 Content-Length 头字段。并且如果同时收到了 Transfer-Encoding 字段和 Content-Length 头字段，那么必须忽略 Content-Length 字段。</li>
+<li>如果消息使用媒体类型 “multipart/byteranges” ，并且 transfer-length 没有另外指定，那么这种自定界（self-delimiting）媒体类型定义 transfer-length 。除非发送者知道接收者能够解析该类型，否则不能使用该类型。</li>
+<li>由服务器关闭连接确定消息长度。（注意：关闭连接不能用于确定请求消息的结束，因为服务器不能再发响应消息给客户端了。）</li>
+</ul>
+<p>为了兼容 HTTP/1.0 应用程序，HTTP/1.1 的请求消息体中必须包含一个合法的 Content-Length 头字段，除非知道服务器兼容 HTTP/1.1。一个请求包含消息体，并且 Content-Length 字段没有给定，如果不能判断消息的长度，服务器应该用用400 (bad request) 来响应；或者服务器坚持希望收到一个合法的 Content-Length 字段，用 411（length required）来响应。</p>
+<p>所有HTTP/1.1的接收者应用程序必须接受“chunked” transfer-coding (传输编码)，因此当不能事先知道消息的长度，允许使用这种机制来传输消息。消息不应该够同时包含 Content-Length头字段和non-identity transfer-coding。如果一个消息同时包含non-identity transfer-coding和Content-Length ，必须忽略Content-Length 。</p>
+<p>原文链接：<a href="http://www.cnblogs.com/skynet/archive/2010/12/11/1903347.html" target="_blank" rel="external">HTTP Keep-Alive模式 - 吴秦（Tyler）</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;1、什么是-Keep-Alive-模式？&quot;&gt;&lt;a href=&quot;#1、什么是-Keep-Alive-模式？&quot; class=&quot;headerlink&quot; title=&quot;1、什么是 Keep-Alive 模式？&quot;&gt;&lt;/a&gt;1、什么是 Keep-Alive 模式？&lt;/h2&gt;&lt;
+    
+    </summary>
+    
+    
+      <category term="HTTP" scheme="http://blog.100dos.com/tags/HTTP/"/>
+    
+      <category term="keepalive" scheme="http://blog.100dos.com/tags/keepalive/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>个人简历</title>
+    <link href="http://blog.100dos.com/2016/08/08/my-resume-zh/"/>
+    <id>http://blog.100dos.com/2016/08/08/my-resume-zh/</id>
+    <published>2016-08-08T02:49:45.000Z</published>
+    <updated>2017-03-14T02:25:20.000Z</updated>
+    
+    <content type="html"><![CDATA[<hr>
+<h2 id="基本信息"><a href="#基本信息" class="headerlink" title="基本信息"></a>基本信息</h2><ul>
+<li>姓名 : 纪刚</li>
+<li>民族 : 满族</li>
+<li>学历 : 本科 - 哈尔滨工业大学</li>
+<li>籍贯 : 辽宁省抚顺市</li>
+<li>现居住地 : 北京市</li>
+<li>婚姻状况 : 已婚</li>
+<li>联系电话 : 188<em>**</em>6729</li>
+<li>邮箱 : <a href="&#109;&#97;&#105;&#x6c;&#116;&#x6f;&#x3a;&#x6a;&#x69;&#46;&#x78;&#105;&#97;&#x6f;&#100;&#64;&#103;&#x6d;&#97;&#x69;&#x6c;&#46;&#99;&#111;&#109;">&#x6a;&#x69;&#46;&#x78;&#105;&#97;&#x6f;&#100;&#64;&#103;&#x6d;&#97;&#x69;&#x6c;&#46;&#99;&#111;&#109;</a></li>
+<li>出生年月 : 1986年10月</li>
+<li>博客 : <a href="http://blog.100dos.com">http://blog.100dos.com</a></li>
+<li>Github : <a href="https://github.com/jixiaod" target="_blank" rel="external">https://github.com/jixiaod</a></li>
+</ul>
+<hr>
+<h2 id="工作经历"><a href="#工作经历" class="headerlink" title="工作经历"></a>工作经历</h2><ul>
+<li><strong>北京墨迹风云科技股份有限公司</strong> | 2014.07 - 至今 | Web 开发 Leader<ul>
+<li>先后负责墨迹商城、Web天气等开发工作</li>
+<li>2014年12月升任为 PHP 开发 Leader，2015年10月升任为Web 开发 Leader</li>
+<li>目前负责端内H5、天气＋、H5活活动、WEB 天气、官网、前端基础架构、X项目、LNMP 基础架构、RPC 、后台开发等项目开发管理工作</li>
+<li>推进前后端开发分离工作，Node.js、React 及 React Native 调研及X项目开发，后端 Swoole、thrift RPC、PHP7等</li>
+<li>推进团队技术氛围形成，Git &amp; Gitlab 及 Code Review、技术分享及技术文档开发</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><strong>北京逸香世纪葡萄酒文化传播有限公司</strong> | 2011.02 - 2014.06 | Web 开发项目经理<ul>
+<li>先后负责逸香网、大众酒评（原逸香社区）项目等项目的开发工作</li>
+<li>2012年9月正式升职为web开发部项目经理</li>
+<li>负责协调各部门开发需求，跟进项目进度</li>
+<li>制定相关技术规范和开发流程，带领和激励开发团队</li>
+<li>并且指导团队成员开发工作，适时解决技术难题</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><strong>大连奥瑞文网络技术有限公司</strong> | 2010.07 - 2010.11 | PHP 开发工程师<ul>
+<li>负责在线考试系统、在线培训系统及官网开发</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="项目经验"><a href="#项目经验" class="headerlink" title="项目经验"></a>项目经验</h2><ul>
+<li><strong>天气RPC服务开发</strong> | 2016.3 - 至今<ul>
+<li>Swoole + Thrift 框架调研开发</li>
+<li>天气数据RPC服务目前提供的接口包括天气实况、24小时预报、15天预报、AQI等等</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><strong>Web 天气开发</strong> | 2015.12 - 至今<ul>
+<li>墨迹天气的网页实现（包括wap版），目前功能同墨迹天气APP类似，包括实况天气、15天预报、AQI、实景等功能</li>
+<li>使用 Swoole 框架开发。并封装 Swoole + Yaf 框架，以便开发人员能够继续使用原来熟悉的 Yaf 框架</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><strong>广告SSP竞价系统</strong> | 2015.07 - 2015.10<ul>
+<li>对接第三方广告平台，实现CPM、CPC两种竞价模式。根据录入SSP后台的广告位出价，计算每个广告位收益最大的第三方。优先展示收益最大的广告第三方平台的广告物料。并且实时计算投放量消耗，消耗完后自动切换该广告位置的其他广告。</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><strong>后台管理系统开发</strong> | 2014.7 - 2015.3<ul>
+<li>墨迹商城后台<ul>
+<li>包括商品管理、订单管理、财务管理、评论管理、优惠券管理、统计、权限管理等功能</li>
+</ul>
+</li>
+<li>客服管理后台<ul>
+<li>允许客服人员实时查看用户对墨迹天气APP的反馈，并能够在后台回复用户，然后对每个反馈分配分类标签。并且有每天的反馈统计，包括趋势分析、回复反馈趋势、反馈分布</li>
+<li>包括问题反馈统计、处理用户反馈、墨迹公告等功能</li>
+</ul>
+</li>
+<li>商城第三方商家后台<ul>
+<li>允许商家自己录入商品，处理自己的订单，主要确认对“已付款”的订单，处理发货</li>
+<li>包括商品管理、订单管理功能</li>
+</ul>
+</li>
+<li>数据统计后台<ul>
+<li>包括用户新增、活跃用户、用户留存、版本分布、扣量分析、渠道、财务等功能 </li>
+</ul>
+</li>
+<li>广告管理后台<ul>
+<li>根据广告排期部署APP 端内各个位置的广告，可以分平台（iPhone、Android）、语言、地区、渠道不同维度上线广告。广告位置包括二级Splash开屏、穿衣助手、首页首中低部、天气背景、实景顶部Banner等等</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><strong>墨迹商城</strong> | 2014.07 - 2015.05 <ul>
+<li>使用PHP Yaf 框架开发</li>
+<li>Python Tornado + Redis 简单队列实现抢购模块</li>
+<li>对接墨迹用户系统，实现商品展示、商品购买、抢购、提交订单、支付等功能</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><strong>读享 Read4Share</strong> | 2014.03 - 2014.05<ul>
+<li>稍后阅读及分享APP，类似Instapaper等稍后阅读应用</li>
+<li>采用Phonegap开发，JS框架选择了Requirejs+Backbone，前端组建使用Bootstrap。</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><strong>酒标图片搜索识别</strong> | 2013.08 - 2013.12<ul>
+<li>移动终端拍摄酒标照片，并上传到服务器处理，返回该葡萄酒的数据信息。使用开源视觉库Opencv搭建，采用SIFT算法。开发完成命名为siftmatch的php的C扩展，并用php语言实现web服务API。后续使用多线程等优化查询效率。能够达到2000张图片库，3s以内返回结果。</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><strong>Sculoy代码发布平台</strong> | 2013.07 - 2013.07<ul>
+<li>开发团队目前大大小小项目又二三十个，外网代码发布十分频繁。而且目前项目都属于尝试性阶段，线上环境出问题对公司影响不大，团队成员能够通过Sculoy平台发布代码到线上环境，这样能够很大程度节省大家的时间。Sculoy支持Git和SVN项目的代码发布，且对每个团队成员做了权限控制，只能发布自己负责的项目。</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><strong>大众酒评项目开发</strong> | 2011.05 - 2012.08<ul>
+<li>初期负责全部代码编写，PHP框架、JS框架搭建和业务模块开发</li>
+<li>开始的功能类似新浪微博，发微博、转发、回复、私信等等社交功能</li>
+<li>大众酒评与酒库核心数据结合，让葡萄酒爱好者有一个秀自己的平台</li>
+<li>加入白酒、烈酒等，且跟酒类电商及线下渠道打通，做酒类产品的购买入口，做成O2O闭环</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><strong>逸香网新闻资讯</strong> | 2011.2 - 2011.5      <ul>
+<li>负责资讯站部分功能开发和维护</li>
+<li>开发了tag关键字模块，实现了相关文章功能</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="实习经历"><a href="#实习经历" class="headerlink" title="实习经历"></a>实习经历</h2><ul>
+<li><strong>沈阳耐斯动漫艺术有限公司</strong> | 2010.01 - 2010.05<ul>
+<li>负责 J2ME 手机游戏开发</li>
+</ul>
+</li>
+<li><strong>中山数字娱乐产业发展有限公司</strong> | 2009.09 - 2010.01<ul>
+<li>负责 PHP 游戏开发及官网开发</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="教育经历"><a href="#教育经历" class="headerlink" title="教育经历"></a>教育经历</h2><ul>
+<li>哈尔滨工业大学 2006.09 - 2010.07 | 软件学园 | 软件工程<ul>
+<li>无挂科，毕业答辩成绩良</li>
+<li>CET-6 英语6级分数 525分</li>
+</ul>
+</li>
+<li>新宾县高级中学 2003.09 - 2006.07 <ul>
+<li>高考分数 533分</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="兴趣爱好"><a href="#兴趣爱好" class="headerlink" title="兴趣爱好"></a>兴趣爱好</h2><p>篮球、看书、电影、动漫、dota……</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;hr&gt;
+&lt;h2 id=&quot;基本信息&quot;&gt;&lt;a href=&quot;#基本信息&quot; class=&quot;headerlink&quot; title=&quot;基本信息&quot;&gt;&lt;/a&gt;基本信息&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;姓名 : 纪刚&lt;/li&gt;
+&lt;li&gt;民族 : 满族&lt;/li&gt;
+&lt;li&gt;学历 : 本科 - 哈尔滨工业大学
+    
+    </summary>
+    
+      <category term="杂" scheme="http://blog.100dos.com/categories/%E6%9D%82/"/>
+    
+    
+      <category term="简历" scheme="http://blog.100dos.com/tags/%E7%AE%80%E5%8E%86/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Kong 集群配置</title>
+    <link href="http://blog.100dos.com/2016/08/01/kong-cluster-configuration/"/>
+    <id>http://blog.100dos.com/2016/08/01/kong-cluster-configuration/</id>
+    <published>2016-08-01T07:27:53.000Z</published>
+    <updated>2017-03-14T02:25:20.000Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="先了解下几个-Kong-的关于集群的配置"><a href="#先了解下几个-Kong-的关于集群的配置" class="headerlink" title="先了解下几个 Kong 的关于集群的配置"></a>先了解下几个 Kong 的关于集群的配置</h3><ul>
+<li>cluster_listen: “0.0.0.0:7946”<ul>
+<li>跟集群中其他 Kong 节点通讯的 IP 地址和端口，使用 UDP 和 TCP 协议。所有集群中的节点都必须能够跟这个节点的这个地址进行通讯。只有 IPv4 地址是被允许的（不支持域名）。</li>
+</ul>
+</li>
+<li>cluster_listen_rpc: “127.0.0.1:7373”<ul>
+<li>节点用于本地集群代理通讯的 IP 地址和端口（只能是TCP，且只能在本地）。</li>
+<li>只能在这个 Kong 节点内部使用。只支持 IPv4 地址（不支持域名）。</li>
+</ul>
+</li>
+<li>cluster<ul>
+<li>advertise: “”<ul>
+<li>跟集群中其他 Kong 节点通讯的 IP 地址和端口，使用 UDP 和 TCP 协议。所有集群中的节点都必须能够跟这个节点的这个地址进行通讯。只有 IPv4 地址是被允许的（不支持域名）。</li>
+<li>只支持 IPv4 地址（不支持域名）。</li>
+<li>advertise 配置项用来指定集群中其他节点跟该节点的通讯地址。默认情况下，跟其他节点通讯的地址就是 cluster_listen 的配置。如果cluster_listen 的 host 地址是 “0.0.0.0”，则得到的第一个本地的、无回路的 IPv4 地址就是跟其他节点通讯的地址。然后，在某些情况下（在通过有 NAT 网络地址转换时），或许有能够被网络路由到的地址，却不能被 Kong 集群中不能与其他节点通讯的情况。这时，advertise 配置的 IP 地址 能够解决这个问题。</li>
+</ul>
+</li>
+<li>encrypt: “foo”<ul>
+<li>Kong 网络传输加密的 key。必须是 base64 的16位 key 值。</li>
+</ul>
+</li>
+<li>ttl_on_failure: 3600<ul>
+<li>TTL (time to live)， 单位是秒，当集群中的一个节点因为故障，停止向发送心跳的 ping 检查。如果在这个配置的周期内，节点一直不能发送心跳检查，那么新加入到集群中的节点启动时，将会停止尝试连接它。这个配置的最小值是 60。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Kong-集群配置"><a href="#Kong-集群配置" class="headerlink" title="Kong 集群配置"></a>Kong 集群配置</h3><p>结合上问配置说明和Kong集群介绍，大概应该了解：配置在同一网断内的 Kong 集群，只需要把所有节点的数据存储配置到同一个数据库即可。节点会根据数据库中存储的节点信息，去自动做互相的通信。如何配置数据存储可参考 <a href="http://blog.100dos.com/2016/07/25/the-installation-and-configuration-of-kong/">Kong 安装与配置</a>。</p>
+<p>成功启动新的 Kong 节点，可以在这三个节点都能通过命令查看现在集群的状态</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">tiger➜~» kong cluster members                                                                                         [16:59:45]</div><div class="line">[INFO] Using configuration: /etc/kong/kong.yml</div><div class="line">tigerdeMacBook-Pro.local_0.0.0.0:7946_8add5ecc222c486ab6caadadf35afbfa  192.168.20.156:7946  alive</div><div class="line">v194_0.0.0.0:7946_f8b6daf71a9f4906993ad1cc3f1ca6a2                      192.168.1.194:7946   alive</div><div class="line">v5_0.0.0.0:7946_1da4f4fbcd2d467a8799ae1c7e056771                        192.168.1.75:7946    alive</div><div class="line"></div><div class="line">[root@v5 ~]# /usr/local/bin/kong cluster members</div><div class="line">[INFO] Using configuration: /etc/kong/kong.yml</div><div class="line">v5_0.0.0.0:7946_1da4f4fbcd2d467a8799ae1c7e056771                        192.168.1.75:7946    alive</div><div class="line">v194_0.0.0.0:7946_f8b6daf71a9f4906993ad1cc3f1ca6a2                      192.168.1.194:7946   alive</div><div class="line">tigerdeMacBook-Pro.local_0.0.0.0:7946_8add5ecc222c486ab6caadadf35afbfa  192.168.20.156:7946  alive</div><div class="line"></div><div class="line">[lan_dev@v194 ~]$ kong cluster members</div><div class="line">[INFO] Using configuration: /etc/kong/kong.yml</div><div class="line">v194_0.0.0.0:7946_f8b6daf71a9f4906993ad1cc3f1ca6a2                      192.168.1.194:7946   alive</div><div class="line">tigerdeMacBook-Pro.local_0.0.0.0:7946_8add5ecc222c486ab6caadadf35afbfa  192.168.20.156:7946  alive</div><div class="line">v5_0.0.0.0:7946_1da4f4fbcd2d467a8799ae1c7e056771                        192.168.1.75:7946    alive</div></pre></td></tr></table></figure>
+<p>能看到现在集群中已经有俩个状态是 alive 的节点。</p>
+<p>如果夸多个机房的配置，一种方法是使用VPN，这样同样可以保证所有节点在同一网断下。或者是显示的配置 advertise 项指明节点去与哪个地址通讯。比如指定这三台服务器都去跟其中一个节点的地址去通信：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">advertise: &quot;192.168.1.75:7946&quot;</div></pre></td></tr></table></figure>
+<p>同样启动 3 个节点，注意启动信息里会有这一行</p>
+<p>[INFO] serf …………..-profile=wan -rpc-addr=127.0.0.1:7373 -event-handler=member-join,member-leave,member-failed,member-update,member-reap,user:kong=/usr/local/kong/serf_event.sh -bind=0.0.0.0:7946 -advertise=192.168.1.75:7946 -node=v194_0.0.0.0:7946_f8b6daf71a9f4906993ad1cc3f1ca6a2 -log-level=err</p>
+<p>其中指明了 advertise=192.168.1.75:7946，通过该地址通讯。</p>
+<p>同样可以在三台节点使用命令查看集群状态</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[lan_dev@v194 ~]$ kong cluster members</div><div class="line">[INFO] Using configuration: /etc/kong/kong.yml</div><div class="line">v194_0.0.0.0:7946_f8b6daf71a9f4906993ad1cc3f1ca6a2                      192.168.1.75:7946  alive</div><div class="line">v5_0.0.0.0:7946_1da4f4fbcd2d467a8799ae1c7e056771                        192.168.1.75:7946  alive</div><div class="line">tigerdeMacBook-Pro.local_0.0.0.0:7946_8add5ecc222c486ab6caadadf35afbfa  192.168.1.75:7946  alive</div><div class="line"></div><div class="line">[root@v5 ~]# /usr/local/bin/kong cluster members</div><div class="line">[INFO] Using configuration: /etc/kong/kong.yml</div><div class="line">tigerdeMacBook-Pro.local_0.0.0.0:7946_8add5ecc222c486ab6caadadf35afbfa  192.168.1.75:7946  alive</div><div class="line">v194_0.0.0.0:7946_f8b6daf71a9f4906993ad1cc3f1ca6a2                      192.168.1.75:7946  alive</div><div class="line">v5_0.0.0.0:7946_1da4f4fbcd2d467a8799ae1c7e056771                        192.168.1.75:7946  alive</div><div class="line"></div><div class="line">tiger➜~» kong cluster members                                                                                                                                                                          [17:32:07]</div><div class="line">[INFO] Using configuration: /etc/kong/kong.yml</div><div class="line">tigerdeMacBook-Pro.local_0.0.0.0:7946_8add5ecc222c486ab6caadadf35afbfa  192.168.1.75:7946  alive</div><div class="line">v5_0.0.0.0:7946_1da4f4fbcd2d467a8799ae1c7e056771                        192.168.1.75:7946  alive</div><div class="line">v194_0.0.0.0:7946_f8b6daf71a9f4906993ad1cc3f1ca6a2                      192.168.1.75:7946  alive</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;先了解下几个-Kong-的关于集群的配置&quot;&gt;&lt;a href=&quot;#先了解下几个-Kong-的关于集群的配置&quot; class=&quot;headerlink&quot; title=&quot;先了解下几个 Kong 的关于集群的配置&quot;&gt;&lt;/a&gt;先了解下几个 Kong 的关于集群的配置&lt;/h3&gt;&lt;
+    
+    </summary>
+    
+      <category term="Nginx" scheme="http://blog.100dos.com/categories/Nginx/"/>
+    
+    
+      <category term="kong" scheme="http://blog.100dos.com/tags/kong/"/>
+    
+  </entry>
+  
+</feed>

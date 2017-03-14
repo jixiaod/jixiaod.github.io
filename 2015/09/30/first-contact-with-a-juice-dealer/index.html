@@ -1,0 +1,553 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+
+
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="React," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="百作坊" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+<meta name="description" content="英文原文 Facebook just taught us all how to build websites
+在软件开发行业，总是会有一些里程碑式的重大突破。
+2003年，Brad Fitzpatrick 发布了 Memcached，然后提出 LiveJournal的架构设计（LiveJournal是一个综合型SNS交友网站，有论坛、博客等功能）。这个架构变成了下一代网站和应用服务的原型设计，直到">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Facebook 教我们写代码">
+<meta property="og:url" content="http://blog.100dos.com/2015/09/30/first-contact-with-a-juice-dealer/index.html">
+<meta property="og:site_name" content="百作坊">
+<meta property="og:description" content="英文原文 Facebook just taught us all how to build websites
+在软件开发行业，总是会有一些里程碑式的重大突破。
+2003年，Brad Fitzpatrick 发布了 Memcached，然后提出 LiveJournal的架构设计（LiveJournal是一个综合型SNS交友网站，有论坛、博客等功能）。这个架构变成了下一代网站和应用服务的原型设计，直到">
+<meta property="og:updated_time" content="2017-03-14T02:25:20.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Facebook 教我们写代码">
+<meta name="twitter:description" content="英文原文 Facebook just taught us all how to build websites
+在软件开发行业，总是会有一些里程碑式的重大突破。
+2003年，Brad Fitzpatrick 发布了 Memcached，然后提出 LiveJournal的架构设计（LiveJournal是一个综合型SNS交友网站，有论坛、博客等功能）。这个架构变成了下一代网站和应用服务的原型设计，直到">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"hide"},
+    fancybox: true,
+    motion: true
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://blog.100dos.com/2015/09/30/first-contact-with-a-juice-dealer/"/>
+
+
+  <title> Facebook 教我们写代码 | 百作坊 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?e70448447504ef27f728084c8f2978ea";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="site-title">百作坊</span>
+    </a>
+  </div>
+  <p class="site-subtitle">100dos.com</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+    </ul>
+  
+
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Facebook 教我们写代码
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2015-09-30T15:33:06+08:00" content="2015-09-30">
+              2015-09-30
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/前端/" itemprop="url" rel="index">
+                    <span itemprop="name">前端</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>英文原文 <a href="https://blog.gyrosco.pe/facebook-just-taught-us-all-how-to-build-websites-51f1e7e996f2" target="_blank" rel="external">Facebook just taught us all how to build websites</a></p>
+<p>在软件开发行业，总是会有一些里程碑式的重大突破。</p>
+<p>2003年，Brad Fitzpatrick 发布了 <a href="http://memcached.org/" target="_blank" rel="external">Memcached</a>，然后提出 LiveJournal的架构设计（LiveJournal是一个综合型SNS交友网站，有论坛、博客等功能）。<a href="http://www.danga.com/words/2005_oscon/oscon-2005.pdf" target="_blank" rel="external">这个架构</a>变成了下一代网站和应用服务的原型设计，直到今天仍然被广泛使用。</p>
+<p>2004年，Google 发布了 <a href="http://research.google.com/archive/mapreduce.html" target="_blank" rel="external">MapReduce</a> 的论文。在这个编程模型的成功和激励下，Hadoop 诞生了，并且日益完善，大放异彩。如今在大数据平台搭建上，成为最广泛被使用的基础架构。</p>
+<p>2007年，亚马逊发表了一片论文 <a href="http://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf" target="_blank" rel="external">the Dynamo paper</a>，向全世界展示了数据库和应用程序如何实现分布式的协同工作，并且实现架构的线性扩展。在这个思想基础上，Cassandra、Riak诞生了，并且在很多超大型APP应用中被使用。</p>
+<p>2010年，Twitter 发表了一篇文章 <a href="https://blog.twitter.com/2010/tech-behind-new-twittercom" target="_blank" rel="external">switched to client-side templating</a>，让服务器角色发生转变，提出了让服务器只提供简单的 API 服务的概念。与此同时，DocumentCloud 发布了 Backbone.js，实现了这个想法，并且提供了整洁的 API，新的实现方式和简洁的文档，让更多开发者可以尝试在客户端上去做渲染模版的工作。可以猜想，五年前 Twitter 一定是遇到了一些问题，各种碰壁之后，终于发现了这条光明大道。现如今，已经有非常多的应用开始直接用客户端去渲染模版了，还将会有更多的应用在朝着这个方向发展。</p>
+<p>2012年，Google 发布了 <a href="http://googledevelopers.blogspot.com/2012/06/better-web-templating-with-angularjs-10.html" target="_blank" rel="external">Angular.js 的1.0 版本</a>。他提供了比 Backbone.js 更多的内容，强调了测试和更好的开发实践。而且在绑定数据和渲染模版方面，都做了更佳优化的处理。今天，在很多招聘前端开发岗位描述上，都能看到 Angular.js 已经做为岗位要求。Angular.js 发展迅速，越来越受欢迎和追捧。</p>
+<p>然而，所有这些有什么共同点呢？这些公司和创业者，他们在漫长的产品道路上，学到了很多，积累了经验，找到了继续前进的捷径，并且乐意去跟全世界分享他们的成果。我们应该感谢这些先驱们。</p>
+<p>### </p>
+<h3 id="我相信这一切也在2015年发生了，这次轮到了-Facebook-的三重奏，React-js、Relay和GraphQL"><a href="#我相信这一切也在2015年发生了，这次轮到了-Facebook-的三重奏，React-js、Relay和GraphQL" class="headerlink" title="我相信这一切也在2015年发生了，这次轮到了 Facebook 的三重奏，React.js、Relay和GraphQL"></a>我相信这一切也在2015年发生了，这次轮到了 Facebook 的三重奏，React.js、Relay和GraphQL</h3><hr>
+<p>&nbsp;</p>
+<p>以下是我这个旁观者对这次 Facebook 发布会，在开发 App 和网站技术上的解读：</p>
+<p>第一，把App拆分成<a href="http://facebook.github.io/react/docs/thinking-in-react.html" target="_blank" rel="external">独立的组件</a>。一些组件可以在 App的许多其他地方复用，虽然一些可能只能被用到一次。但是这些组件联合到一起就组成了App应用。</p>
+<p>第二，对于每一个组件，都应该包含所有用来渲染他的一组数据。而且无论何时，一定要为状态变量赋予不变的数据结构。</p>
+<p>第三，明确！一定要明确！！组件如何去响应用户或者其他组件触发的组件状态变化。</p>
+<p>（注：以下视频需要翻墙观看）</p>
+<iframe width="700" height="393" src="https://www.youtube.com/embed/DgVS-zXgMTk" frameborder="0" allowfullscreen="allowfullscreen"></iframe><br>第四，确保每个组件被正确的、明确的声明，并且渲染组件的数据也需要按照一定的顺序去渲染。<br><br><iframe width="700" height="393" src="https://www.youtube.com/embed/9sc8Pyc51uU" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+
+<p>第五，组件需要的样式、标记、验证和数据必须在组件的内部或者靠近组件定义的位置。</p>
+<iframe width="700" height="587" src="https://cdn.embedly.com/widgets/media.html?src=https%3A%2F%2Fspeakerdeck.com%2Fplayer%2F2e15908049bb013230960224c1b4b8bd&amp;url=https%3A%2F%2Fspeakerdeck.com%2Fvjeux%2Freact-css-in-js&amp;image=https%3A%2F%2Fspeakerd.s3.amazonaws.com%2Fpresentations%2F2e15908049bb013230960224c1b4b8bd%2Fslide_0.jpg&amp;key=d04bfffea46d4aeda930ec88cc64b87c&amp;type=text%2Fhtml&amp;schema=speakerdeck" frameborder="0" scrolling="no"></iframe>
+
+<p>六，如果你能够学会React，你就可以用这些相同的技术、语言、框架和库去开发原生 App 应用。如果你足够幸运的话，甚至可以直接在他们之间复用代码。</p>
+<iframe width="700" height="393" src="https://www.youtube.com/embed/7rDsRXj9-cU" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+
+<p>所有其他的都应该能够被框架、编译器或者工具处理，比如：</p>
+<ul>
+<li>当一个组件的状态改变，框架需要知道如何去改变DOM，让他去按照组件告诉他的方式去执行动作，去展示。</li>
+<li>给出一个组件树，每个节点去请求数据。框架需要知道如何让编译能够使用最高效的方法去执行一个或一组查询，去请求服务器获得需要的数据。</li>
+<li>状态的变化需要积极的去适应 App 的 UI，同时需要服务器端做验证。</li>
+<li>当页面加载时，他应该用 HTML 渲染。而且浏览器加载完成后，他应该被启动且变成一个有交互的页面。<br>为什么要说这是一个非常好的方法去做 App 和 Web 开发呢？我们经常会谈论可扩展性，无论是服务器上还是在浏览器上，却很少去讨论开发团队的可扩展性。或许这是个很艰难的问题，但是这正是我们需要从 Facebook 学习的东西。</li>
+</ul>
+<p>用这些技术去写组件可以封装他们的业务逻辑，所以他们不用担心拆分或者去知道APP的其他部分。他们可以被标准化并且能够复用，所以不用为了同一个button的只有些许不同，而去编写很多个button。对于新人来说也很容易学习，因为一个基础的组件本身就很小，开发过程中没有隐藏很深的、潜在的复杂度。这的的确确是一种很优雅的架构。</p>
+<p>这个技术也强迫我们更多的去关注UI的状态和状态的变化。相比之前只是简单的写页面交互，对于开发人员，在开发之前需要更多的思考，思考如何更权衡的方法来渲染页面的每个组件和每个状态。这样也就减少了整个 Class 的会出问题的可能。</p>
+<p>&nbsp;</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/qrcode_for_gh_b81f9d06ec2e_258.jpg" alt="小弟 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>扫一下呗，反正我也不怎么发～</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/React/" rel="tag">#React</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/08/17/rule-of-svn-for-team/" rel="next" title="svn 协作开发流程">
+                <i class="fa fa-chevron-left"></i> svn 协作开发流程
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/10/12/code-read-of-react-native/" rel="prev" title="React Native 源码阅读">
+                React Native 源码阅读 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+  </div>
+
+
+          </div>
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://tva1.sinaimg.cn/crop.0.0.414.414.180/62d98a55jw1e6lb32mfm7j20bo0bo0to.jpg"
+               alt="小弟" />
+          <p class="site-author-name" itemprop="name">小弟</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">160</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">67</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+        
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/jixiaod" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/jixiaod" target="_blank" title="Code">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  Code
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.douban.com/people/ttihgiesr" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2008 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="author" itemprop="copyrightHolder"> 『百作坊』 Generated by <a href="https://hexo.io">Hexo</a> & Theme by <a href="https://github.com/jixiaod/hexo-theme-next">Next</a> & Public by <a href="https://pages.github.com">Github Pages</a>.</span>
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+</body>
+</html>

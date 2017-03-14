@@ -1,0 +1,579 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+
+
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="kong," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="百作坊" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+<meta name="description" content="安装官方安装文档 写的很详细，个人尝试了以下方法，均能顺利安装。 
+
+CentOS Install： https://getkong.org/install/centos/
+OS X Install： https://getkong.org/install/osx/ (https://getkong.org/install/osx/)
+brew install： https://github.co">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kong 的安装和配置">
+<meta property="og:url" content="http://blog.100dos.com/2016/07/25/the-installation-and-configuration-of-kong/index.html">
+<meta property="og:site_name" content="百作坊">
+<meta property="og:description" content="安装官方安装文档 写的很详细，个人尝试了以下方法，均能顺利安装。 
+
+CentOS Install： https://getkong.org/install/centos/
+OS X Install： https://getkong.org/install/osx/ (https://getkong.org/install/osx/)
+brew install： https://github.co">
+<meta property="og:updated_time" content="2017-03-14T02:25:20.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Kong 的安装和配置">
+<meta name="twitter:description" content="安装官方安装文档 写的很详细，个人尝试了以下方法，均能顺利安装。 
+
+CentOS Install： https://getkong.org/install/centos/
+OS X Install： https://getkong.org/install/osx/ (https://getkong.org/install/osx/)
+brew install： https://github.co">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"hide"},
+    fancybox: true,
+    motion: true
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://blog.100dos.com/2016/07/25/the-installation-and-configuration-of-kong/"/>
+
+
+  <title> Kong 的安装和配置 | 百作坊 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?e70448447504ef27f728084c8f2978ea";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="site-title">百作坊</span>
+    </a>
+  </div>
+  <p class="site-subtitle">100dos.com</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+    </ul>
+  
+
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Kong 的安装和配置
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-25T14:16:10+08:00" content="2016-07-25">
+              2016-07-25
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Nginx/" itemprop="url" rel="index">
+                    <span itemprop="name">Nginx</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p><a href="https://getkong.org/install/" target="_blank" rel="external">官方安装文档</a> 写的很详细，个人尝试了以下方法，均能顺利安装。 </p>
+<ul>
+<li>CentOS Install： <a href="https://getkong.org/install/centos/" target="_blank" rel="external">https://getkong.org/install/centos/</a></li>
+<li>OS X Install： <a href="https://getkong.org/install/osx/" target="_blank" rel="external">https://getkong.org/install/osx/</a> (<a href="https://getkong.org/install/osx/" target="_blank" rel="external">https://getkong.org/install/osx/</a>)<ul>
+<li>brew install： <a href="https://github.com/Mashape/homebrew-kong" target="_blank" rel="external">https://github.com/Mashape/homebrew-kong</a></li>
+</ul>
+</li>
+<li>编译安装：<a href="https://getkong.org/install/source/" target="_blank" rel="external">https://getkong.org/install/source/</a></li>
+</ul>
+<h4 id="安装-Kong-的-rpm-包"><a href="#安装-Kong-的-rpm-包" class="headerlink" title="安装 Kong 的 rpm 包"></a>安装 Kong 的 rpm 包</h4><p>// 查看CentOS版本，官方下载对应版本的 rpm 包</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[lan_dev@v194 ~]$ cat /etc/redhat-release </div><div class="line">CentOS release 6.6 (Final)</div></pre></td></tr></table></figure>
+<p>下载对应 CentOS 版本的 rpm 文件，之后执行 </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~$ sudo yum install epel-release </div><div class="line">~$ sudo yum install kong-0.8.3.*.noarch.rpm —nogpgcheck</div></pre></td></tr></table></figure>
+<h2 id="配置数据存储"><a href="#配置数据存储" class="headerlink" title="配置数据存储"></a>配置数据存储</h2><p>配置 Kong 需要连接的数据库存储，同时支持 PostgreSQL 9.4+ 或 Cassandra 2.2.x 作为它的存储服务。 </p>
+<p>打开配置文件 </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~$ sudo vim /etc/kong/kong.yml</div></pre></td></tr></table></figure>
+<p>修改如下所在行的配置（PostgreSQL 安装配置可查看文档 <a href="http://blog.100dos.com/2016/08/01/postgresql-install-and-use">PostgreSQL 安装与配置</a> ）</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">database: postgres </div><div class="line">postgres: </div><div class="line"> host: &quot;127.0.0.1&quot; </div><div class="line"> port: 5432 </div><div class="line"> database: kong </div><div class="line"> user: &quot;kong&quot; </div><div class="line"> password: &quot;123456&quot;</div></pre></td></tr></table></figure>
+<p>启动 Kong </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~$ kong start </div><div class="line"># Kong is running </div><div class="line">~$ curl 127.0.0.1:8001 </div><div class="line"></div><div class="line">~$ kong stop </div><div class="line">~$ kong reload</div></pre></td></tr></table></figure>
+<p>启动时，如果报错</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[lan_dev@v194 ~]$ kong start</div><div class="line">[INFO] kong 0.8.3</div><div class="line">[INFO] Using configuration: /etc/kong/kong.yml</div><div class="line">[INFO] Setting working directory to /usr/local/kong</div><div class="line">[INFO] database...........postgres host=127.0.0.1 database=kong user=kong password=123456 port=5432 </div><div class="line">[INFO] Leaving cluster..</div><div class="line">[ERR] 错误: 函数 to_regclass(unknown) 不存在 (8)</div><div class="line">[ERR] Could not start Kong</div></pre></td></tr></table></figure>
+<p>是因为PostgreSQL 版本太低，安装 PostgreSQL 9.4+ 以上版本。</p>
+<h2 id="添加API"><a href="#添加API" class="headerlink" title="添加API"></a>添加API</h2><p>添加你的具体业务 API 服务到 Kong 中，Kong 通过 RESTful API 来管理具体的Kong 实例。具体请求如下，Kong 管理的 API 在8001 端口。请求配置如下： </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~$ curl -i -X POST \ </div><div class="line"> --url http://localhost:8001/apis/ \ </div><div class="line"> -d &apos;name=coapi&apos; \ </div><div class="line"> -d &apos;upstream_url=http://co.moji.com/&apos; \ </div><div class="line"> -d &apos;request_host=co.moji.com&apos; \ </div><div class="line"> -d &apos;strip_request_path=true&apos; \ </div><div class="line"> -d &apos;request_path=/coapi&apos;</div></pre></td></tr></table></figure>
+<p>成功后，可测试： </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~$ curl -i -X GET --url http://localhost:8000/coapi/api/cola/getTimes?activityid=MC2016062101</div></pre></td></tr></table></figure>
+<p>请求成功表示 Kong 已经路由请求到我们配置的 upstream_url 地址。这里我们选择了一种简单的适合我们的配置方式，路由方式可以分以下英文原文的俩种。Proxy Reference (<a href="https://getkong.org/docs/0.8.x/proxy/" target="_blank" rel="external">https://getkong.org/docs/0.8.x/proxy/</a>)</p>
+<p>How does Kong route a request to an API?<br>When receiving a request, Kong will inspect it and try to route it to the correct API. In order to do so, it supports different routing mechanisms depending on your needs. A request can be routed by: </p>
+<ul>
+<li>A DNS value contained in the Host header of the request. </li>
+<li>The path (URI) of the request.</li>
+</ul>
+<p>我们的从 KONG 路由到业务的 API 使用： path URI 的方式请求 ＋ 设置 strip_request_path 为 true </p>
+<h2 id="开启-KONG-插件"><a href="#开启-KONG-插件" class="headerlink" title="开启 KONG 插件"></a>开启 KONG 插件</h2><p>插件的可扩展性是 Kong 的核心思想之一，可以非常便利的通过插件让你的 API 获得新的特性。 </p>
+<p>这里是 Kong 所有可用的插件 (<a href="https://getkong.org/plugins/)，下面是简单添加一个" target="_blank" rel="external">https://getkong.org/plugins/)，下面是简单添加一个</a> key-auth 插件。 </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~$ curl -i -X POST \ </div><div class="line"> --url http://localhost:8001/apis/coapi/plugins/ \ </div><div class="line"> --data &apos;name=key-auth&apos;</div></pre></td></tr></table></figure>
+<p>再次请求，已经不能访问了 401 Unauthorized。<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~$ curl -i -X GET --url http://localhost:8000/coapi/api/cola/getTimes?activityid=MC2016062101</div></pre></td></tr></table></figure></p>
+<h2 id="添加-Consumers"><a href="#添加-Consumers" class="headerlink" title="添加 Consumers"></a>添加 Consumers</h2><p>现在已经配置了 key-auth 插件，还需要添加 consumer 到 API，才能继续通过 Kong 代理请求。Consumer 在调用API时，与单个用户请求关联，能被用来跟踪、访问管理等等。 </p>
+<p>建立一个用户名称为Jason 的 consumer，下面请求命令成功之后，Kong 还会为Jason 用户建立一个唯一的 custom_id。 </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~$ curl -i -X POST \ </div><div class="line"> --url http://localhost:8001/consumers/ \ </div><div class="line"> --data &quot;username=Jason&quot;</div></pre></td></tr></table></figure>
+<p>然后再为刚刚建立的用户 Jason 创建一个 key-auth 插件的 key。 </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~$ curl -i -X POST \ </div><div class="line"> --url http://localhost:8001/consumers/Jason/key-auth/ \ </div><div class="line"> --data &apos;key=18b4ccb1a20076813c208d8e8a281a94&apos;</div></pre></td></tr></table></figure>
+<p>成功之后，再次访问： </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~$ curl -i -X GET --url http://localhost:8000/coapi/api/cola/getTimes?apikey=18b4ccb1a20076813c208d8e8a281a94&amp;activityid=MC2016062101</div></pre></td></tr></table></figure>
+<p>PS：apikey 必须写在 url 的第一个参数，否则会报“No API Key found in headers, body or querystring”的错误。 </p>
+<h2 id="用到的插件-RESTful-API-配置"><a href="#用到的插件-RESTful-API-配置" class="headerlink" title="用到的插件 RESTful API 配置"></a>用到的插件 RESTful API 配置</h2><p>Basic Authentication － 浏览器弹框需要输入用户名密码才能访问…… </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~$ curl -X POST http://localhost:8001/apis/tianqi/plugins \ </div><div class="line"> --data &quot;name=basic-auth&quot; \ </div><div class="line"> --data &quot;config.hide_credentials=true&quot; </div><div class="line"></div><div class="line">~$ curl -X POST http://localhost:8001/consumers/Jason/basic-auth \ </div><div class="line"> --data &quot;username=user123&quot; \ </div><div class="line"> --data &quot;password=secret&quot;</div></pre></td></tr></table></figure>
+<p>IP Restriction － IP 限制，黑名单、白名单。支持单IP、多IP、IP区间等配置。 </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~$ curl -X POST http://localhost:8001/apis/tianqi/plugins \ </div><div class="line"> --data &quot;name=ip-restriction&quot; \ </div><div class="line"> --data &apos;config.blacklist=192.168.20.156&apos;</div></pre></td></tr></table></figure>
+<p>Rate Limiting － 以下是限制一分钟内只允许同一个IP 有5个请求，一小时内10000个请求 </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~$ curl -X POST http://localhost:8001/apis/tianqi/plugins \ </div><div class="line"> --data &quot;name=rate-limiting&quot; \ </div><div class="line"> --data &quot;config.minute=5&quot; \ </div><div class="line"> --data &quot;config.hour=10000&quot;</div></pre></td></tr></table></figure>
+<p>Request Size Limiting － 防止 DOS 攻击，限制访问的请求body 大于多megabytes 的请求。 </p>
+<p>~$ curl -X POST <a href="http://localhost:8001/apis/tianqi/plugins" target="_blank" rel="external">http://localhost:8001/apis/tianqi/plugins</a> \<br> –data “name=request-size-limiting” \<br> –data “config.allowed_payload_size=128” </p>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/qrcode_for_gh_b81f9d06ec2e_258.jpg" alt="小弟 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>扫一下呗，反正我也不怎么发～</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/kong/" rel="tag">#kong</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/07/25/kong-introduction/" rel="next" title="Kong 介绍">
+                <i class="fa fa-chevron-left"></i> Kong 介绍
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/08/01/postgresql-install-and-use/" rel="prev" title="PostgreSQl 安装和使用">
+                PostgreSQl 安装和使用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+  </div>
+
+
+          </div>
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://tva1.sinaimg.cn/crop.0.0.414.414.180/62d98a55jw1e6lb32mfm7j20bo0bo0to.jpg"
+               alt="小弟" />
+          <p class="site-author-name" itemprop="name">小弟</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">160</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">67</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+        
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/jixiaod" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/jixiaod" target="_blank" title="Code">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  Code
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.douban.com/people/ttihgiesr" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2008 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="author" itemprop="copyrightHolder"> 『百作坊』 Generated by <a href="https://hexo.io">Hexo</a> & Theme by <a href="https://github.com/jixiaod/hexo-theme-next">Next</a> & Public by <a href="https://pages.github.com">Github Pages</a>.</span>
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+</body>
+</html>

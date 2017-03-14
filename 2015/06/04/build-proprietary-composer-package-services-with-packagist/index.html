@@ -1,0 +1,555 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+
+
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="composer," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="百作坊" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+<meta name="description" content="1.下载 Packagist~# git clone https://github.com/composer/packagist.git
+2.建立配置文件从源里复制一份配置文件
+~# cd packagist~# cp app/config/parameters.yml.dist app/config/parameters.yml
+然后修改配置，其中 client_id 我是在 github 随便">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用 packagist 搭建私有的 composer包管理服务">
+<meta property="og:url" content="http://blog.100dos.com/2015/06/04/build-proprietary-composer-package-services-with-packagist/index.html">
+<meta property="og:site_name" content="百作坊">
+<meta property="og:description" content="1.下载 Packagist~# git clone https://github.com/composer/packagist.git
+2.建立配置文件从源里复制一份配置文件
+~# cd packagist~# cp app/config/parameters.yml.dist app/config/parameters.yml
+然后修改配置，其中 client_id 我是在 github 随便">
+<meta property="og:updated_time" content="2017-03-14T02:25:20.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用 packagist 搭建私有的 composer包管理服务">
+<meta name="twitter:description" content="1.下载 Packagist~# git clone https://github.com/composer/packagist.git
+2.建立配置文件从源里复制一份配置文件
+~# cd packagist~# cp app/config/parameters.yml.dist app/config/parameters.yml
+然后修改配置，其中 client_id 我是在 github 随便">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"hide"},
+    fancybox: true,
+    motion: true
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://blog.100dos.com/2015/06/04/build-proprietary-composer-package-services-with-packagist/"/>
+
+
+  <title> 使用 packagist 搭建私有的 composer包管理服务 | 百作坊 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?e70448447504ef27f728084c8f2978ea";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="site-title">百作坊</span>
+    </a>
+  </div>
+  <p class="site-subtitle">100dos.com</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+    </ul>
+  
+
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                使用 packagist 搭建私有的 composer包管理服务
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2015-06-04T19:27:59+08:00" content="2015-06-04">
+              2015-06-04
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/PHP/" itemprop="url" rel="index">
+                    <span itemprop="name">PHP</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="1-下载-Packagist"><a href="#1-下载-Packagist" class="headerlink" title="1.下载 Packagist"></a>1.下载 <a href="https://github.com/composer/packagist" target="_blank" rel="external">Packagist</a></h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~# git clone https://github.com/composer/packagist.git</div></pre></td></tr></table></figure>
+<h3 id="2-建立配置文件"><a href="#2-建立配置文件" class="headerlink" title="2.建立配置文件"></a>2.建立配置文件</h3><p>从源里复制一份配置文件</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~# cd packagist</div><div class="line">~# cp app/config/parameters.yml.dist app/config/parameters.yml</div></pre></td></tr></table></figure>
+<p>然后修改配置，其中 client_id 我是在 github 随便注册了一个 application (注意冒号后面有个空格,否则会报错)，因为我是准备用svn做包的托管服务。</p>
+<p>github.client_id: e1cf8971709276647541</p>
+<h3 id="3-安装-php-需要-intl-扩展"><a href="#3-安装-php-需要-intl-扩展" class="headerlink" title="3.安装 php 需要 intl 扩展"></a>3.安装 php 需要 intl 扩展</h3><p>zendframework/zend-i18n 2.0.8 需要php安装intl扩展，需安装icu4c</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~# brew install icu4c</div><div class="line">~# cd php_src_package/ext/intl</div></pre></td></tr></table></figure>
+<p>安装 php 的 intl 扩展</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~# /opt/php/bin/phpize</div><div class="line">~# ./configure  --with-php-config=/opt/php/bin/php-config --with-icu-dir=/usr/local/opt/icu4c</div><div class="line">~# make</div><div class="line">~# make install</div></pre></td></tr></table></figure>
+<p>在 php.ini 中添加 extension=intl.so</p>
+<h3 id="4-安装-Packagist-项目依赖"><a href="#4-安装-Packagist-项目依赖" class="headerlink" title="4.安装 Packagist 项目依赖"></a>4.安装 Packagist 项目依赖</h3><p>安装 composer</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~# curl -sS https://getcomposer.org/installer | php</div></pre></td></tr></table></figure>
+<p>在正式安装依赖之前，最好先把 composer.lock 删除，从新去生成 composer 依赖信息。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~# php composer.phar install</div></pre></td></tr></table></figure>
+<p>成功的话，应该是下面的打印</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">tiger➜github/OT/packagist(master✗)» php composer.phar install                                                                                                    [16:49:29]</div><div class="line">Loading composer repositories with package information</div><div class="line">Installing dependencies (including require-dev) from lock file</div><div class="line">Nothing to install or update</div><div class="line">Generating autoload files</div><div class="line">Clearing the cache for the dev environment with debug true</div><div class="line">Installing assets using the hard copy option</div><div class="line">Installing assets for Symfony\Bundle\FrameworkBundle into web/bundles/framework</div><div class="line">Installing assets for Packagist\WebBundle into web/bundles/packagistweb</div><div class="line">Installing assets for WhiteOctober\PagerfantaBundle into web/bundles/whiteoctoberpagerfanta</div><div class="line">Installing assets for Nelmio\SolariumBundle into web/bundles/nelmiosolarium</div></pre></td></tr></table></figure>
+<h3 id="5-安装数据库-amp-部署web应用"><a href="#5-安装数据库-amp-部署web应用" class="headerlink" title="5.安装数据库 &amp; 部署web应用"></a>5.安装数据库 &amp; 部署web应用</h3><p>先把数据库建好，数据库名同配置文件，下面的脚步不会帮我们建立数据库。。。。（坑了我一下）</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~# app/console doctrine:schema:create</div></pre></td></tr></table></figure>
+<p>部署web目录</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~# app/console assets:install</div></pre></td></tr></table></figure>
+<h3 id="6-配置nginx"><a href="#6-配置nginx" class="headerlink" title="6.配置nginx"></a>6.配置nginx</h3><p>配置如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">server &#123;</div><div class="line">        listen       80;</div><div class="line">        server_name  pkg.lo;</div><div class="line"></div><div class="line">        location ~ ^/(css|js|font|js|bundles)/ &#123; </div><div class="line">            root /opt/work/github/OT/packagist/web;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        location / &#123;</div><div class="line">            try_files $uri /app.php$is_args$args;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        location ~ \.php$ &#123;</div><div class="line">            root           /opt/work/github/OT/packagist/web;</div><div class="line">            fastcgi_pass   127.0.0.1:9000;</div><div class="line">            fastcgi_index  app.php;</div><div class="line">            fastcgi_param  SCRIPT_FILENAME  /opt/work/github/OT/packagist/web/$fastcgi_script_name;</div><div class="line">            include        fastcgi_params;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<h3 id="7-使用-Packagist-建立账号，提交自己的php包"><a href="#7-使用-Packagist-建立账号，提交自己的php包" class="headerlink" title="7.使用 Packagist 建立账号，提交自己的php包"></a>7.使用 Packagist 建立账号，提交自己的php包</h3><p>注册账号就不说了，登录自己的注册用户，然后提交自己的已经写好的php包。需要注意的是发布到 Packagist 的分支分别对应的是svn项目的 trunk 和 tags 下的子目录， 比如版本 1.9.2 对应 tags/1.9.2。如果你的 svn 项目地址是 svn://svn.domain/code/packages，目录按照</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">| trunk</div><div class="line">          + | composer.json</div><div class="line">          + | src</div><div class="line">| tags</div><div class="line">          + | 1.0.0</div><div class="line">          + | 1.0.2</div><div class="line">| branches</div></pre></td></tr></table></figure>
+<p>提交这个代码包到 Packagist 的话，只需提交 svn://svn.domain/code/packages即可，会帮你自动生成 tags 目录下对应版本和 trunk 开发版本</p>
+<p>另外需要注意，目录下需要有 composer.json 文件，说明这个包的信息。文件内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&#123;</div><div class="line">        &quot;name&quot;: “vender-name/package-name&quot;,</div><div class="line">        &quot;type&quot;: &quot;library&quot;,</div><div class="line">        &quot;homepage&quot;: &quot;http://your-domain&quot;,</div><div class="line">        &quot;description&quot;: “This is test package.&quot;,</div><div class="line">        &quot;license&quot;: “If you have.&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="8-如何使用包"><a href="#8-如何使用包" class="headerlink" title="8.如何使用包"></a>8.如何使用包</h3><p>在需要使用包的项目目录配置下建立 composer.json 文件，同使用公共的Packagist。只是多了使用私有包托管服务的部分，文件内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&#123;</div><div class="line">    &quot;require&quot;: &#123;</div><div class="line">        &quot;mpb/mpb&quot;: &quot;1.9.2&quot;</div><div class="line">    &#125;,</div><div class="line">    &quot;repositories&quot;: [</div><div class="line">    &#123;</div><div class="line">        &quot;type&quot;: &quot;svn&quot;,</div><div class="line">        &quot;url&quot;: &quot;svn://svn.domain/code/packages/vender-name/package-name&quot;</div><div class="line">    &#125;,</div><div class="line">    &#123;&quot;packagist&quot;: false&#125;</div><div class="line">    ]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>最后，安装包依赖</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~# php composer.phar install</div></pre></td></tr></table></figure>
+<p>算是为了摆脱“轮子哥”的称号吧，毕竟自己费劲扒拉开发的包管理工具不太好用且不太实用。Composer＋Packagist是非常好的解决方案，配置简单且文档详细。尽量使用开源成熟的技术，还是把自己有限的精力贡献到无穷的 事业吧。</p>
+<p>That is all, thank you.</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/qrcode_for_gh_b81f9d06ec2e_258.jpg" alt="小弟 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>扫一下呗，反正我也不怎么发～</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/composer/" rel="tag">#composer</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/06/02/10-quick-tips-about-redis/" rel="next" title="Redis使用的10个小贴士">
+                <i class="fa fa-chevron-left"></i> Redis使用的10个小贴士
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/06/10/sed-1-invalid-command-code-mac-os/" rel="prev" title="sed: 1: "...": invalid command code  on Mac OS">
+                sed: 1: "...": invalid command code  on Mac OS <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+  </div>
+
+
+          </div>
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://tva1.sinaimg.cn/crop.0.0.414.414.180/62d98a55jw1e6lb32mfm7j20bo0bo0to.jpg"
+               alt="小弟" />
+          <p class="site-author-name" itemprop="name">小弟</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">160</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">67</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+        
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/jixiaod" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/jixiaod" target="_blank" title="Code">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  Code
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.douban.com/people/ttihgiesr" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2008 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="author" itemprop="copyrightHolder"> 『百作坊』 Generated by <a href="https://hexo.io">Hexo</a> & Theme by <a href="https://github.com/jixiaod/hexo-theme-next">Next</a> & Public by <a href="https://pages.github.com">Github Pages</a>.</span>
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+</body>
+</html>

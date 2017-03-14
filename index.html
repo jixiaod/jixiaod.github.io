@@ -1,0 +1,1244 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+
+
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="百作坊, 小弟, 纪刚, LNMP Stack, Web, PHP, 工作和生活, 诗和远方" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="百作坊" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="百作坊">
+<meta property="og:url" content="http://blog.100dos.com/index.html">
+<meta property="og:site_name" content="百作坊">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="百作坊">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"hide"},
+    fancybox: true,
+    motion: true
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://blog.100dos.com/"/>
+
+
+  <title> 百作坊 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?e70448447504ef27f728084c8f2978ea";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left 
+   page-home 
+ ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="site-title">百作坊</span>
+    </a>
+  </div>
+  <p class="site-subtitle">100dos.com</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+    </ul>
+  
+
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+  <section id="posts" class="posts-expand">
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/03/03/installing-gitlab-ce-on-centos7/" itemprop="url">
+                  Centos7 安装 Gitlab-CE
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-03-03T11:30:02+08:00" content="2017-03-03">
+              2017-03-03
+            </time>
+          </span>
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ol>
+<li>安装配置依赖项<br>如想使用Postfix来发送邮件,在安装期间请选择’Internet Site’. 您也可以用sendmai或者 配置SMTP服务 并 使用SMTP发送邮件.<br>在 Centos 6 和 7 系统上, 下面的命令将在系统防火墙里面开放HTTP和SSH端口.</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">sudo yum install curl policycoreutils openssh-server openssh-clients</div><div class="line">sudo systemctl enable sshd</div><div class="line">sudo systemctl start sshd</div><div class="line">sudo yum install postfix</div><div class="line">sudo systemctl enable postfix</div><div class="line">sudo systemctl start postfix</div><div class="line">sudo firewall-cmd --permanent --add-service=http</div><div class="line">sudo systemctl reload firewalld</div></pre></td></tr></table></figure>
+<p>如果提示防火墙没打开，执行<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">systemctl start firewalld</div></pre></td></tr></table></figure></p>
+<ol>
+<li>添加GitLab仓库,并安装到服务器上<br>curl -sS <a href="http://packages.gitlab.cc/install/gitlab-ce/script.rpm.sh" target="_blank" rel="external">http://packages.gitlab.cc/install/gitlab-ce/script.rpm.sh</a> | sudo bash<br>sudo yum install gitlab-ce</li>
+</ol>
+<ol>
+<li><p>启动GitLab</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">sudo gitlab-ctl reconfigure</div></pre></td></tr></table></figure>
+</li>
+<li><p>使用浏览器访问GitLab</p>
+</li>
+</ol>
+<p>首次访问GitLab,系统会让你重新设置管理员的密码,设置成功后会返回登录界面.<br>默认的管理员账号是root,如果你想更改默认管理员账号,请输入上面设置的新密码登录系统后修改帐号</p>
+<p>5.配置域名访问<br>以上基本是官方内容，以下配置自己的域名。首先添加 godaddy的域名 A 记录到服务器IP。</p>
+<p>在文件<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">vi /etc/gitlab/gitlab.rb</div></pre></td></tr></table></figure></p>
+<p>找到nginx的配置文件位置，并修改默认域名为自己的域名。</p>
+<p>更多可官方安装文档 ：<a href="https://www.gitlab.cc/downloads/#centos7" target="_blank" rel="external">https://www.gitlab.cc/downloads/#centos7</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/03/03/installing-centos7-nginx1-10-3-php7-mysql5-7/" itemprop="url">
+                  CentOS 7 从零开始搭建 LNMP 环境（nginx/1.10.3 PHP/7.1.2 Mysql/5.7.17）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-03-03T10:10:36+08:00" content="2017-03-03">
+              2017-03-03
+            </time>
+          </span>
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>最近买了 Linode VPS 服务。5刀每月，只有1G的内存，编译 Mysql 内存溢出，然后升级到2G内存的版本，每月10刀……以下纪录 LNMP 环境安装过程：</p>
+<h2 id="安装-Nginx"><a href="#安装-Nginx" class="headerlink" title="安装 Nginx"></a>安装 Nginx</h2><figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">~<span class="comment"># yum install wget</span></div><div class="line">~<span class="comment"># wget http://nginx.org/download/nginx-1.10.3.tar.gz</span></div><div class="line">~<span class="comment"># tar zxf nginx-1.10.3.tar.gz</span></div><div class="line">~<span class="comment"># cd nginx-1.10.3</span></div><div class="line"></div><div class="line">~<span class="comment"># yum install pcre-devel pcre openssl openssl-devel</span></div><div class="line">~<span class="comment"># yum install gcc</span></div><div class="line">~<span class="comment"># ./configure --prefix=/opt/nginx</span></div><div class="line">~<span class="comment"># make &amp; make install</span></div></pre></td></tr></table></figure>
+<p>修改配置文件，启动 Nginx服务<br><figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">~<span class="comment"># /opt/nginx/sbin/nginx</span></div></pre></td></tr></table></figure></p>
+<p>重启<br><figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">~<span class="comment"># /opt/nginx/sbin/nginx -s reload</span></div></pre></td></tr></table></figure></p>
+<h2 id="安装-PHP"><a href="#安装-PHP" class="headerlink" title="安装 PHP"></a>安装 PHP</h2><figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">~<span class="comment"># wget http://jp2.php.net/get/php-7.1.2.tar.gz/from/this/mirror</span></div><div class="line">~<span class="comment"># tar zxf mirror</span></div><div class="line">~<span class="comment"># cd php-7.1.2</span></div></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">~<span class="comment"># yum install zlib-devel zlib libxml2 libxml2-devel  libpng libpng-devel libcurl-devel curl libcurl libzip-devel libzip gd bzip2-devel bzip2</span></div><div class="line"></div><div class="line">~<span class="comment"># ./configure --prefix=/opt/php  --enable-fpm --with-openssl  --with-zlib  --with-mysqli=mysqlnd  --enable-pcntl --enable-soap --enable-zip --enable-sockets --enable-mbstring  --with-curl --with-pcre-regex  --with-bz2 --with-gd  --with-pdo-mysql=mysqlnd  --with-mysqli=mysqlnd   --enable-maintainer-zts</span></div><div class="line"></div><div class="line">~<span class="comment"># make &amp; make install</span></div></pre></td></tr></table></figure>
+<p>启动 php-fpm，使用默认的配置文件<br><figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">~<span class="comment"># cd /opt/php</span></div><div class="line">~<span class="comment"># mv etc/php-fpm.conf.default etc/php-fpm.conf</span></div><div class="line">~<span class="comment"># mv etc/php-fpm.d/www.conf.default etc/php-fpm.d/www.conf</span></div><div class="line">~<span class="comment"># sbin/php-fpm -y etc/php-fpm.conf</span></div></pre></td></tr></table></figure></p>
+<h2 id="安装-Mysql"><a href="#安装-Mysql" class="headerlink" title="安装 Mysql"></a>安装 Mysql</h2><figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">~<span class="comment"># wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.17.tar.gz</span></div><div class="line">~<span class="comment"># tar zxf mysql-5.7.17.tar.gz</span></div><div class="line">~<span class="comment"># cd mysql-5.7.17</span></div><div class="line"></div><div class="line">// cmake安装mysql，会自行下载并安装boost</div><div class="line"></div><div class="line">~<span class="comment"># yum install  cmake gcc gcc-c++ ncurses-devel cmake libaio  bison</span></div><div class="line"></div><div class="line">~<span class="comment"># cmake . -DCMAKE_INSTALL_PREFIX=/opt/mysql -DWITH_BOOST=/opt/boost/ -DMYSQL_DATADIR=/opt/mysql/data -DWITH_INNOBASE_STORAGE_ENGINE=1 -DMYSQL_UNIX_ADDR==/opt/mysql/mysql.sock -DMYSQL_USER=mysql -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci</span></div><div class="line"></div><div class="line">~<span class="comment"># make &amp; make install</span></div></pre></td></tr></table></figure>
+<p>创建 Mysql 账户<br><figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">~<span class="comment"># groupadd mysql</span></div><div class="line">~<span class="comment"># useradd -r -g mysql -s /bin/false mysql</span></div><div class="line">~<span class="comment"># chown -R mysql .</span></div><div class="line">~<span class="comment"># chgrp -R mysql .</span></div></pre></td></tr></table></figure></p>
+<p>启动 Mysql 服务</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">//生成初始化 Mysql 帐号root 密码</div><div class="line">[root@li1571-79 mysql]<span class="comment"># bin/mysqld --initialize --user=mysql</span></div><div class="line">2017-03-03T02:59:23.230496Z 0 [Warning] TIMESTAMP with implicit DEFAULT value is deprecated. Please use --explicit_defaults_for_timestamp server option (see documentation <span class="keyword">for</span> more details).</div><div class="line">2017-03-03T02:59:23.576085Z 0 [Warning] InnoDB: New <span class="built_in">log</span> files created, LSN=45790</div><div class="line">2017-03-03T02:59:23.628088Z 0 [Warning] InnoDB: Creating foreign key constraint system tables.</div><div class="line">2017-03-03T02:59:23.685971Z 0 [Warning] No existing UUID has been found, so we assume that this is the first time that this server has been started. Generating a new UUID: 67ce62cb-ffbd-11e6<span class="_">-a</span>9b9<span class="_">-f</span>23c91e57db2.</div><div class="line">2017-03-03T02:59:23.688763Z 0 [Warning] Gtid table is not ready to be used. Table <span class="string">'mysql.gtid_executed'</span> cannot be opened.</div><div class="line">2017-03-03T02:59:23.690301Z 1 [Note] A temporary password is generated <span class="keyword">for</span> root@localhost: &amp;H4FpSyD/b6&lt;</div></pre></td></tr></table></figure>
+<p>最后的 <code>&amp;H4FpSyD/b6&lt;</code> 即是生成的临时账户，启动 Mysql 服务<br><figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">~<span class="comment"># cp support-files/mysql.server /opt/mysql/bin</span></div><div class="line">~<span class="comment"># cd /opt/mysql</span></div><div class="line">~<span class="comment"># bin/mysql.server start</span></div></pre></td></tr></table></figure></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">[root@li1571-79 mysql]<span class="comment"># bin/mysql -uroot -p -h127.0.0.1 -P3306</span></div><div class="line">Enter password:</div><div class="line">输入临时帐号密码，即可进入mysql 客户端。第一次登录，强制需要修改临时密码</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">mysql&gt; alter user &apos;root&apos;@&apos;localhost&apos; identified by &apos;123abc&apos;;</div><div class="line">Query OK, 0 rows affected (0.01 sec)</div><div class="line"></div><div class="line">mysql&gt; show databases;</div><div class="line">+--------------------+</div><div class="line">| Database           |</div><div class="line">+--------------------+</div><div class="line">| information_schema |</div><div class="line">| mysql              |</div><div class="line">| performance_schema |</div><div class="line">| sys                |</div><div class="line">+--------------------+</div><div class="line">4 rows in set (0.01 sec)</div></pre></td></tr></table></figure>
+<p>到这里，LNMP 到这里LNMP 初始默认环境搭建完成。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/27/processes-and-threads/" itemprop="url">
+                  进程和线程
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-02-27T11:11:14+08:00" content="2017-02-27">
+              2017-02-27
+            </time>
+          </span>
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><a href="https://zh.wikipedia.org/wiki/行程" target="_blank" rel="external">进程</a>（process）是计算机中已运行程序的实体。关于进程需要知道的几点：</p>
+<ul>
+<li>进程是程序的基本执行实体。</li>
+<li>在面向线程设计的系统（如当代多数操作系统、Linux 2.6及更新的版本）中，进程本身不是基本运行单位，而是线程的容器。</li>
+<li>程序本身只是指令、数据及其组织形式的描述，进程才是程序（那些指令和数据）的真正运行实例。</li>
+<li>若干进程有可能与同一个程序相关系，且每个进程皆可以同步（循序）或异步（平行）的方式独立运行。</li>
+<li>现代计算机系统可在同一段时间内以进程的形式将多个程序加载到存储器中，并借由时间共享（或称时分复用），以在一个处理器上表现出同时（平行性）运行的感觉。</li>
+<li>同样的，使用多线程技术（多线程即每一个线程都代表一个进程内的一个独立执行上下文）的操作系统或计算机架构，同样程序的平行线程，可在多CPU主机或网络上真正同时运行（在不同的CPU上）。</li>
+<li>进程需要一些资源才能完成工作，如CPU使用时间、存储器、文件以及I/O设备，且为依序逐一进行，也就是每个CPU核心任何时间内仅能运行一项进程。</li>
+<li>进程在运行时，状态（state）会改变。进城的状态包括：<ul>
+<li>新生（new）：进程新产生中。</li>
+<li>运行（running）：正在运行。</li>
+<li>等待（waiting）：等待某事发生，例如等待用户输入完成。亦称“阻塞”（blocked）</li>
+<li>就绪（ready）：排班中，等待CPU。</li>
+<li>结束（terminated）：完成运行。</li>
+</ul>
+</li>
+<li>进程间通信（IPC Inter-process communication）:每个进程都有自己的一部分独立的系统资源，彼此是隔离的。为了能使不同的进程互相访问资源并进行协调工作，才有了进程间通信。</li>
+<li>进程控制块是操作系统能够支持多进程和提供多处理的结构。 </li>
+<li>当操作系统做进程切换时，它会执行两步操作，一是中断当前处理器中的进程，二是执行下一个进程。 不管是中断还是执行，进程控制块中的程序计数器、上下文数据和进程状态都会发生变化。</li>
+</ul>
+<p>在 PHP 中的 <a href="http://php.net/manual/zh/book.pcntl.php" target="_blank" rel="external">PCNTL</a> 扩展实现了Unix方式的进程创建，程序执行，信号处理以及进程的中断。但是只能 CLI 环境下使用，且在 Windows 平台不可用。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"></div><div class="line">$pid = pcntl_fork();</div><div class="line"><span class="comment">//父进程和子进程都会执行下面代码</span></div><div class="line"><span class="keyword">if</span> ($pid == <span class="number">-1</span>) &#123;</div><div class="line">    <span class="comment">//错误处理：创建子进程失败时返回-1.</span></div><div class="line">     <span class="keyword">die</span>(<span class="string">'could not fork'</span>);</div><div class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> ($pid) &#123;</div><div class="line">     <span class="comment">//父进程会得到子进程号，所以这里是父进程执行的逻辑</span></div><div class="line">     pcntl_wait($status); <span class="comment">//等待子进程中断，防止子进程成为僵尸进程。</span></div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">     <span class="comment">//子进程得到的$pid为0, 所以这里是子进程执行的逻辑。</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><a href="https://zh.wikipedia.org/wiki/线程" target="_blank" rel="external">线程</a>（thread）是操作系统能够进行运算调度的最小单位。</p>
+<ul>
+<li>它被包含在进程之中，是进程中的实际运作单位。</li>
+<li>一条线程指的是进程中一个单一顺序的控制流，一个进程中可以并发多个线程，每条线程并行执行不同的任务。</li>
+<li>在Unix System V及SunOS中也被称为轻量进程（lightweight processes），但轻量进程更多指内核线程（kernel thread），而把用户线程（user thread）称为线程。</li>
+<li>线程是独立调度和分派的基本单位。线程可以操作系统内核调度的内核线程，如Win32线程；由用户进程自行调度的用户线程，如Linux平台的POSIX Thread；或者由内核与用户进程，如Windows 7的线程，进行混合调度。</li>
+<li>同一进程中的多条线程将共享该进程中的全部系统资源，如虚拟地址空间，文件描述符和信号处理等等。但同一进程中的多个线程有各自的调用栈（call stack），自己的寄存器环境（register context），自己的线程本地存储（thread-local storage）。</li>
+<li>一个进程可以有很多线程，每条线程并行执行不同的任务。</li>
+<li>线程的四种基本状态：<ul>
+<li>产生（spawn）</li>
+<li>中断（block）</li>
+<li>非中断（unblock）</li>
+<li>结束（finish）</li>
+</ul>
+</li>
+</ul>
+<p>在PHP中有 <a href="http://php.net/manual/zh/intro.pthreads.php" target="_blank" rel="external">pthreads</a> 多线程扩展，实现了面向对象的 多线程 API。可以创建、读取、写入以及执行多线程应用，并可以在多个线程之间进行同步控制。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">workerThread</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($num)</span></span>&#123;</div><div class="line">        <span class="keyword">$this</span>-&gt;num = $num;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">run</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">while</span>(<span class="keyword">true</span>)&#123;</div><div class="line">            <span class="keyword">echo</span> <span class="keyword">$this</span>-&gt;num . <span class="string">"\n"</span>;</div><div class="line">            sleep(<span class="number">1</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">for</span> ($i=<span class="number">0</span>; $i &lt; <span class="number">50</span>; $i++)&#123;</div><div class="line">    $workers[$i] = <span class="keyword">new</span> workerThread($i);</div><div class="line">    $workers[$i]-&gt;start();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>线程较之进程，其优势在于一个快，不管是创建新的线程还是终止一个线程；或者是线程间的切换还是线程间共享数据或通信，其速度与进程相比都有较大的优势。进程和线程区别：</p>
+<ul>
+<li>线程是在一个进程内的，可以共享内存变量实现线程间通信。<ul>
+<li>而进程间通信是要借助于<a href="https://zh.wikipedia.org/wiki/行程間通訊" target="_blank" rel="external">进程间通信（IPC）</a>，文件、管道、消息队列等等。</li>
+</ul>
+</li>
+<li>线程比进程更轻量级，开大量进程会比线程消耗更多系统资源。<ul>
+<li>比如 PHP-FPM 模块。通常情况下，一个PHP-FPM 进程占用的内存为10M左右，假如支持10000并发，就需要100G的内存。一台物理机的资源是有限的，就那么多CPU和内存，决定了单独依靠 PHP-FPM 不可能开发出单机百万级并发的系统。</li>
+</ul>
+</li>
+</ul>
+<p>我们用多进程和多线程的很大因素是为了解决并发问题，先理清一个概念并发和并行是不是一个意思？</p>
+<blockquote>
+<p>并发和并行的区别就是一个处理器同时处理多个任务和多个处理器或者是多核的处理器同时处理多个不同的任务。 前者是逻辑上的同时发生（simultaneous），而后者是物理上的同时发生。</p>
+</blockquote>
+<p>由于进程的性能问题，我们觉得并发使用的更多的线程，而不是进程。在处理网络请求时，多线程模型下，可以采用一个独立线程接受请求然后派发到各个 worker 线程的方式。但是使用多线程也存在一些问题：</p>
+<ul>
+<li>线程读写变量存在同步问题，需要加锁</li>
+<li>锁的粒度过大会有性能问题，可能会导致只有1个线程在运行，其他线程都在等待锁。这样就不是并行了</li>
+<li>同时使用多个锁，逻辑复杂，一旦某个锁没被正确释放，可能会发生线程死锁</li>
+<li>某个线程发生致命错误会导致整个进程崩溃</li>
+</ul>
+<p>多进程方式更加稳定，另外利用进程间通信（IPC）也可以实现数据共享。至于为什么进程想对安全稳定，主要是依靠进程<a href="https://zh.wikipedia.org/zh-cn/沙盒_(電腦安全" target="_blank" rel="external">沙箱</a>)，可以查看这篇文章<a href="http://zkread.com/article/584903.html" target="_blank" rel="external">《为什么浏览器采用多进程模型》</a>。</p>
+<ul>
+<li>共享内存，这种方式和线程间读写变量是一样的，需要加锁，会有同步、死锁问题。</li>
+<li>消息队列，可以采用多个子进程抢队列模式，性能很好</li>
+<li>PIPE，UnixSock，TCP，UDP。可以使用read/write来传递数据，TCP/UDP方式使用socket来通信，子进程可以分布运行</li>
+</ul>
+<p>Swoole 框架的多进程和多线程的设计实用就非常合理，在需要稳定的时候使用进程，在需要效率的时候使用线程。盗个图</p>
+<p><img src="/images/swoole-process-threads.png" alt=""></p>
+<p>Swoole 中 worker/task 进程都是由 Manager 进程 Fork 并管理的。</p>
+<ul>
+<li>子进程结束运行时，Manager 进程负责回收此子进程，避免成为僵尸进程。并创建新的子进程</li>
+<li>服务器关闭时，Manager 进程将发送信号给所有子进程，通知子进程关闭服务</li>
+<li>服务器 reload 时，Manager进程会逐个关闭/重启子进程</li>
+</ul>
+<p>Swoole 提供了完善的进程管理机制，当Worker进程异常退出，如发生PHP的致命错误、被其他程序误杀，或达到 max_request 次数之后正常退出。主进程会重新拉起新的 Worker 进程。 Worker 进程内可以像普通的 apache+php 或者 php-fpm 中写代码。不需要像 Node.js 那样写异步回调的代码。</p>
+<p>Swoole 的Master主进程是一个多线程的程序，其中一组很重要的是Reactor线程。Swoole 在接收到一个请求连接之后，将这个链接分配给一个固定的Reactor线程，并由这个线程来监听socket。在socket可读时读取数据，并进行协议解析，将请求投递到Worker进程。在socket可写时将数据发送给TCP客户端。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/09/nearby-jobs/" itemprop="url">
+                  8w+拉勾网招聘数据帮你查询 - 家附近的工作
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-02-09T14:25:08+08:00" content="2017-02-09">
+              2017-02-09
+            </time>
+          </span>
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>从<a href="https://www.lagou.com/" target="_blank" rel="external">拉勾网</a>抓取的 86341 条招聘企业数据，企业地址匹配 LBS 经纬度取自<a href="http://lbs.amap.com/console/show/picker" target="_blank" rel="external">高德开放平台API</a>，成功匹配到 83090 条经纬度数据。没有做详细做企业主正在招聘岗位的数据，所以很大可能情况会遇到附近的公司没有招聘信息的情况，但是某些方面还是能大概了解自己附近有什么值得考虑的公司，有一定参考价值。</p>
+<h2 id="查询附近的工作"><a href="#查询附近的工作" class="headerlink" title="查询附近的工作"></a>查询附近的工作</h2><p>Github地址: <a href="https://github.com/jixiaod/NearbyJobs" target="_blank" rel="external">https://github.com/jixiaod/NearbyJobs</a></p>
+<h3 id="下载-mongo-数据包"><a href="#下载-mongo-数据包" class="headerlink" title="下载 mongo 数据包"></a>下载 mongo 数据包</h3><p><a href="https://github.com/jixiaod/NearbyJobs/blob/master/jobs.tar.gz" target="_blank" rel="external">https://github.com/jixiaod/NearbyJobs/blob/master/jobs.tar.gz</a></p>
+<h3 id="导入-mongo-数据"><a href="#导入-mongo-数据" class="headerlink" title="导入 mongo 数据"></a>导入 mongo 数据</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~# tar zxf jobs.tar.gz</div><div class="line">~# mongoimport -d jobs -c company --upsert jobs.json</div></pre></td></tr></table></figure>
+<h3 id="geo-查询"><a href="#geo-查询" class="headerlink" title="geo 查询"></a>geo 查询</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">// 进入mongodb，我的是默认环境</div><div class="line">~# mongo</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&gt; use jobs</div><div class="line">// 创建索引</div><div class="line">&gt; db.company.createIndex(&#123; &quot;loc&quot;: &quot;2d&quot; &#125;)</div><div class="line">// 查询附近的工作，自己的坐标可以从[高德开放平台API]获得。</div><div class="line">&gt; db.company.find(&#123;&quot;loc&quot;:&#123;&quot;$near&quot;:[116.673886,39.943799]&#125;&#125;,&#123;&quot;short_name&quot;:1, &quot;address&quot;:1&#125;)</div></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/jixiaod/NearbyJobs/master/nearby-jobs.png" alt=""></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/19/minesweeper-on-wechat-app/" itemprop="url">
+                  扫雷 - 微信小程序
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-19T10:55:08+08:00" content="2017-01-19">
+              2017-01-19
+            </time>
+          </span>
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>微信小程序这几天很火，9号正式发布，今天19号过了10天，到现在略有降温的趋势。个大厂商对微信小程序的态度很不看好，最激进的要数[罗辑思维]，直接下架了自己的[得到APP]。滴滴、京东等APP也只保留了最精简的功能，某些担心过于完善的功能会抢夺APP本身的用户。不过这也印证了小程序的初衷，小而精、用完即走。（并不否认腾讯微信平台确实流氓的事实）</p>
+<blockquote>
+<p>PS：墨迹天气也开发了微信小程序版本，并且在1月9号第一时间发布，欢迎使用。</p>
+</blockquote>
+<p>作为技术人员，怎能不亲手试试小程序开发呢？扫雷 Minesweeper</p>
+<h2 id="实现思路："><a href="#实现思路：" class="headerlink" title="实现思路："></a>实现思路：</h2><ul>
+<li>如果不了解扫雷的游戏规则，请自行 Google</li>
+<li>绘制一张 10*10 的地图，并且标注地雷和非地雷，并且需要用数字表示每个点周围地雷的数量</li>
+<li>用 mineMap[x][y] 表示一个点位<ul>
+<li>mineMap[x][y] &lt; 0 (代码中 == -1) 初始状态</li>
+<li>0 &lt; mineMap[x][y] &lt; 9 该点周围地雷的数量</li>
+<li>mineMap[x][y] == 9 表示该点是地雷</li>
+<li>mineMap[x][y] &gt; 9 （代码中 == 10）表示该点插旗</li>
+</ul>
+</li>
+</ul>
+<h2 id="Github"><a href="#Github" class="headerlink" title="Github"></a>Github</h2><ul>
+<li><a href="https://github.com/jixiaod/wechat-app-minesweeper" target="_blank" rel="external">https://github.com/jixiaod/wechat-app-minesweeper</a></li>
+</ul>
+<h2 id="如何跑起来？"><a href="#如何跑起来？" class="headerlink" title="如何跑起来？"></a>如何跑起来？</h2><ul>
+<li>下载 &amp; 安装 <a href="https://mp.weixin.qq.com/debug/wxadoc/dev/devtools/download.html" target="_blank" rel="external">微信小程序开发工具</a> </li>
+<li>配置 wechat-app-minesweeper 代码目录到开发工具即可</li>
+</ul>
+<h2 id="玩法"><a href="#玩法" class="headerlink" title="玩法"></a>玩法</h2><ul>
+<li>需要注意的是，由于没有鼠标右键标记Flag，简单做了 Flag 切换，开启后，方可标记Flag</li>
+<li>最初的想法是通过 tap 和 longtap 来区分扫雷和Flag，但是开发工具不能区分这俩个事件，只能作罢</li>
+</ul>
+<p><img src="/images/wechat-minesweeper.png" alt=""></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/12/27/reading-note-the-trime-minister-of-qing-dynasty/" itemprop="url">
+                  ［读书笔记］－ 《大清相国》
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-12-27T19:18:35+08:00" content="2016-12-27">
+              2016-12-27
+            </time>
+          </span>
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><strong>很多事情不像表面上那么简单，尤其是在官场，要考虑点更多。</strong>发生的时间、涉及的官员、所涉及到官员之间的关系、地位、各自的立场。</p>
+<p>皇上：要顾全皇族的利益，凡事涉及皇族，一定是要偏袒皇族，照顾其颜面。朝中大臣以和为贵，可以接受做官贪赃枉法，但是对上对皇上要有敬畏之心，对下对百姓不能做太过分出格。</p>
+<p>陈廷敬：心怀天下百姓，一心要肃清官场腐败。</p>
+<p>鳌拜／明珠／索额图：一人之下，万人之上。任人唯亲，独揽大权。</p>
+<p>高士其：墙头草，唯利是图。</p>
+<p>等等……</p>
+<p>书中围绕陈廷敬一生为官，发生的诸多故事展开。故事的来龙去脉都大同小异，朝廷出了什么事（比如大户统筹案、宝泉局毁钱鬻铜案等），然后派陈廷敬微服私访查明真相，结果又查出来了个大贪官，然后最终如何处置这点事儿。</p>
+<p>事故虽然不算太精彩，但更精彩的部分是揣摩为官的道理。如何看准官场的风向，想要参人，也要看这个人是参得参不得。皇上用的人参不得，皇上宠信的大臣参不得，皇上宠信的大臣的人也要看情况是不是可以参。总之要先摸清皇上的意思，最简单的情况，皇上示意可以参，你参就一点毛病没有。</p>
+<p><strong>身为人臣，最忌讳功高盖主。</strong>虽然在书的最后章节里，皇上对陈廷敬的评价是“宽大老成，几近完人！”，但是请注意也只是“几近”哦，因为完人只有皇帝他老人家而已。此时陈廷敬也已是七旬老人，事君也已有四十八年，可又能怎样呢？得到皇上嘉许时不也还要赶忙连连扣头谢恩。所以你陈廷敬如果是完人，那皇上又是什么呢？</p>
+<p>陈廷敬一心要肃清官场，整天参来参去。弄的皇帝很不开心，但是陈廷敬为官清廉，又没有确着的罪证。皇上只好让张英随便编个理由参他，导致陈廷敬第一次被贬。连明珠后来都跟萨穆哈都说：“你以为陈廷敬真的有罪？他根本就没罪！”。</p>
+<p>后来，陈廷敬自己也有所悟：“我让皇上知道天下没几个好官了，我就完了；我让天下人知道大清没几个清官了，天下就完了。”</p>
+<p><strong>皇上也得哄着。</strong>如果让皇上觉得你认为他是傻逼，你就完了！！！你只能比皇上更傻逼……</p>
+<p>最终，陈廷敬用“等”、“忍”、“稳”、“恨”四字诀，扳倒了明珠和索额图，坐上了大清相国的位置。等待时机，逆境要忍，做事要稳，下手要狠。</p>
+<p>好吧，挺难的，突然想到冯小刚给广告词：“做人做事，安全第一……”。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/12/14/cancer-is-not-far-from-us/" itemprop="url">
+                  癌症离我们不远
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-12-14T18:10:51+08:00" content="2016-12-14">
+              2016-12-14
+            </time>
+          </span>
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>前几天知道了妈得了癌症的消息，原来新闻里、电视里不相干的陌生人得的病，也来到了我的身边。原来癌症离我也并不远……</p>
+<p>刚知道的时候心情不免低落，一个是为老妈难过，刚到60便染此恶疾，虽有希望治愈，治疗过程不免受苦；在一个也为自己难过，刚刚步入正轨的生活，又被被打乱了。本来还打算着让老妈过来帮带带孩子呢，结果计划全变了……孩子还未满月，老婆尚未做完月子。家里出了这么大的事情，也不敢告诉她。怕月子里身子虚，心情压抑，对恢复有影响。</p>
+<p>上周末已回老家抚顺看过，现在在抚顺矿务局医院（当地三甲）接受治疗。老妈的状态还不错，些许安慰。刚做完化疗，吃不下东西。中午一家人吃了点东西，都吐了。晚上还好，因为打了抗呕吐的针，而且是上周五最后做的化疗，已隔了2天，身体已无太大反应。</p>
+<p>最近看了好多关于癌症的资料，老妈得得是鼻癌（鼻咽癌）。很是吃紧，离大脑太近，后期如果癌细胞扩散到脑腔，就会引发头痛，而且是痛的要撞墙的那种。据老妈自己说，最近感觉还好，感觉肿块相比之前软了许多，或许治疗起作用了。今天电话又说，做了放疗，并无大碍。而且吃饭很好，吃了一碗。</p>
+<p>在医院时候陪父母跟老婆和孩子视频聊天，老人家很开心，这个时间段，让老人保持心情舒畅很重要。也告诉老爸钱方面不要担心，更不要在老妈面前提钱字。老爸也确实很上火，家里确实不太富裕。不过我觉得还好吧，毕竟有三个子女，看病的话大家分担一下，压力还没有那么大。病还是要治的，就算治不好，多活一年是一年。也能多陪老爸一年，老伴老伴，到老了才是伴。假如说老妈真的没了，老爸难免会孤单。</p>
+<p>今天又跟家里视频，老人家，总是看见孩子就很开心。孩子这时候真是法宝，且当作你奶奶的开心果吧……</p>
+<p>琢磨着过年时偶接老俩口过来住几天，看看孩子。</p>
+<p>查看癌症资料，无意间看到了一位癌症患者的博客，<a href="http://xin-sheng.hxwk.org/" target="_blank" rel="external">辛声文集</a>，翻看了很多篇文章。甚是佩服博主的乐观态度，但是停更很久了，不知道现在是否安好。</p>
+<p>健康生活很重要，乐观的生活态度也少不了。猜测老妈大概就是因为心情长期压抑导致的癌症，总是看不惯这个那个，埋怨这个那个。可能有点像姥姥，不过姥姥倒是活了很大年纪，所以也吃不太准，也可能是姥姥比较善忘的缘故。老妈可能一件烦心事可以憋很久吧。本身老人都是农村人，体力活干过不少，身体应该还是不错的。总之，癌症又有点来的不明所以。</p>
+<p>病既来之，只好安之……</p>
+<p>老爸那边更多的是需要宽慰、开导，老妈那边要多多的哄她开心。毕竟也刚刚 60 出头，刚刚结束了一辈子的辛苦，还没有开始享受生活。</p>
+<p>同时告诫自己：锻炼身体、保持健康、凡事轻看、心情愉悦，还有多多赚钱……</p>
+<p>如果你也在看，共勉之。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/12/13/say-goodbye-to-stevengerrard/" itemprop="url">
+                  告别 斯蒂芬·杰拉德
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-12-13T17:47:55+08:00" content="2016-12-13">
+              2016-12-13
+            </time>
+          </span>
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>杰拉德退役的消息出来好几天了，想想还是写一篇吧。以纪念我浦最伟大的队长……</p>
+<blockquote>
+<p>一个人守护一座城，一座城守护一个人 – 杰拉德和利物浦</p>
+</blockquote>
+<p><img src="/images/steven-gerrard.jpg" alt=""></p>
+<p>我看球应该算是比较晚的，02年世界杯因为中国队杀入了世界杯决赛圈，大家都在看球。那时候不太懂，就跟着一起瞎看，人都认不全，什么是越位都不懂……大概也就知道足球，只能用脚，不能用手吧。</p>
+<p>记得小时候有一件T恤，上面印的是［迈克 欧文］，我当时也不知道。后来有别的小朋友看见我穿那件衣服，问到：你喜欢欧文啊？我哪里知道谁是欧文，只是怕跌了面子，直道：我喜欢欧文，欧文是我偶像！</p>
+<p>至于欧文是［英格兰］的球员，在［利物浦足球俱乐部］踢球都是后话了。再后来又认识了杰拉德，并不喜欢他的风格，因为他跑起来的样子怪怪的……虽然速度很快。</p>
+<p>真正接触足球源于《实况足球》这款游戏，游戏里让我认识了很多球员。玩的时候大家都会自己的主队，巴西、意大利、法国……他们跳差不多了，我当然不能跟他们一样，英格兰的整体能力也是不错的，而且“欧文是我偶像”，就选了英格兰做主队。</p>
+<p>游戏里每个球员都有能力值，80以上就是能力很不错的球员了。杰拉德就是能力非常全面的球员，各项能力都是80+。射门精度和射门力量90+，速度也要比［双德］之一的兰帕德要快。甚是喜欢，那时候还没怎么看过利物浦的比赛，对于杰拉德的印象就是在游戏中，反正很屌！</p>
+<p>高中生活很是压抑，平时的消遣就是晚自习看《足球周刊》和《体坛周报》，比看课本都认真，真可以说咬文嚼字。周末休息也要去［PS房］踢几局实况（就是出租Play Station的小店，当时玩一个小时4块钱，当时PS2代），我几乎就选英格兰踢，上课上自习也没事研究英格兰阵型，我主打442，中场菱形站位。我认为菱形站位比平行站位，进攻和防守都会更加均衡一些。中场如果对方有速度快的前锋，就杰拉德拖后，速度快、身体平衡高，回追一追一个准，否则，就兰帕德拖后。除非遇到巴西阿德里亚诺那种，就只能上中后卫坎贝尔的了……</p>
+<blockquote>
+<p>锋线：欧文、鲁尼<br>中场：乔 科尔、杰拉德、兰帕德、贝克汉姆<br>后卫：阿什利 科尔、费迪南德、坎贝尔、加里 内维尔<br>门将：罗宾逊<br>替补：迪福、克劳奇、唐宁、列侬、哈格里弗斯、特里、卡拉格、詹姆斯</p>
+</blockquote>
+<p>这大概是06年世界杯时期的阵容吧，忘却了……06年英格兰有实力拼一下世界杯冠军的。可惜欧文开场没多久莫名其妙自己拉伤，可惜英格兰对阵葡萄牙又输在了12码线……</p>
+<p>那一年杰拉德也是正直巅峰，26岁的年纪，04/05年伊斯坦布尔之夜过去没多久。好像是宿命，英格兰同利物浦一样沉沦了……都是在苦苦挣扎，利物浦慢慢掉队，从欧洲冠军到进不了欧冠。</p>
+<p>但是杰拉德一直没有离开，用他的忠诚捍卫着利物浦的荣耀。五冠王之后，青训同伴欧文 04 年就转投到皇马。好友阿隆索、金童托雷斯，直道苏牙相继离开，只有杰拉德抵挡住了金钱的诱惑，更多的是忍受没有冠军的寂寞。</p>
+<p>2014年，杰对拼着老脸说服苏牙再留下一年，曾经离冠军如此之近，最后俩轮仍然保持着领先优势。直到杰拉德滑倒的一瞬间，整个世界都黑暗了。很久之后，有记者提到当时那个球，杰拉德依然无法释怀，注定是杰队一辈子的痛……</p>
+<p>最后一个赛季，杰队无法接受罗杰斯只能坐冷板凳的安排，转投美国大联盟踢了自己的最后一个赛季。</p>
+<p>渣叔临危受命利物浦，带领球队踢得越来越好，现排名英超老二。然而我们的老队长杰拉德宣布退役了……</p>
+<p>80年出生，36岁的年纪。作为利物浦青训体系自己培养的青年才俊，18岁进入一线队，直到退役。虽然最后一个赛季到美国大联盟，但是那是唯一不可能与利物浦为敌的地方。杰拉得把最好的岁月献给了利物浦，把他最坏的记忆也留在了利物浦。</p>
+<blockquote>
+<p>我们记住的是他永远的全力以赴<br>我们记住的是无数的炮弹般的大力远射<br>我们记住的是无数鼓励队友的士气的画面<br>我们记住的是高举欧冠奖杯利物浦队长<br>我们记住的是那个初出茅庐的青涩少年<br>我记不住的是何时变成了利物浦死忠、杰拉德的死忠。</p>
+</blockquote>
+<p>只奢望年华和青春永不逝去。最好的现在就在，最好的过去就在，最好的永远都在。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+    
+  </section>
+
+  
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
+
+
+          </div>
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://tva1.sinaimg.cn/crop.0.0.414.414.180/62d98a55jw1e6lb32mfm7j20bo0bo0to.jpg"
+               alt="小弟" />
+          <p class="site-author-name" itemprop="name">小弟</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">160</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">67</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+        
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/jixiaod" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/jixiaod" target="_blank" title="Code">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  Code
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.douban.com/people/ttihgiesr" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2008 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="author" itemprop="copyrightHolder"> 『百作坊』 Generated by <a href="https://hexo.io">Hexo</a> & Theme by <a href="https://github.com/jixiaod/hexo-theme-next">Next</a> & Public by <a href="https://pages.github.com">Github Pages</a>.</span>
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+</body>
+</html>
