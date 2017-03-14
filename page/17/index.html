@@ -27,7 +27,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="百作坊, 小弟, 纪刚, LNMP Stack, Web, PHP, 工作和生活, 诗和远方" />
+  <meta name="keywords" content="百作坊, 百作坊博客, 百作坊Blog, 小弟, 纪刚, LNMP Stack, Web, PHP, 工作和生活, 不只眼前的苟且, 还有诗和远方" />
 
 
 
@@ -141,6 +141,16 @@
         </li>
       
         
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
@@ -175,6 +185,112 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2009/07/11/java-thread-termination/" itemprop="url">
+                  Java 线程终止问题
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2009-07-11T10:25:02+08:00" content="2009-07-11">
+              2009-07-11
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>对于线程的终止或者中断，由于java中Thread.stop方法已经被弃用，如何终止一个线程，成为了一个挑战，不仅仅要考虑终止的条件也要考虑终止后的收尾工作。<br>大部分情况下，我们可以通过自己设置的标识例如m_stop布尔变量来，这样写run方法<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">public run ()</div><div class="line">&#123;</div><div class="line">    while(!m_stop)</div><div class="line">    &#123;</div><div class="line">        //add your works here.</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>然后可以自己写一个Stop方法在里面将m_stop改变，就可以达到终止线程的目的。<br>但是如果在你的线程中，就是while循环中出现阻塞（大部分情况是wait，sleep或者IO阻塞等等），线程就停在里面，我们就无法通过判断m_stop的值来终止线程了。<br>这样我们可以通过另一种方式，调用interrupt（）方法，这个方法是比较特别的，<br>通过测试，interrupt方法实现了这样的功能：<br>如果线程当前在sleep和wait状态下,会清除interrupt status, 并同时抛出异常.<br>而在非sleep和wait状态下,就会表明自己为interrupt status.<br>我们可以通过isInterrupted方法获得interrupt status。<br>也就是说如果线程处于阻塞状态，而且我们改变m_stop的值已经不起作用的时候，我们可以通过异常来终止线程。也就是在Stop方法里调用interrupt（）方法，如果线程当前处于阻塞状态会产生一个异常。</p>
+<p>例如：<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">public void run() &#123;</div><div class="line">    while ( !m_stop) &#123;</div><div class="line">        System.out.println( &quot;Thread running...&quot; );</div><div class="line">        try &#123;</div><div class="line">            Thread.sleep( 1000 );</div><div class="line">        &#125; catch ( InterruptedException e ) &#123;</div><div class="line">            System.out.println( &quot;Thread interrupted...&quot; );</div><div class="line">        &#125;</div><div class="line">    &#125;   </div><div class="line">    System.out.println( &quot;Thread exiting under request...&quot; );</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这样可以通过catch子句跳出run方法，从而终止线程。</p>
+<p>总结：<br>终止线程的方法<br>1、通过标识设置，跳出while循环<br>2、通过异常跳出run方法。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
     
       
 
@@ -327,8 +443,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/杂/" itemprop="url" rel="index">
-                    <span itemprop="name">杂</span>
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
                   </a>
                 </span>
 
@@ -433,8 +549,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/杂/" itemprop="url" rel="index">
-                    <span itemprop="name">杂</span>
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
                   </a>
                 </span>
 
@@ -545,8 +661,8 @@ boot
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/杂/" itemprop="url" rel="index">
-                    <span itemprop="name">杂</span>
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
                   </a>
                 </span>
 
@@ -670,8 +786,8 @@ boot
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/杂/" itemprop="url" rel="index">
-                    <span itemprop="name">杂</span>
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
                   </a>
                 </span>
 
@@ -774,8 +890,8 @@ boot
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/杂/" itemprop="url" rel="index">
-                    <span itemprop="name">杂</span>
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
                   </a>
                 </span>
 
@@ -880,8 +996,8 @@ boot
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/杂/" itemprop="url" rel="index">
-                    <span itemprop="name">杂</span>
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
                   </a>
                 </span>
 
@@ -914,115 +1030,6 @@ boot
 <p>保存退出，另开一个终端：</p>
 <p>emulator</p>
 <p>结果一样的！</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2009/04/04/the-last-letter-to-you/" itemprop="url">
-                  给你的最后一封信
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2009-04-04T09:36:18+08:00" content="2009-04-04">
-              2009-04-04
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/杂/" itemprop="url" rel="index">
-                    <span itemprop="name">杂</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>我想说我是真的喜欢你，但是你并没有给我机会。我痛恨你的无情，我也狠自己的无能。没有办法让你喜欢我，甚至你可能都会讨厌我。我更加厌烦了这个世界，我好想好想和它说“sai you na la”。</p>
-<p>我的自信哪去了？我的自尊也消失不见。我想从新找回他们，发现是那么难！我一直在努力做着我认为对的事情，而且我也一直坚信“只要我努力去做，我就一定能成功，能做好。”</p>
-<p>你可能不人为世间真的存在真正的爱情。但我都在想有个人陪着我走过一生，而且我希望那个人会是你。也许我错了，你不是那个命中注定。本来我们也不适合，我条件是不太好。我改变不了我的出身，但我一直在努力，我在奋斗，我试图在改变这一切……身世是天注定的，我听天由命；但是我的命运还是有我来掌握。</p>
-<p>我发现我竟然跑题了，我或许就是这种人，呵呵～～自己想干什么，有时候自己都不知道。至少我过得很开心，虽然你拒绝我但我一样的生活，我的日子一样过得好。</p>
-<p>我说不出你在什么场合最让我动心。对你最后的记忆，是高考后：你的最后一个背影。那天我站在旅馆的二楼，你从楼下经过，右手牵了个孩子（是你弟弟？）。你那天穿了一件黄色的T恤，头发扎在后面。你一定不知道，有一双眼睛一直注视着你。我就这样看着你，直到你消失不见……我最喜欢你的背影，看着让我觉得安心、舒服、踏实。高中时候，我最常干的一件事就是，坐在窗台边看着你上学放学。同学老问我看什么呢》我告诉他们我看美女……呵呵～              </p>
-<p>后来，我又能和你有了联系。我认为这是个接近你的机会，而且我在努力让你能喜欢我，虽然现在看起来相当的失败，我不会放弃的。</p>
-<p>我想告诉你：你是我想娶的那个人，如果你答应。我会为我们努力！！我喜欢你～本当（日语）……</p>
-<p>2008-4-4  清明</p>
 
           
         
@@ -1090,24 +1097,24 @@ boot
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">161</span>
+              <span class="site-state-item-count">162</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
 
           
             <div class="site-state-item site-state-categories">
-              
-                <span class="site-state-item-count">10</span>
+              <a href="/categories">
+                <span class="site-state-item-count">17</span>
                 <span class="site-state-item-name">分类</span>
-              
+              </a>
             </div>
           
 
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">68</span>
+                <span class="site-state-item-count">110</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

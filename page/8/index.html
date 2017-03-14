@@ -27,7 +27,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="百作坊, 小弟, 纪刚, LNMP Stack, Web, PHP, 工作和生活, 诗和远方" />
+  <meta name="keywords" content="百作坊, 百作坊博客, 百作坊Blog, 小弟, 纪刚, LNMP Stack, Web, PHP, 工作和生活, 不只眼前的苟且, 还有诗和远方" />
 
 
 
@@ -141,6 +141,16 @@
         </li>
       
         
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
@@ -197,6 +207,123 @@
             
               
                 
+                <a class="post-title-link" href="/2015/04/10/relearning-php-1-why-we-always-ignor-trailer-php-tags/" itemprop="url">
+                  Relearning PHP (1) - 为什么php文件尾不闭合标记 ?>
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2015-04-10T16:33:17+08:00" content="2015-04-10">
+              2015-04-10
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/PHP/" itemprop="url" rel="index">
+                    <span itemprop="name">PHP</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>初学php的时候踩过这个坑，确实对初学者是个很难debug的问题。经大神指点说：“只要删除文件结尾的 ?&gt;，然后文件尾加几个空行就好！！”。试了下，果然解决问题。</p>
+<p>但是为什么呢？</p>
+<p>比如代码是这样一个php文件 a.php。在文件的最后的php结束标记 ?&gt; 后有空格和空行。</p>
+<p><pre class="lang:php decode:true" title="a.php">&lt;?php</pre></p>
+<p>class FooClass<br>{<br>public function foo()<br>{<br>echo “function foo”;<br>}</p>
+<p>}<br>?&gt;<br>在文件 b.php 中引用。</p>
+<p><pre class="lang:php decode:true" title="b.php">&lt;?php<br>include “a.php”;<br>ob_flush();</pre></p>
+<p>header(‘HTTP/1.1 404 Not Found’);<br>header(“status: 404 Not Found”);<br>echo “ok”;<br>?&gt;<br>在header等函数调用之前，有输出，就会造成php的错误。</p>
+<p>可以这样理解这个问题：其实可以把php的include的代码可以理解为俩个文件合并，于是中间的空格和空行还会保留。这些空格和空行是不会被php忽略的，会当做一种输出。如果没有结尾，则php语法会将空白忽略，从而不会发生错误。</p>
+<p>下面是从php手册摘抄的，很有用<a href="http://php.net/manual/zh/language.basic-syntax.php" title="http://php.net/manual/zh/language.basic-syntax.php" target="_blank" rel="external">http://php.net/manual/zh/language.basic-syntax.php</a></p>
+<p>当解析一个文件时，PHP 会寻找起始和结束标记，也就是 <!--?php 和 ?-->，这告诉 PHP 开始和停止解析二者之间的代码。此种解析方式使得 PHP 可以被嵌入到各种不同的文档中去，而任何起始和结束标记之外的部分都会被 PHP 解析器忽略。</p>
+<p>PHP 也允许使用短标记 &lt;? 和 ?&gt;，但不鼓励使用。只有通过激活 php.ini 中的 short_open_tag 配置指令或者在编译 PHP 时使用了配置选项 –enable-short-tags 时才能使用短标记。</p>
+<p>如果文件内容是纯 PHP 代码，最好在文件末尾删除 PHP 结束标记。这可以避免在 PHP 结束标记之后万一意外加入了空格或者换行符，会导致 PHP 开始输出这些空白，而脚本中此时并无输出的意图。</p>
+<p>Note:<br>在以下情况应避免使用短标记：开发需要再次发布的程序或者库，或者在用户不能控制的服务器上开发。因为目标服务器可能不支持短标记。为了代码的移植及发行，确保不要使用短标记。</p>
+<p>Note:<br>在 PHP 5.2 和之前的版本中，解释器不允许一个文件的全部内容就是一个开始标记 <!--?php。自 PHP 5.3 起则允许此种文件，但要开始标记后有一个或更多白空格符。</p--></p>
+<p>Note:<br>自 PHP 5.4 起，短格式的 echo 标记 &lt;?= 总会被识别并且合法，而不管 short_open_tag 的设置是什么。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2014/11/05/mysql-index-and-query-optimization/" itemprop="url">
                   MySQL 索引原理及慢查询优化
                 </a>
@@ -225,8 +352,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Mysql-DB/" itemprop="url" rel="index">
-                    <span itemprop="name">Mysql&DB</span>
+                  <a href="/categories/数据库/" itemprop="url" rel="index">
+                    <span itemprop="name">数据库</span>
                   </a>
                 </span>
 
@@ -527,8 +654,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/杂/" itemprop="url" rel="index">
-                    <span itemprop="name">杂</span>
+                  <a href="/categories/流程-工具/" itemprop="url" rel="index">
+                    <span itemprop="name">流程&工具</span>
                   </a>
                 </span>
 
@@ -1053,113 +1180,6 @@
   </article>
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2013/08/14/how-to-deal-with-relationship-between-coder-and-pm/" itemprop="url">
-                  程序开发如何处理和PM的关系
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2013-08-14T16:24:57+08:00" content="2013-08-14">
-              2013-08-14
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/杂/" itemprop="url" rel="index">
-                    <span itemprop="name">杂</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>我想在任何一家技术公司，产品经理和技术开发的关系都是对立的。稍有不慎，矛盾就会激化。 产品经理该如何做就不多说了，我们先从自身的角度解决问题。以下讲讲我的一些想法。</p>
-<p>首先，强势开发，震慑PM。为了避免产品和技术之间的误会，作为技术，你需要向PM证明你自己的技术实力！要有亮剑精神，告诉PM你不是吃素的。证明你的实力足够满足PM所有合理的需求（真的是合理的需求！），而且我完成的时间比PM安排的要短，完成的质量和达到的效果比PM预想的还好。不要让PM怀疑你的技术能力和你的工作效率（PM可能会认为你偷懒），这样的话，PM安排给你一项开发任务，即使你预估开发周期间很长，需要更长的开发时间，PM也不会怀疑你。相反他会考虑自己的设计是不是有什么问题，而且为了规避时间风险，是否需要简化自己的设计。</p>
-<p>第二，各司其职，对事不对人。PM和技术都是公司的员工，只是大家职责不同而已。不要认为产品经理是一群不懂技术、没有逻辑，整天异想天开跟你提各种无理需求的SB们。你嫌弃人家设计不好，人家还嫌弃你技术烂呢。大家互相体谅，就算在工作中互相对立，能在生活中成为朋友也不错嘛。</p>
-<p>第三，PK产品，P不过找领导。对于PM最忌讳就是程序不认可PM的设计，提出来的需求，程序上来就说“不能做！”，直接就把PM给婉拒了。作为技术人员，“不能做”之类的话不是不可以说，但是不做必须要有理由。程序不想实现产品的需求，大部分不过是认为PM设计有问题，设计不合理。遇到这样的问题，技术和PM可以先PK一下，尝试说服对方，当然PK的时候还是对事不对人。技术从技术的角度出发，PM则从产品的角度出发阐述自己的观点，同时还需要站在对方的立场考虑问题。如果PK无果，产品还坚持他的想法。那就只能请领导出马了，在牛的耗子见了猫都得虚。领导一来，再嚣张的PM也得服软。不过领导也不一定向着你这边，无论结果如何，去执行就对了，这样比你们俩个人争得面红耳赤更有效率。</p>
-<p>最后，要提出技术实现的成本风险。对于PM提出的难以实现的功能需求，也不要说“不能做”。讲出你的担心和顾虑的地方：“我开发这个功能需要尝试和技术调研，而结果是不可预期的，而且需要比较长的时间进行调研”。我相信如果是个好的产品都会做一个风险评估，会让你这边评估一下时间，把可能的的风险和成本都列出来，大家一起研究一下是否还要去操作。</p>
-<p>对于程序，最理想、最占据主动的就是拉着产品走。强势开发，引导产品做决策。不过我劝你们还是不要想太多，一点点来吧。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-    
   </section>
 
   
@@ -1200,24 +1220,24 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">161</span>
+              <span class="site-state-item-count">162</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
 
           
             <div class="site-state-item site-state-categories">
-              
-                <span class="site-state-item-count">10</span>
+              <a href="/categories">
+                <span class="site-state-item-count">17</span>
                 <span class="site-state-item-name">分类</span>
-              
+              </a>
             </div>
           
 
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">68</span>
+                <span class="site-state-item-count">110</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
