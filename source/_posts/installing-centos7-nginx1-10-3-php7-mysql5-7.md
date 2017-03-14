@@ -2,8 +2,12 @@
 title: CentOS 7 从零开始搭建 LNMP 环境（nginx/1.10.3 PHP/7.1.2 Mysql/5.7.17）
 date: 2017-03-03 10:10:36
 tags:
-    - lnmp
-
+    - linux
+    - nginx
+    - PHP
+    - mysql
+categories:
+    - linux
 ---
 
 最近买了 Linode VPS 服务。5刀每月，只有1G的内存，编译 Mysql 内存溢出，然后升级到2G内存的版本，每月10刀……以下纪录 LNMP 环境安装过程：

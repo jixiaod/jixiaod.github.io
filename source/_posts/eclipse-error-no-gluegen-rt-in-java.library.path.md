@@ -1,8 +1,10 @@
 ---
 title: eclipse 的 no gluegen-rt in java.library.path
 tags:
+    - eclipse
+    - error
 categories:
-  - 杂
+    - Java
 date: 2010-01-21 13:06:30
 ---
 

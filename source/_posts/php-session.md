@@ -1,9 +1,12 @@
 ---
 title: PHP SESSION
 tags:
+    - PHP
+    - session
 categories:
-  - 杂
+    - PHP
 date: 2010-07-18 20:50:55
+
 ---
 
 前几天面试有问道SESSION修改生存周期的问题，现在找到了答案。

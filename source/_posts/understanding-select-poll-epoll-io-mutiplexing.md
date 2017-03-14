@@ -5,7 +5,7 @@ tags:
     - epoll
     - IO
 categories:
-    - Nginx
+    - 底层知识
 ---
 
 select、poll 和 epoll 都是 Linux API 提供的 IO 复用方式。*IO多路复用是指内核一旦发现进程指定的一个或者多个IO条件准备读取，它就通知该进程。*[知乎上的回答](http://www.zhihu.com/question/32163005/answer/55772739) 非常好的解释了什么事IO多路复用，用机场航班调度问题的解释的非常清晰，看完之后豁然开朗。

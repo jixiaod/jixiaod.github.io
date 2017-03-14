@@ -1,9 +1,12 @@
 ---
 title: Ubuntu Java3D 环境配置
 tags:
+    - Java
+    - 3D
 categories:
-  - 杂
+    - Java
 date: 2009-10-22 00:15:57
+
 ---
 
 事先安装jdk 1.6版本，eclipse 3.2。

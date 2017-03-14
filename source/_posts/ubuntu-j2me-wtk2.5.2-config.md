@@ -1,8 +1,11 @@
 ---
 title: ubuntu 配置 j2me 环境  wtk2.5.2
 tags:
+    - ubuntu
+    - j2me
+    - wtk
 categories:
-  - 杂
+    - linux
 date: 2010-01-31 17:50:37
 ---
 

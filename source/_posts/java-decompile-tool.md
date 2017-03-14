@@ -1,8 +1,10 @@
 ---
-title: java 反编译
+title: java 反编译工具
 tags:
+    - Java
+    - 反编译
 categories:
-  - 杂
+    - Java
 date: 2009-10-20 10:49:19
 ---
 

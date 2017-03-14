@@ -1,8 +1,10 @@
 ---
 title: Ubuntu Pdf 中文不显示解决办法
 tags:
-categories:
-  - 杂
+    - ubuntu
+    - 中文乱码
+categories: 
+    - linux
 date: 2009-11-08 22:57:06
 ---
 

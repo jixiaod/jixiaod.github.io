@@ -2,7 +2,7 @@
 title: PHP 获取视频的预览截图
 tags:
   - ffmpeg
-  - php
+  - PHP
 categories:
   - PHP
 date: 2015-11-12 12:22:10

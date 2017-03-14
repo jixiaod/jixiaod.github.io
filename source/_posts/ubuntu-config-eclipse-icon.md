@@ -1,8 +1,10 @@
 ---
 title: ubuntu 配置 eclipse 启动图标
 tags:
+    - ubuntu
+    - eclipse
 categories:
-  - 杂
+    - linux
 date: 2010-02-07 14:47:15
 ---
 

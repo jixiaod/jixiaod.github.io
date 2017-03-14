@@ -1,8 +1,12 @@
 ---
 title: ubuntu 9.04安装配置 sun-java6-jdk 和 eclipse
 tags:
+    - Java
+    - ubuntu
+    - JDK
+    - eclipse
 categories:
-  - 杂
+  - Java
 date: 2009-09-12 18:29:54
 ---
 

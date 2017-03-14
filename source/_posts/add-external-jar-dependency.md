@@ -1,8 +1,9 @@
 ---
 title: 添加外部 Jar 包依赖
 tags:
+    - jar
 categories:
-  - 杂
+    - Java
 date: 2010-01-03 22:47:20
 ---
 

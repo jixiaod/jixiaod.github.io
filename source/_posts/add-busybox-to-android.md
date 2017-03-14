@@ -1,8 +1,11 @@
 ---
 title: Android 中添加 Busybox
 tags:
+    - linux
+    - android
+    - busybox
 categories:
-  - 杂
+  - linux
 date: 2009-04-26 17:06:08
 ---
 

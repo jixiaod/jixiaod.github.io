@@ -2,7 +2,7 @@
 title: http server原理，nginx与php之间是如何工作的
 tags:
   - nginx
-  - php
+  - PHP
   - php-fpm
 categories:
   - Nginx

@@ -1,8 +1,10 @@
 ---
 title: Ubuntu 引导盘设置
 tags:
+    - ubuntu
+    - grub
 categories:
-  - 杂
+    - linux
 date: 2009-10-19 19:59:17
 ---
 

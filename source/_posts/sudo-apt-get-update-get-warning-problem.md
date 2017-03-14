@@ -1,8 +1,9 @@
 ---
 title: sudo apt-get update  提示“GPG签名验证错误”“没有公钥”
 tags:
+    - linux
 categories:
-  - 杂
+    - linux
 date: 2009-09-12 18:33:09
 ---
 

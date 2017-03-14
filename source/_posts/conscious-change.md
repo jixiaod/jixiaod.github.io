@@ -1,8 +1,8 @@
 ---
 title: 有意识的转变
-id: 72
+tags:
 categories:
-  - 杂
+    - 工作&职场
 date: 2012-07-17 23:05:51
 tags:
 ---

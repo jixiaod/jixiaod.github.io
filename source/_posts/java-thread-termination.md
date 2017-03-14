@@ -1,8 +1,10 @@
 ---
 title: Java 线程终止问题
 tags:
+    - Java
+    - 线程
 categories:
-  - 杂
+    - Java
 date: 2009-07-11 10:25:02
 ---
 

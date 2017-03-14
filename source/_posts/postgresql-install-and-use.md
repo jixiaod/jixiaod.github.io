@@ -4,7 +4,7 @@ date: 2016-08-01 14:44:48
 tags:
     - postgresql
 categories:
-    - Mysql&DB
+    - 数据库
 ---
 
 ## 安装

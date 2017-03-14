@@ -2,8 +2,9 @@
 title: 为什么要有绩效考核？
 tags:
   - 绩效考核
-categories:
   - 管理
+categories:
+  - 工作&职场
 date: 2015-07-20 11:28:30
 
 ---

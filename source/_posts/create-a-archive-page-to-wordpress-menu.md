@@ -2,9 +2,8 @@
 title: Wordpress 添加一个文章归档页面
 tags:
   - wordpress
-id: 469
 categories:
-  - 杂
+  - 流程&工具
 date: 2015-11-20 17:14:58
 ---
 

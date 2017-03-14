@@ -1,8 +1,10 @@
 ---
 title: ubuntu8.10安装jdk-6u10-linux-i586.bin
 tags:
+    - Java
+    - ubuntu
 categories:
-  - 杂
+    - Java
 date: 2009-04-19 20:37:58
 ---
 

@@ -1,9 +1,12 @@
 ---
 title: Building Android
 tags:
+    - linux
+    - Android
 categories:
-  - 杂
+    - linux
 date: 2009-04-15 15:51:10
+
 ---
 
 ## 1.Environment Requirement

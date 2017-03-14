@@ -1,8 +1,10 @@
 ---
 title: ms3d文件分析
 tags:
+    - java
+    - ms3d
 categories:
-  - 杂
+    - Java
 date: 2009-12-08 10:37:38
 ---
 

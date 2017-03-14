@@ -1,10 +1,10 @@
 ---
 title: 知乎日报kindle推送
 tags:
-  - kindle
-id: 264
+    - kindle
+    - 知乎
 categories:
-  - 杂
+    - 流程&工具
 date: 2014-07-02 14:26:54
 ---
 

@@ -1,8 +1,9 @@
 ---
-title: 不完善的 QQ 验证码识别
+title: 随便玩玩 QQ 验证码
 tags:
+    - 验证码
 categories:
-  - 杂
+    - Java
 date: 2009-12-06 23:53:10
 ---
 

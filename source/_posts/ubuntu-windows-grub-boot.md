@@ -1,8 +1,10 @@
 ---
 title: Ubuntu 添加 Windows 引导
 tags:
+    - ubuntu
+    - boot
 categories:
-  - 杂
+    - linux
 date: 2009-05-12 12:39:17
 ---
 

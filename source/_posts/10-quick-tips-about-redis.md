@@ -3,7 +3,7 @@ title: Redis使用的10个小贴士
 tags:
   - redis
 categories:
-  - Mysql/DB
+  - 数据库
 date: 2015-06-02 16:32:45
 ---
 

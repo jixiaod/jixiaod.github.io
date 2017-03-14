@@ -1,8 +1,11 @@
 ---
 title: Javascript 与 Applet 交互
 tags:
+    - Java
+    - applet
+    - javascript
 categories:
-  - 杂
+    - Java
 date: 2010-01-01 17:57:56
 ---
 

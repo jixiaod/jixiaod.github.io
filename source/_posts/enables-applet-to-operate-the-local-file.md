@@ -1,8 +1,10 @@
 ---
 title: java applet 数字签名  使applet能操作本地文件
 tags:
+    - Java
+    - applet
 categories:
-  - 杂
+    - Java
 date: 2010-01-01 17:32:08
 ---
 

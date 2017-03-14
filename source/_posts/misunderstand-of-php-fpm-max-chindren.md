@@ -1,7 +1,7 @@
 ---
 title: php-fpm的max_chindren的一些误区
 tags:
-  - php
+  - PHP
   - php-fpm
 categories:
   - PHP

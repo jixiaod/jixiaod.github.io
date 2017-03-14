@@ -4,7 +4,7 @@ date: 2016-09-19 11:09:40
 tags: 
   - 事务
 categories:
-  - Mysql&DB
+  - 数据库
 
 ---
 

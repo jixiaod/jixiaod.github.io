@@ -1,8 +1,10 @@
 ---
-title: 打 Jar 包
+title: 如何打 Jar 包？
 tags:
+    - Java
+    - jar
 categories:
-  - 杂
+    - Java
 date: 2010-01-01 09:11:26
 ---
 

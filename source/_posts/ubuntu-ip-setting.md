@@ -1,8 +1,10 @@
 ---
 title: Ubuntu IP 设置
 tags:
+    - linux
+    - ubuntu
 categories:
-  - 杂
+    - linux
 date: 2009-04-16 15:24:48
 ---
 

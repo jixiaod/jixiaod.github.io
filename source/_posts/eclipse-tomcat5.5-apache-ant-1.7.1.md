@@ -1,8 +1,13 @@
 ---
 title: Eclipse + Tomcat5.5 + Apache-ant-1.7.1 （J2EE）环境配置
 tags:
+    - Java
+    - eclipse
+    - tomcat
+    - apache
+    - ant
 categories:
-  - 杂
+    - Java
 date: 2009-05-18 22:37:23
 ---
 

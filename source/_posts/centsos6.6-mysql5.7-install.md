@@ -1,9 +1,10 @@
 ---
 title: CentOS 6.6 安装 mysql 5.7
 tags:
-  - mysql
+    - mysql
+    - centos
 categories:
-  - Linux
+  - linux
 date: 2016-10-14 12:05:45
 ---
 在 CentOS 的 yum 默认安装的是 mysql 5.5 版本，由于开发需要 5.6 以上版本，索性就装个 5.7。

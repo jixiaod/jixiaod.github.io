@@ -1,8 +1,10 @@
 ---
 title: 去除数组中的重复元素
 tags:
+    - array
+    - PHP
 categories:
-  - 杂
+    - PHP
 date: 2010-10-20 15:44:50
 ---
 

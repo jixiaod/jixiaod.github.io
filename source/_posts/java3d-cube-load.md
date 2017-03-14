@@ -1,9 +1,12 @@
 ---
 title: Java3D 立方体 加载纹理
 tags:
+    - Java
+    - 3D
 categories:
-  - 杂
+    - Java
 date: 2009-12-01 15:45:26
+
 ---
 
 研究了很久的java3d，从昨天开始研究怎么加载纹理，今天终于搞定。原本想用数组加载图片，但是总是ava.lang.NullPointerException。于是就放弃了 一个个加载。。有点傻～java3d <wbr>立方体 <wbr>加载纹理java3d <wbr>立方体 <wbr>加载纹理java3d <wbr>立方体 <wbr>加载纹理

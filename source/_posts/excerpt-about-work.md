@@ -2,7 +2,7 @@
 title: 节选 
 tags:
 categories:
-  - 杂
+  - 工作&职场
 date: 2009-02-28 13:29:46
 ---
 

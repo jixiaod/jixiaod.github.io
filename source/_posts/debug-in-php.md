@@ -3,7 +3,7 @@ title: 如何调试 PHP 程序
 date: 2016-08-29 17:52:26
 tags:
     - debug
-    - php
+    - PHP
 categories:
     - PHP
 ---

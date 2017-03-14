@@ -5,7 +5,7 @@ tags:
   - 索引
   - 查询优化
 categories:
-  - Mysql&DB
+  - 数据库
 date: 2014-11-05 16:32:45
 
 ---

@@ -4,7 +4,7 @@ tags:
   - mac
   - sed
 categories:
-  - Linux
+  - 流程&工具
 date: 2015-06-10 10:35:34
 ---
 

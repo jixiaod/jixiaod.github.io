@@ -1,7 +1,7 @@
 ---
 title: Relearning PHP (1) - 为什么php文件尾不闭合标记 ?>
 tags:
-  - php
+  - PHP
 categories:
   - PHP
 date: 2015-04-10 16:33:17
