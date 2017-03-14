@@ -1189,12 +1189,6 @@ pre .javascript .function {
   left: 20px;
   top: 5px;
 }
-.posts-collapse .post-meta-cat {
-  position: absolute;
-  font-size: 12px;
-  right: 10px;
-  top: 20px;
-}
 .posts-collapse .post-comments-count {
   display: none;
 }
@@ -1552,7 +1546,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #adffb1;
+  background: #a86314;
 }
 .links-of-blogroll {
   font-size: 13px;

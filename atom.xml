@@ -65,7 +65,7 @@
     <link href="http://blog.100dos.com/2017/03/14/understand-aclocal-autoconf-automake-autoheader-configure/"/>
     <id>http://blog.100dos.com/2017/03/14/understand-aclocal-autoconf-automake-autoheader-configure/</id>
     <published>2017-03-14T03:02:23.000Z</published>
-    <updated>2017-03-14T10:00:45.000Z</updated>
+    <updated>2017-03-14T11:26:40.000Z</updated>
     
     <content type="html"><![CDATA[<h3 id="autoscan-autoconf"><a href="#autoscan-autoconf" class="headerlink" title="autoscan (autoconf)"></a>autoscan (autoconf)</h3><p>扫描源代码以搜寻普通的可移植性问题，比如检查编译器、库、头文件等，生成文件configure.scan，它是configure.ac的一个雏形。</p>
 <h3 id="aclocal-automake"><a href="#aclocal-automake" class="headerlink" title="aclocal (automake)"></a>aclocal (automake)</h3><p>根据已经安装的宏，用户定义宏和 acinclude.m4 文件中的宏将 configure.ac 文件所需要的宏集中定义到文件 aclocal.m4 中。aclocal是一个 perl 脚本程序，它的定义是：</p>
@@ -103,7 +103,7 @@
     <link href="http://blog.100dos.com/2017/03/03/installing-gitlab-ce-on-centos7/"/>
     <id>http://blog.100dos.com/2017/03/03/installing-gitlab-ce-on-centos7/</id>
     <published>2017-03-03T03:30:02.000Z</published>
-    <updated>2017-03-14T10:01:57.000Z</updated>
+    <updated>2017-03-14T11:26:40.000Z</updated>
     
     <content type="html"><![CDATA[<ol>
 <li>安装配置依赖项<br>如想使用Postfix来发送邮件,在安装期间请选择’Internet Site’. 您也可以用sendmai或者 配置SMTP服务 并 使用SMTP发送邮件.<br>在 Centos 6 和 7 系统上, 下面的命令将在系统防火墙里面开放HTTP和SSH端口.</li>
@@ -192,7 +192,7 @@
     <link href="http://blog.100dos.com/2017/02/27/processes-and-threads/"/>
     <id>http://blog.100dos.com/2017/02/27/processes-and-threads/</id>
     <published>2017-02-27T03:11:14.000Z</published>
-    <updated>2017-03-14T10:04:49.000Z</updated>
+    <updated>2017-03-14T11:26:40.000Z</updated>
     
     <content type="html"><![CDATA[<p><a href="https://zh.wikipedia.org/wiki/行程" target="_blank" rel="external">进程</a>（process）是计算机中已运行程序的实体。关于进程需要知道的几点：</p>
 <ul>
@@ -299,7 +299,7 @@
     <link href="http://blog.100dos.com/2017/02/09/nearby-jobs/"/>
     <id>http://blog.100dos.com/2017/02/09/nearby-jobs/</id>
     <published>2017-02-09T06:25:08.000Z</published>
-    <updated>2017-03-14T10:05:50.000Z</updated>
+    <updated>2017-03-14T11:26:40.000Z</updated>
     
     <content type="html"><![CDATA[<p>从<a href="https://www.lagou.com/" target="_blank" rel="external">拉勾网</a>抓取的 86341 条招聘企业数据，企业地址匹配 LBS 经纬度取自<a href="http://lbs.amap.com/console/show/picker" target="_blank" rel="external">高德开放平台API</a>，成功匹配到 83090 条经纬度数据。没有做详细做企业主正在招聘岗位的数据，所以很大可能情况会遇到附近的公司没有招聘信息的情况，但是某些方面还是能大概了解自己附近有什么值得考虑的公司，有一定参考价值。</p>
 <h2 id="查询附近的工作"><a href="#查询附近的工作" class="headerlink" title="查询附近的工作"></a>查询附近的工作</h2><p>Github地址: <a href="https://github.com/jixiaod/NearbyJobs" target="_blank" rel="external">https://github.com/jixiaod/NearbyJobs</a></p>
@@ -330,7 +330,7 @@
     <link href="http://blog.100dos.com/2017/01/19/minesweeper-on-wechat-app/"/>
     <id>http://blog.100dos.com/2017/01/19/minesweeper-on-wechat-app/</id>
     <published>2017-01-19T02:55:08.000Z</published>
-    <updated>2017-03-14T10:08:31.000Z</updated>
+    <updated>2017-03-14T11:26:40.000Z</updated>
     
     <content type="html"><![CDATA[<p>微信小程序这几天很火，9号正式发布，今天19号过了10天，到现在略有降温的趋势。个大厂商对微信小程序的态度很不看好，最激进的要数[罗辑思维]，直接下架了自己的[得到APP]。滴滴、京东等APP也只保留了最精简的功能，某些担心过于完善的功能会抢夺APP本身的用户。不过这也印证了小程序的初衷，小而精、用完即走。（并不否认腾讯微信平台确实流氓的事实）</p>
 <blockquote>
@@ -384,7 +384,7 @@
     <link href="http://blog.100dos.com/2016/12/27/reading-note-the-trime-minister-of-qing-dynasty/"/>
     <id>http://blog.100dos.com/2016/12/27/reading-note-the-trime-minister-of-qing-dynasty/</id>
     <published>2016-12-27T11:18:35.000Z</published>
-    <updated>2017-03-14T10:16:33.000Z</updated>
+    <updated>2017-03-14T11:26:40.000Z</updated>
     
     <content type="html"><![CDATA[<p><strong>很多事情不像表面上那么简单，尤其是在官场，要考虑点更多。</strong>发生的时间、涉及的官员、所涉及到官员之间的关系、地位、各自的立场。</p>
 <p>皇上：要顾全皇族的利益，凡事涉及皇族，一定是要偏袒皇族，照顾其颜面。朝中大臣以和为贵，可以接受做官贪赃枉法，但是对上对皇上要有敬畏之心，对下对百姓不能做太过分出格。</p>
@@ -421,7 +421,7 @@
     <link href="http://blog.100dos.com/2016/12/14/cancer-is-not-far-from-us/"/>
     <id>http://blog.100dos.com/2016/12/14/cancer-is-not-far-from-us/</id>
     <published>2016-12-14T10:10:51.000Z</published>
-    <updated>2017-03-14T10:17:06.000Z</updated>
+    <updated>2017-03-14T11:26:40.000Z</updated>
     
     <content type="html"><![CDATA[<p>前几天知道了妈得了癌症的消息，原来新闻里、电视里不相干的陌生人得的病，也来到了我的身边。原来癌症离我也并不远……</p>
 <p>刚知道的时候心情不免低落，一个是为老妈难过，刚到60便染此恶疾，虽有希望治愈，治疗过程不免受苦；在一个也为自己难过，刚刚步入正轨的生活，又被被打乱了。本来还打算着让老妈过来帮带带孩子呢，结果计划全变了……孩子还未满月，老婆尚未做完月子。家里出了这么大的事情，也不敢告诉她。怕月子里身子虚，心情压抑，对恢复有影响。</p>
@@ -457,7 +457,7 @@
     <link href="http://blog.100dos.com/2016/12/13/say-goodbye-to-stevengerrard/"/>
     <id>http://blog.100dos.com/2016/12/13/say-goodbye-to-stevengerrard/</id>
     <published>2016-12-13T09:47:55.000Z</published>
-    <updated>2017-03-14T10:17:35.000Z</updated>
+    <updated>2017-03-14T11:26:40.000Z</updated>
     
     <content type="html"><![CDATA[<p>杰拉德退役的消息出来好几天了，想想还是写一篇吧。以纪念我浦最伟大的队长……</p>
 <blockquote>
@@ -510,7 +510,7 @@
     <link href="http://blog.100dos.com/2016/12/05/how-to-c-in-2016/"/>
     <id>http://blog.100dos.com/2016/12/05/how-to-c-in-2016/</id>
     <published>2016-12-05T03:23:52.000Z</published>
-    <updated>2017-03-14T10:18:35.000Z</updated>
+    <updated>2017-03-14T11:26:40.000Z</updated>
     
     <content type="html"><![CDATA[<p>英文原文：<a href="https://matt.sh/howto-c" target="_blank" rel="external">https://matt.sh/howto-c</a></p>
 <p>这原本是一篇我写在 2015 年没有发布出来的草稿。为了让大家也能受益，我决定把它从我的草稿文件夹里拿出来。并且基本是原文，未做过多修改。大概只是把年份改了一下，2015 改成了 2016。</p>
@@ -967,7 +967,7 @@
     <link href="http://blog.100dos.com/2016/09/25/understanding-select-poll-epoll-io-mutiplexing/"/>
     <id>http://blog.100dos.com/2016/09/25/understanding-select-poll-epoll-io-mutiplexing/</id>
     <published>2016-09-25T07:26:48.000Z</published>
-    <updated>2017-03-14T10:04:41.000Z</updated>
+    <updated>2017-03-14T11:26:40.000Z</updated>
     
     <content type="html"><![CDATA[<p>select、poll 和 epoll 都是 Linux API 提供的 IO 复用方式。<em>IO多路复用是指内核一旦发现进程指定的一个或者多个IO条件准备读取，它就通知该进程。</em><a href="http://www.zhihu.com/question/32163005/answer/55772739" target="_blank" rel="external">知乎上的回答</a> 非常好的解释了什么事IO多路复用，用机场航班调度问题的解释的非常清晰，看完之后豁然开朗。</p>
 <p>select、poll 和 epoll 都是阻塞的，用 select 来举例，写法大概是这样：</p>
@@ -1097,7 +1097,7 @@
     <link href="http://blog.100dos.com/2016/09/02/reading-note-brief-history-of-humankind/"/>
     <id>http://blog.100dos.com/2016/09/02/reading-note-brief-history-of-humankind/</id>
     <published>2016-09-02T11:48:47.000Z</published>
-    <updated>2017-03-14T10:22:14.000Z</updated>
+    <updated>2017-03-14T11:26:40.000Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <p>究竟为什么要学历史？历史不像是物理学或经济学，目的不在于做出准预测。我们之所以研究历史，不是为了要知道未来，而是要拓展视野，要了解现在的种种绝非“自然”，也并非无可避免。未来的可能性远超过我们的想象。举例来说，研究欧洲人究竟是如何控制了非洲人，我们就知道种族歧视绝非自然或无可避免，而且知道世界大有可能是完全不同的样貌。</p>
@@ -1514,7 +1514,7 @@
     <link href="http://blog.100dos.com/2016/08/09/http-keepalive-model-md/"/>
     <id>http://blog.100dos.com/2016/08/09/http-keepalive-model-md/</id>
     <published>2016-08-09T03:19:48.000Z</published>
-    <updated>2017-03-14T10:21:11.000Z</updated>
+    <updated>2017-03-14T11:26:40.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="1、什么是-Keep-Alive-模式？"><a href="#1、什么是-Keep-Alive-模式？" class="headerlink" title="1、什么是 Keep-Alive 模式？"></a>1、什么是 Keep-Alive 模式？</h2><p>我们知道 HTTP 协议采用“请求-应答”模式，当使用普通模式，即非KeepAlive模式时，每个请求/应答客户和服务器都要新建一个连接，完成之后立即断开连接（HTTP协议为无连接的协议）；当使用 Keep-Alive 模式（又称持久连接、连接重用）时，Keep-Alive 功能使客户端到服务器端的连接持续有效，当出现对服务器的后继请求时，Keep-Alive功能避免了建立或者重新建立连接。</p>
 <p>http 1.0 中默认是关闭的，需要在 http 头加入”Connection: Keep-Alive”，才能启用 Keep-Alive；http 1.1 中默认启用 Keep-Alive，如果加入”Connection: close “，才关闭。目前大部分浏览器都是用 http1.1 协议，也就是说默认都会发起 Keep-Alive 的连接请求了，所以是否能完成一个完整的 Keep-Alive 连接就看服务器设置情况。</p>
