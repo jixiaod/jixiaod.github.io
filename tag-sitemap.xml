@@ -30,6 +30,13 @@
     </url>
 
     <url>
+        <loc>http://blog.100dos.com/tags/float/</loc>
+        <lastmod>2017-03-14T02:25:20.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
         <loc>http://blog.100dos.com/tags/git/</loc>
         <lastmod>2017-03-14T02:25:20.000Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -93,13 +100,6 @@
     </url>
 
     <url>
-        <loc>http://blog.100dos.com/tags/float/</loc>
-        <lastmod>2017-03-14T02:25:20.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>http://blog.100dos.com/tags/%E6%9E%B6%E6%9E%84/</loc>
         <lastmod>2017-03-14T02:25:20.000Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -142,6 +142,13 @@
     </url>
 
     <url>
+        <loc>http://blog.100dos.com/tags/%E7%A8%8B%E5%BA%8F%E5%91%98/</loc>
+        <lastmod>2017-03-14T09:50:33.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
         <loc>http://blog.100dos.com/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AE%BE%E8%AE%A1/</loc>
         <lastmod>2017-03-14T09:50:33.000Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -171,13 +178,6 @@
 
     <url>
         <loc>http://blog.100dos.com/tags/javascript/</loc>
-        <lastmod>2017-03-14T09:50:33.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>http://blog.100dos.com/tags/%E7%A8%8B%E5%BA%8F%E5%91%98/</loc>
         <lastmod>2017-03-14T09:50:33.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
@@ -254,6 +254,13 @@
     </url>
 
     <url>
+        <loc>http://blog.100dos.com/tags/hexo/</loc>
+        <lastmod>2017-03-14T09:50:33.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
         <loc>http://blog.100dos.com/tags/mysql/</loc>
         <lastmod>2017-03-14T09:50:33.000Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -283,13 +290,6 @@
 
     <url>
         <loc>http://blog.100dos.com/tags/debug/</loc>
-        <lastmod>2017-03-14T09:50:33.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>http://blog.100dos.com/tags/hexo/</loc>
         <lastmod>2017-03-14T09:50:33.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
@@ -415,6 +415,13 @@
     </url>
 
     <url>
+        <loc>http://blog.100dos.com/tags/session/</loc>
+        <lastmod>2017-03-14T09:50:33.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
         <loc>http://blog.100dos.com/tags/%E7%B4%A2%E5%BC%95/</loc>
         <lastmod>2017-03-14T09:50:33.000Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -423,13 +430,6 @@
 
     <url>
         <loc>http://blog.100dos.com/tags/%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96/</loc>
-        <lastmod>2017-03-14T09:50:33.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>http://blog.100dos.com/tags/session/</loc>
         <lastmod>2017-03-14T09:50:33.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
@@ -639,13 +639,6 @@
     </url>
 
     <url>
-        <loc>http://blog.100dos.com/tags/%E7%BB%A7%E6%89%BF/</loc>
-        <lastmod>2017-03-14T11:26:40.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>http://blog.100dos.com/tags/%E7%AE%AD%E5%A4%B4%E5%87%BD%E6%95%B0/</loc>
         <lastmod>2017-03-14T11:26:40.000Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -682,6 +675,13 @@
 
     <url>
         <loc>http://blog.100dos.com/tags/postgresql/</loc>
+        <lastmod>2017-03-14T11:26:40.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://blog.100dos.com/tags/%E7%BB%A7%E6%89%BF/</loc>
         <lastmod>2017-03-14T11:26:40.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
