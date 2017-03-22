@@ -31,9 +31,10 @@
           </a>
         </li>
       {% endfor %}
-
+        
     </ul>
   {% endif %}
-
+  {% include 'localsearch.swig' %}
+     
 </nav>
 

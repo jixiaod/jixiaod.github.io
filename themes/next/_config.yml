@@ -220,7 +220,8 @@ wechat_subscriber:
   description: 扫一下呗，反正我也不怎么发～
 
 
-
+local_search:
+  enable: true
 
 # ---------------------------------------------------------------
 # Third Party Services Settings

@@ -1,4 +1,5 @@
 {% macro render(is_post) %}
+  
   <div class="sidebar-toggle">
     <div class="sidebar-toggle-line-wrap">
       <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
@@ -80,6 +81,7 @@
                 </a>
               </span>
             {% endfor %}
+            
           {% endif %}
         </div>
 
@@ -108,7 +110,7 @@
             </ul>
           </div>
         {% endif %}
-
+       
       </section>
 
       {% if display_toc %}

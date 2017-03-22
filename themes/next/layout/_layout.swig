@@ -50,6 +50,10 @@
     <div class="back-to-top">
       <i class="fa fa-arrow-up"></i>
     </div>
+    <div class="search-bar">
+            <i class="popup-trigger fa fa-search fa-fw"></i> 
+    </div>
+
   </div>
 
   {% include '_scripts/vendors.swig' %}
@@ -61,6 +65,7 @@
   {% block script_extra %}{% endblock %}
 
   {% include '_scripts/boostrap.swig' %}
+  {% include '_third-party/search/index.swig' %}
 
   {% include '_scripts/third-party/mathjax.swig' %}
 
