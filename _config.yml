@@ -49,6 +49,15 @@ default_category: uncategorized
 category_map:
 tag_map:
 
+search:
+  path: search.xml
+  field: all
+  format: html
+  limit: 10000
+
+sitemap:
+    path: sitemap.xml
+
 # Date / Time format
 ## Hexo uses Moment.js to parse and display date
 ## You can customize the date format as defined in
