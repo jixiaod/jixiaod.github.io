@@ -207,6 +207,286 @@
             
               
                 
+                <a class="post-title-link" href="/2016/09/25/understanding-select-poll-epoll-io-mutiplexing/" itemprop="url">
+                  理解 select、poll 和 epoll
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-09-25T15:26:48+08:00" content="2016-09-25">
+              2016-09-25
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/底层原理/" itemprop="url" rel="index">
+                    <span itemprop="name">底层原理</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>select、poll 和 epoll 都是 Linux API 提供的 IO 复用方式。<em>IO多路复用是指内核一旦发现进程指定的一个或者多个IO条件准备读取，它就通知该进程。</em><a href="http://www.zhihu.com/question/32163005/answer/55772739" target="_blank" rel="external">知乎上的回答</a> 非常好的解释了什么事IO多路复用，用机场航班调度问题的解释的非常清晰，看完之后豁然开朗。</p>
+<p>select、poll 和 epoll 都是阻塞的，用 select 来举例，写法大概是这样：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">while</span> <span class="literal">true</span> &#123;</div><div class="line">    select(fds[])</div><div class="line">    <span class="keyword">for</span> i in fds[] &#123;</div><div class="line">        <span class="keyword">if</span> i has data <span class="comment">// 事件是否就绪</span></div><div class="line">            read until unavailable</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面的代码在执行到 select 时，会阻塞整个程序执行，直到有就绪的描述符才会返回，从而继续向下执行程序。现在如果把上面为代码中的 select 那一行删除，那么程序就会一直循环确认程序中是否准备好的文件描述符。这样在高程序在大量并发连接中只有少量活跃的情况下的系统，就浪费了非常多的CPU资源。现在通过IO复用，在没有就绪的描述符准备好时，就暂时将程序阻塞，从而提高了CPU的利用率。</p>
+<p>但是 select 的返回时，我们仅仅是知道有IO事件发生，但并不知道是那个或那几个事件准备好了？于是我们只能轮询所有的描述符，查找到具体就绪可以操作的描述符，然后再进行操作处理。</p>
+<blockquote>
+<p>传统的 select/poll 另一个致命弱点就是当你拥有一个很大的 socket 集合，不过由于网络延时，任一时间只有部分的 socket 是“活跃”的，但是 select/poll 每次调用都会线性扫描全部的集合，导致效率呈现线性下降。但是epoll不存在这个问题，它只会对“活跃”的 socket 进行操作 — 这是因为在内核实现中 epoll 是根据每个 fd 上面的 callback 函数实现的。那么，只有“活跃”的 socket 才会主动的去调用 callback 函数，其他 idle 状态 socket 则不会，在这点上，epoll 实现了一个“伪”AIO，因为这时候推动力在 OS 内核。</p>
+</blockquote>
+<p>epoll 可以理解为 event poll，基于事件驱动。<code>epoll_ctl</code>注册事件并注册 <code>callback</code> 回调函数，<code>epoll_wait</code>只返回发生的事件。不同于 select 和 poll，把哪个描述符发生了怎样的 IO 事件返回，这样就避免了像 select/poll 对所有的事件的轮询操作。复杂度降低到了O(1)。epoll 的伪代码如下：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">while</span> <span class="literal">true</span> &#123;</div><div class="line">    ready_events[] = epoll_wait(epollfd)</div><div class="line">    <span class="keyword">for</span> i in ready_events[] &#123;</div><div class="line">        read or write till</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>epoll是Linux内核为处理大批量文件描述符而作了改进的poll，是Linux下多路复用IO接口select/poll的增强版本，它能显著提高程序在大量并发连接中只有少量活跃的情况下的系统CPU利用率。另一点原因就是获取事件的时候，它无须遍历整个被侦听的描述符集，只要遍历那些被内核IO事件异步唤醒而加入Ready队列的描述符集合就行了。epoll除了提供select/poll那种IO事件的水平触发（Level Triggered）外，还提供了边缘触发（Edge Triggered），这就使得用户空间程序有可能缓存IO状态，减少epoll_wait/epoll_pwait的调用，提高应用程序效率。</p>
+</blockquote>
+<p>使用 epoll 的优点有：</p>
+<p>使用 epoll 的优点有：</p>
+<ul>
+<li>select 最不能忍受的是一个进程所打开的FD是有一定限制的，由 FD_SETSIZE 设置，默认是 1024。这对于连接数量比较大的服务器来说根本不能满足。虽然也可以选择多进程的解决方案( Apache 就是这样实现的)，不过虽然 linux 上面创建进程的代价比较小，但仍旧是不可忽视的，加上进程间数据同步远比不上线程间同步的高效，所以也不是一种完美的方案。不过 epoll 没有这个限制，监视的描述符数量不受限制，它所支持的 fd 上限是最大可以打开文件的数目，这个数字一般远大于 2048,举个例子,在 1GB 内存的机器上大约是 10 万左右，具体数目可以 cat /proc/sys/fs/file-max 察看,一般来说这个数目和系统内存关系很大。</li>
+<li>IO 的效率不会随着监视 fd 的数量的增长而下降。epoll 不同于 select 和 poll 轮询的方式，而是通过每个 fd 定义的回调函数来实现的。只有就绪的 fd 才会执行回调函数。</li>
+<li>epoll除了提供select/poll那种IO事件的水平触发（Level Triggered）外，还提供了边缘触发（Edge Triggered），这就使得用户空间程序有可能缓存IO状态，减少epoll_wait/epoll_pwait的调用，提高应用程序效率。<ul>
+<li>水平触发模式，文件描述符状态发生变化后，如果没有采取行动，它将后面反复通知，这种情况下编程相对简单，libevent 等开源库很多都是使用的这种模式。</li>
+<li>边沿触发模式，只告诉进程哪些文件描述符刚刚变为就绪状态，只说一遍，如果没有采取行动，那么它将不会再次告知。理论上边缘触发的性能要更高一些，但是代码实现相当复杂（Nginx 使用的边缘触发）。</li>
+</ul>
+</li>
+<li>mmap 加速内核与用户空间的信息传递。无论是 select，poll 还是 epoll 都需要内核把FD消息通知给用户空间，如何避免不必要的内存拷贝就很重要，在这点上，epoll 是通过内核与用户空间 mmap 同一块内存实现的。而如果你像我一样从2.5内核就关注 epoll 的话，一定不会忘记手工 mmap 这一步的。</li>
+</ul>
+<p>最后，自己之前理解的 Nginx 中只支持 epoll也是不对的。Nginx 封装了很多事件方法，epoll 只是其支持的一种方式，在linux系统中应用最广。还支持select、poll、kqueue等方式，在配置文件中也可以配置处理请求的方式选择哪种，见<a href="http://nginx.org/en/docs/events.html" target="_blank" rel="external">Connection processing methods</a></p>
+<p>epoll 仅是在 linux 下支持 IO 复用技术，比如我的 Mac OS 的Unix 系统就不支持epoll。Windows下 IOCP 和 BSD 的 kqueue。Libevent 将不同平台的 IO 复用技术封装统一的接口，使程序可以跨平台。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/09/19/the-four-levels-of-database-isolation-for-transactions/" itemprop="url">
+                  事务的四个隔离级别
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-09-19T11:09:40+08:00" content="2016-09-19">
+              2016-09-19
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/数据库/" itemprop="url" rel="index">
+                    <span itemprop="name">数据库</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Mysql/InnoDB 支持四个事务隔离级别，默认是可重复读（REPEATABLE-READ）。四个事务级别逐渐增强，保证数据有更高的一致性。但级别越高，性能越差。</p>
+<table>
+<thead>
+<tr>
+<th>隔离级别</th>
+<th>脏读</th>
+<th>不可重复读</th>
+<th>幻读</th>
+<th>锁</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>未提交读(Read uncommitted)</td>
+<td>可能</td>
+<td>可能</td>
+<td>可能</td>
+<td>不锁表，隔离级别最低，并发性能高</td>
+</tr>
+<tr>
+<td>提交读(Read commited)</td>
+<td>不可能</td>
+<td>可能</td>
+<td>可能</td>
+<td>锁定正在读取的行</td>
+</tr>
+<tr>
+<td>可重复读(Repeatable read)</td>
+<td>不可能</td>
+<td>不可能</td>
+<td>可能</td>
+<td>锁定所读取的所有行</td>
+</tr>
+<tr>
+<td>串行读(Serializable)</td>
+<td>不可能</td>
+<td>不可能</td>
+<td>不可能</td>
+<td>锁表</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>未提交读：允许脏读，也就是可能读取到其他会话中未提交的事务修改的数据。</li>
+<li>提交读：只能读到已经提交的数据。（不重复读）</li>
+<li>可重复读：在同一个事务内的查询都是事务开始时刻是一致的，InnoDB的默认级别。在SQL标准中，该隔离级别消除了不可重复读，但是还是存在幻读。</li>
+<li>串行读：完全串行化的读，每次读都需要获得表级共享锁，读写相互都会阻塞。</li>
+</ul>
+<p>脏读(dirty read)：指当一个事务正在访问数据，并且对数据进行了修改，而该次修改还没有提交到数据库中。这时，另一个事务也访问这个数据，然后使用了这个数据。</p>
+<p>不可重复读(nonrepeatable read)：指在一个事务内，多次读同一数据。在这个事务还没有结束时，另一个事务也访问该同一数据。那么，在第一个事务中的俩次读数据之间，由于第二个事务的修改，和第一个事务读取到的数据可能是不一样的。这样就发生了在一个事务内俩次读到的数据是不一样的，因此称为不可重复读。（不可重复读在于修改同样条件的数据）</p>
+<p>幻读(phantom read)：第一个事务对一个表中的数据做了修改，这个修改涉及到表中的全部数据行。同时，第二个事务也修改这个表中的数据，插入一行新的数据。那么，以后就会发生操作第一个事务的用户发现表中还有没有修改的数据行，就好象发生了幻觉一样。（幻读是在于新增或删除表中数据）</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/09/02/reading-note-brief-history-of-humankind/" itemprop="url">
                   ［读书笔记］－ 《人类简史》
                 </a>
@@ -1055,7 +1335,7 @@
 <li>现居住地 : 北京市</li>
 <li>婚姻状况 : 已婚</li>
 <li>联系电话 : 188<em>**</em>6729</li>
-<li>邮箱 : <a href="&#109;&#x61;&#x69;&#108;&#x74;&#111;&#x3a;&#106;&#x69;&#x2e;&#x78;&#x69;&#x61;&#111;&#100;&#x40;&#x67;&#x6d;&#97;&#x69;&#108;&#x2e;&#99;&#x6f;&#109;">&#106;&#x69;&#x2e;&#x78;&#x69;&#x61;&#111;&#100;&#x40;&#x67;&#x6d;&#97;&#x69;&#108;&#x2e;&#99;&#x6f;&#109;</a></li>
+<li>邮箱 : <a href="&#109;&#97;&#x69;&#108;&#x74;&#111;&#58;&#106;&#105;&#x2e;&#120;&#x69;&#97;&#111;&#100;&#64;&#x67;&#109;&#97;&#x69;&#x6c;&#46;&#x63;&#x6f;&#x6d;">&#106;&#105;&#x2e;&#120;&#x69;&#97;&#111;&#100;&#64;&#x67;&#109;&#97;&#x69;&#x6c;&#46;&#x63;&#x6f;&#x6d;</a></li>
 <li>出生年月 : 1986年10月</li>
 <li>博客 : <a href="http://blog.100dos.com">http://blog.100dos.com</a></li>
 <li>Github : <a href="https://github.com/jixiaod" target="_blank" rel="external">https://github.com/jixiaod</a></li>
@@ -1370,293 +1650,6 @@
   </article>
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/01/kong-cluster-introduction/" itemprop="url">
-                  Kong 集群介绍
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-01T15:14:15+08:00" content="2016-08-01">
-              2016-08-01
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Nginx/" itemprop="url" rel="index">
-                    <span itemprop="name">Nginx</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>“Kong cluster”是指多个 Kong 节点指向同一个存储。Kong cluster 允许以添加物理机的方式平行的去扩展系统，来应对大量的并发请求。他们使用同一个数据存储，共享同一份数据。并且Kong 能够自动的监管加入和离开的节点。</p>
-<ul>
-<li>允许系统平行扩展以处理大量并发请求；</li>
-<li>允许扩展部署在多个数据中心，提供一个分布式对于地理位置低延时的服务；</li>
-<li>如果其中一个节点挂掉，集群的其他节点仍然可以提供正常服务；</li>
-</ul>
-<p>因为集群所有节点的Kong 都使用同一个数据存储，所以无论是在哪个节点配置的 APIs、Consumers、Plugins 都可以适用所有节点。而且而且所有节点处理用户请求的模式也是一样，所以返回结果也都是一样的。</p>
-<h2 id="如何配置-Kong-集群？"><a href="#如何配置-Kong-集群？" class="headerlink" title="如何配置 Kong 集群？"></a>如何配置 Kong 集群？</h2><p>每次当一个 Kong 节点启动时，它就会加入其它共同使用一个数据存储的 Kong 集群，这个是根据 Kong 的配置自动完成的 。</p>
-<p>可根据配置文件中的以下几项来修改 Kong 集群的配置</p>
-<ul>
-<li><a href="https://getkong.org/docs/0.8.x/configuration/#cluster_listen" target="_blank" rel="external">cluster_listen</a></li>
-<li><a href="https://getkong.org/docs/0.8.x/configuration/#cluster_listen_rpc" target="_blank" rel="external">cluster_listen_rpc</a></li>
-<li><a href="https://getkong.org/docs/0.8.x/configuration/#cluster" target="_blank" rel="external">cluster</a></li>
-</ul>
-<h2 id="为什么需要-Kong-集群？"><a href="#为什么需要-Kong-集群？" class="headerlink" title="为什么需要 Kong 集群？"></a>为什么需要 Kong 集群？</h2><p>在理解为什么需要 Kong 集群之前，需要花点时间先了解 Kong 是如何跟数据存储交互的。</p>
-<p>每次当有新的 API 请求到 Kong 服务，Kong 从数据存储载入数据来知道用何种方式代理请求，包括载入相关的插件、认证的 Consumer等等。如果每次请求都如是去处理，性能开销势必是非常大的。因为每次请求， Kong 都需要跟数据存储获取数据，而且这个效率是非常低的。</p>
-<p>为了避免每次查询数据库，Kong 在第一次请求之行时，尝试在本地的内存里做尽可能多的数据缓存。本地内存中的数据查询当然要比每次去查询数据库要快的多，这样就保证了 Kong 能有非常好的性能。</p>
-<p>如果数据库中的数据一直不变化，这种机制是没有问题的。但是如果数据库中的数据发生变化（比如 API 或者 插件被更新），之前在每个 Kong 节点的内存中的缓存就会立即过期。对于 Kong 的节点，它是完全不知道数据库中的数据发生变化了的，除非有什么东西通知每个节点数据发生变化，需要重新创建缓存。</p>
-<p>通过 Kong 集群，每个节点能够知道其它节点的存在。并且当一个Kong 节点有对数据更新，该节点有责任通知这个变化给集群里的其他节点，通知其其他节点把本地内存中的缓存无效，重新从数据库中获取更新后的数据。</p>
-<p>总的来说，会有更好的性能提升，因为 Kong 节点不会轻易的去跟数据库交互，除非这些节点必须要去更新数据缓存。从另一方面来说，上文我们也大概介绍了 Kong 集群的概念：确保每个 Kong 节点能知道其他节点的存在，并且能够互相通知数据的变化。如果不这样使用这样的策略，就会有节点的数据缓存跟数据库中的数据不一致的问题，带来不可预期的问题。</p>
-<h2 id="添加新的节点到集群"><a href="#添加新的节点到集群" class="headerlink" title="添加新的节点到集群"></a>添加新的节点到集群</h2><p>一个 Kong 集群至少需要俩个指向同一个数据库的节点组成。</p>
-<p>点一个节点启动时，它会注册它的第一个本地的、无回路的、IPv4地址到数据库。当另一个节点启动，它会查询数据库，得到之前注册到该数据库的所有节点，然后通过存储的IP地址加入到这些节点中。如果几点自动监测发现的 IP 地址是错误的，也可以手动设置在 cluster 配置中的 advertise 项，这样这个配置的 IP 地址就能够让其他节点知道需要跟谁来通信。</p>
-<p>一个节点只需要加入集群中的一个节点，然后它就能自动的发现集群中的所有节点。</p>
-<h2 id="删除集群中的节点"><a href="#删除集群中的节点" class="headerlink" title="删除集群中的节点"></a>删除集群中的节点</h2><p>每次停止一个 Kong 节点服务时，该节点都会尝试以优雅的方式从集群中把自己删除。当一个节点从集群中成功移除之后，它的状态从 alive 变成 left。</p>
-<p>只需要在命令行执行 kong quit 或者 kong stop 就可以优雅的停止和从集群中移除节点。</p>
-<p>无论任何原因，当一个节点不能被访问时，它的状态会变成 failed。Kong 集群会自动的尝试重新加入有故障的节点直到它又能够可用为止。可以通过俩个方法把一个有故障的节点从集群中移除：</p>
-<ul>
-<li>使用 kong cluster force-leave 命令</li>
-<li>使用 <a href="https://getkong.org/docs/0.8.x/admin-api/#forcibly-remove-a-node" target="_blank" rel="external">API</a></li>
-</ul>
-<h2 id="查看集群的状态"><a href="#查看集群的状态" class="headerlink" title="查看集群的状态"></a>查看集群的状态</h2><p>查看集群、集群中节点和所有节点的状态可以用以下俩个方法：</p>
-<ul>
-<li>通过命令 kong cluster members，这个将会输出每个节点的名称，地址和在集群中的状态。状态是 active 表示该节点能被访问到，failed 表示该节点当前不能被访问到，left 表示已经被从集群中移除。</li>
-<li>另一个方查看集群状态的方法是请求后台管理的API － <a href="https://getkong.org/docs/0.8.x/admin-api/#retrieve-cluster-status" target="_blank" rel="external">查询集群状态的API</a></li>
-</ul>
-<h2 id="网络环境的假设"><a href="#网络环境的假设" class="headerlink" title="网络环境的假设"></a>网络环境的假设</h2><p>搭建不管是单个还是多个数据中心的 Kong 集群时，需要知道 Kong 是在 IP 层工作的（不支持余名，只支持 IP）。在俩个数据中心之间也是需要一个平面网络的拓扑结构的，中间不能有 NAT 网络地址转换的。通常情况下，跨数据中心是通过 VPN 来解决平面网络问题的。或者通过设置 cluster 配置的 advertise 项来指定一个公共地址，从而跳过 NAT。</p>
-<p>Kong 将会尝试监测第一个配置的无回路的 IPv4 地址，然后跟其他节点共享这个地址。但是也可以通过设置cluster配置的 advertise 项来覆盖这个地址。</p>
-<h2 id="几种边界情况问题"><a href="#几种边界情况问题" class="headerlink" title="几种边界情况问题"></a>几种边界情况问题</h2><p>Kong 的集群实现非常复杂，或许会带来一些边界情况的问题。</p>
-<p>1.并发启动多个节点会异步地加入集群</p>
-<p>当多个Kong 节点同时启动时，其中的一个节点或许不能知道其他节点的存在，因为其他的节点根本没有时间写入它们的数据到数据库中。为了避免这种情况，Kong 实现了一个特性叫做“Asynchronous auto-join”（异步的自动加入）。</p>
-<p>在一个Kong节点启动之后，Asynchronous auto-join 将会每3秒钟检查一次数据库，持续60秒。然后会加入任何在这60秒之内出现的节点。这个表示在并发环境下，多个节点同时启动，这些节点会话费60秒的时间去自动加入到集群中。</p>
-<p>2.节点加入集群时，自动的数据清洗</p>
-<p>每次当一个新节点加入集群，或者一个失败的节点重新加入集群。每个节点的缓存都被清洗，并且所有的数据都被强制重载。这个做是为了避免集群中已经失效的数据和节点中存储的数据发生不一致的问题。</p>
-<p>这个同样也意味着，当一个集群加入一个新节点时，性能会变慢，直到所有数据被重新缓存。</p>
-<p>3.节点故障</p>
-<p>一个集群中的节点会因为很多种原因发生故障，包括网络问题或者节点自己崩溃了。当不正当的使用 kong stop 或 kong quit 结束节点，也会发生节点故障的问题。</p>
-<p>当一个节点失效，Kong 将会失去跟它继续通讯的能力，同时集群也会尝试重新跟这个节点建立连接。它的状态显示会是 failed，当使用集群健康检查命令的时候</p>
-<p>kong cluster members</p>
-<p>使用 kong cluster force-leave 命令移除失效的节点，然后该节点的状态就会变成 left。</p>
-<p>节点的数据会在数据库中保留1个小时，以防止其他节点崩溃。当节点的数据从数据库中删除之后，新的节点将停止尝试自动加入这个节点。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/01/postgresql-install-and-use/" itemprop="url">
-                  PostgreSQl 安装和使用
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-01T14:44:48+08:00" content="2016-08-01">
-              2016-08-01
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/数据库/" itemprop="url" rel="index">
-                    <span itemprop="name">数据库</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>1.使用 Yum 安装 </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~$ sudo yum install postgresql-server postgresql</div></pre></td></tr></table></figure>
-<p>2.编译安装 </p>
-<p>下载最新的源码包 <a href="https://www.postgresql.org/ftp/source/" target="_blank" rel="external">https://www.postgresql.org/ftp/source/</a></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~$ sudo yum install readline-devel</div><div class="line">~$ ./configure --prefix=/opt/postgresql</div><div class="line">~$ make &amp;&amp; make install</div></pre></td></tr></table></figure>
-<p>初始化数据库配置 </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~$ /opt/postgresql/bin/initdb -D /opt/pgdata/</div></pre></td></tr></table></figure>
-<p>启动数据库 </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~$ /opt/postgresql/bin/pg_ctl start -D /opt/pgdata/</div></pre></td></tr></table></figure>
-<p>PostgreSQL 默认建立的帐户既是当前的系统账户，并且建立了一个名为postgres的数据库。尝试登陆 </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[lan_dev@v194 ~]$ /opt/postgresql/bin/psql -h127.0.0.1 -p5432 -Ulan_dev -dpostgres</div><div class="line">psql (9.5.3)</div><div class="line">Type &quot;help&quot; for help.</div><div class="line"></div><div class="line">postgres=#</div></pre></td></tr></table></figure>
-<p>psql 常用命令 </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">\h：查看SQL命令的解释，比如\h select。 </div><div class="line">\?：查看psql命令列表。 </div><div class="line">\l：列出所有数据库。 </div><div class="line">\c [database_name]：连接其他数据库。 </div><div class="line">\d：列出当前数据库的所有表格。 </div><div class="line">\d [table_name]：列出某一张表格的结构。 </div><div class="line">\du：列出所有用户。 </div><div class="line">\e：打开文本编辑器。 </div><div class="line">\conninfo：列出当前数据库和连接的信息。</div></pre></td></tr></table></figure>
-<p>建立新的帐户 </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">postgres=# CREATE USER konguser WITH PASSWORD &apos;123456&apos;;</div><div class="line">CREATE ROLE</div></pre></td></tr></table></figure>
-<p>创建数据库 </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">postgres=# CREATE DATABASE kong OWNER kong;</div><div class="line">CREATE DATABASE</div></pre></td></tr></table></figure>
-<p>赋予所有 kong 数据库的权限给帐户 konguser，否则 konguser 就只能登陆控制台，没有任何数据库操作权限 </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">postgres=# GRANT ALL PRIVILEGES ON DATABASE kong to konguser;</div><div class="line">GRANT</div></pre></td></tr></table></figure>
-<h2 id="配置远程登录"><a href="#配置远程登录" class="headerlink" title="配置远程登录"></a>配置远程登录</h2><p>1.查看Postgresql 的配置文件，打开 pg_hba.conf 文件，能看到如下的纪录： </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~$ vim /opt/pgdata/pg_hba.conf </div><div class="line"># &quot;local&quot; is for Unix domain socket connections only </div><div class="line">local all all trust </div><div class="line"># IPv4 local connections: </div><div class="line">host all all 127.0.0.1/32 trust </div><div class="line"># IPv6 local connections: </div><div class="line">host all all ::1/128</div></pre></td></tr></table></figure>
-<p>能看出默认的 Postgresql 配置只允许 loacalhost（127.0.0.1） 的访问。添加纪录 </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">host all all 192.168.20.1/24 trust</div></pre></td></tr></table></figure>
-<p>配置文件中每个配置项代表什么内容都写的很详细。如果不知道配置文件路径，可在psql客户端查看 </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[jigang@v5 postgresql]$ bin/psql -U jigang -d postgres -h 127.0.0.1 -p 5432</div><div class="line">psql (9.5.3)</div><div class="line">Type &quot;help&quot; for help.</div><div class="line">postgres=# show config_file;</div><div class="line">config_file</div><div class="line">----------------------------------------</div><div class="line">/opt/postgresql/dbdata/postgresql.conf</div><div class="line">(1 row)</div></pre></td></tr></table></figure>
-<p>2.修改 postgresql.conf 文件，修改 listen_addresses 配置为 ‘*’ </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">listen_addresses = &apos;localhost&apos;  # what IP address(es) to listen on; </div><div class="line">                                # comma-separated list of addresses; </div><div class="line">                                # defaults to &apos;localhost&apos;; use &apos;*&apos; for all </div><div class="line">                                # (change requires restart)</div></pre></td></tr></table></figure>
-<p>从新启动PostgreSQL </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~$ /opt/postgresql/bin/pg_ctl restart -D /opt/pgdata/</div></pre></td></tr></table></figure>
-<p>3.打开防火墙 </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~$ sudo iptables -A INPUT -p tcp --dport 5432 -j ACCEPT</div></pre></td></tr></table></figure>
-<p>4.测试远程登录数据库 </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">tiger➜work/moji/code» psql -h192.168.1.194 -p5432 -dkong -Ukonguser [17:48:12]</div><div class="line">Password for user konguser:</div><div class="line">psql (9.5.3)</div><div class="line">Type &quot;help&quot; for help.</div><div class="line">kong=&gt;</div></pre></td></tr></table></figure>
-<p>后记</p>
-<p>PostgreSQL 的 SQL 跟 Mysql 几乎完全一样。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-    
   </section>
 
   
@@ -1697,7 +1690,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">162</span>
+              <span class="site-state-item-count">164</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1714,7 +1707,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">111</span>
+                <span class="site-state-item-count">114</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

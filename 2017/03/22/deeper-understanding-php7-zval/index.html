@@ -1,0 +1,611 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+
+
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="PHP,PHP7,zval," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="百作坊" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+<meta name="description" content="转载：https://github.com/laruence/php7-internal/blob/master/zval.md
+PHP7已经发布, 如承诺, 我也要开始这个系列的文章的编写, 今天我想先和大家聊聊zval的变化. 在讲zval变化的之前我们先来看看zval在PHP5下面是什么样子
+PHP5zval回顾在PHP5的时候, zval的定义如下:struct _zval_struct">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入理解 PHP7 之 zval">
+<meta property="og:url" content="http://blog.100dos.com/2017/03/22/deeper-understanding-php7-zval/index.html">
+<meta property="og:site_name" content="百作坊">
+<meta property="og:description" content="转载：https://github.com/laruence/php7-internal/blob/master/zval.md
+PHP7已经发布, 如承诺, 我也要开始这个系列的文章的编写, 今天我想先和大家聊聊zval的变化. 在讲zval变化的之前我们先来看看zval在PHP5下面是什么样子
+PHP5zval回顾在PHP5的时候, zval的定义如下:struct _zval_struct">
+<meta property="og:image" content="http://blog.100dos.com/images/zval.png">
+<meta property="og:updated_time" content="2017-03-22T09:30:10.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深入理解 PHP7 之 zval">
+<meta name="twitter:description" content="转载：https://github.com/laruence/php7-internal/blob/master/zval.md
+PHP7已经发布, 如承诺, 我也要开始这个系列的文章的编写, 今天我想先和大家聊聊zval的变化. 在讲zval变化的之前我们先来看看zval在PHP5下面是什么样子
+PHP5zval回顾在PHP5的时候, zval的定义如下:struct _zval_struct">
+<meta name="twitter:image" content="http://blog.100dos.com/images/zval.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"hide"},
+    fancybox: true,
+    motion: true
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://blog.100dos.com/2017/03/22/deeper-understanding-php7-zval/"/>
+
+
+  <title> 深入理解 PHP7 之 zval | 百作坊 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?e70448447504ef27f728084c8f2978ea";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="site-title">百作坊</span>
+    </a>
+  </div>
+  <p class="site-subtitle">100dos.com</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+    </ul>
+  
+
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                深入理解 PHP7 之 zval
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-03-22T10:42:21+08:00" content="2017-03-22">
+              2017-03-22
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/PHP/" itemprop="url" rel="index">
+                    <span itemprop="name">PHP</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>转载：<a href="https://github.com/laruence/php7-internal/blob/master/zval.md" target="_blank" rel="external">https://github.com/laruence/php7-internal/blob/master/zval.md</a></p>
+<p>PHP7已经发布, 如承诺, 我也要开始这个系列的文章的编写, 今天我想先和大家聊聊zval的变化. 在讲zval变化的之前我们先来看看zval在PHP5下面是什么样子</p>
+<h4 id="PHP5"><a href="#PHP5" class="headerlink" title="PHP5"></a>PHP5</h4><h5 id="zval回顾"><a href="#zval回顾" class="headerlink" title="zval回顾"></a>zval回顾</h5><p>在PHP5的时候, zval的定义如下:<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">struct</span> _zval_struct &#123;</div><div class="line">    <span class="keyword">union</span> &#123;</div><div class="line">        <span class="keyword">long</span> lval;</div><div class="line">        <span class="keyword">double</span> dval;</div><div class="line">        <span class="keyword">struct</span> &#123;</div><div class="line">            <span class="keyword">char</span> *val;</div><div class="line">            <span class="keyword">int</span> len;</div><div class="line">        &#125; str;</div><div class="line">        HashTable *ht;</div><div class="line">        zend_object_value obj;</div><div class="line">        zend_ast *ast;</div><div class="line">    &#125; value;</div><div class="line">    zend_uint refcount__gc;</div><div class="line">    zend_uchar type;</div><div class="line">    zend_uchar is_ref__gc;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>对PHP5内核有了解的同学应该对这个结构比较熟悉, 因为zval可以表示一切PHP中的数据类型, 所以它包含了一个type字段, 表示这个zval存储的是什么类型的值, 常见的可能选项是<code>IS_NULL</code>, <code>IS_LONG</code>, <code>IS_STRING</code>, <code>IS_ARRAY</code>, <code>IS_OBJECT</code>等等.</p>
+<p>根据type字段的值不同, 我们就要用不同的方式解读value的值, 这个value是个联合体, 比如对于type是<code>IS_STRING</code>, 那么我们应该用<code>value.str</code>来解读<code>zval.value</code>字段, 而如果type是<code>IS_LONG</code>, 那么我们就要用<code>value.lval</code>来解读.</p>
+<p>另外, 我们知道PHP是用引用计数来做基本的垃圾回收的, 所以zval中有一个<code>refcount__gc</code>字段, 表示这个zval的引用数目, 但这里有一个要说明的, 在5.3以前, 这个字段的名字还叫做<code>refcount</code>, 5.3以后, 在引入新的垃圾回收算法来对付循环引用计数的时候, 作者加入了大量的宏来操作<code>refcount</code>, 为了能让错误更快的显现, 所以改名为<code>refcount__gc</code>, 迫使大家都使用宏来操作<code>refcount</code>.</p>
+<p>类似的, 还有<code>is_ref</code>, 这个值表示了PHP中的一个类型是否是引用, 这里我们可以看到是不是引用是一个标志位.</p>
+<p>这就是PHP5时代的zval, 在2013年我们做PHP5的opcache JIT的时候, 因为JIT在实际项目中表现不佳, 我们转而意识到这个结构体的很多问题. 而PHPNG项目就是从改写这个结构体而开始的.</p>
+<h5 id="存在的问题"><a href="#存在的问题" class="headerlink" title="存在的问题"></a>存在的问题</h5><p>PHP5的zval定义是随着Zend Engine 2诞生的, 随着时间的推移, 当时设计的局限性也越来越明显:</p>
+<p>首先这个结构体的大小是(在64位系统)24个字节, 我们仔细看这个<code>zval.value</code>联合体, 其中<code>zend_object_value</code>是最大的长板, 它导致整个value需要16个字节, 这个应该是很容易可以优化掉的, 比如把它挪出来, 用个指针代替,因为毕竟<code>IS_OBJECT</code>也不是最最常用的类型.</p>
+<p>第二, 这个结构体的每一个字段都有明确的含义定义, 没有预留任何的自定义字段, 导致在PHP5时代做很多的优化的时候, 需要存储一些和zval相关的信息的时候, 不得不采用其他结构体映射, 或者外部包装后打补丁的方式来扩充zval, 比如5.3的时候新引入专门解决循环引用的GC, 它不得采用如下的比较hack的做法:<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">/* The following macroses override macroses from zend_alloc.h */</span></div><div class="line"><span class="meta">#<span class="meta-keyword">undef</span>  ALLOC_ZVAL</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> ALLOC_ZVAL(z)                                   \</span></div><div class="line">    do &#123;                                                \</div><div class="line">        (z) = (zval*)emalloc(sizeof(zval_gc_info));     \</div><div class="line">        GC_ZVAL_INIT(z);                                \</div><div class="line">    &#125; while (0)</div></pre></td></tr></table></figure></p>
+<p>它用<code>zval_gc_info</code>劫持了zval的分配:<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> _zval_gc_info &#123;</div><div class="line">    zval z;</div><div class="line">    <span class="keyword">union</span> &#123;</div><div class="line">        gc_root_buffer       *buffered;</div><div class="line">        <span class="keyword">struct</span> _zval_gc_info *next;</div><div class="line">    &#125; u;</div><div class="line">&#125; zval_gc_info;</div></pre></td></tr></table></figure></p>
+<p>然后用<code>zval_gc_info</code>来扩充了zval, 所以实际上来说我们在PHP5时代申请一个zval其实真正的是分配了32个字节, 但其实GC只需要关心<code>IS_ARRAY和IS_OBJECT</code>类型, 这样就导致了大量的内存浪费.</p>
+<p>还比如我之前做的Taint扩展, 我需要对于给一些字符串存储一些标记, zval里没有任何地方可以使用, 所以我不得不采用非常手段:<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line">Z_STRVAL_PP(ppzval) = erealloc(Z_STRVAL_PP(ppzval), Z_STRLEN_PP(ppzval) + <span class="number">1</span> + PHP_TAINT_MAGIC_LENGTH);</div><div class="line">PHP_TAINT_MARK(*ppzval, PHP_TAINT_MAGIC_POSSIBLE);</div></pre></td></tr></table></figure></p>
+<p>就是把字符串的长度扩充一个int, 然后用magic number做标记写到后面去, 这样的做法安全性和稳定性在技术上都是没有保障的</p>
+<p>第三, PHP的zval大部分都是按值传递, 写时拷贝的值, 但是有俩个例外, 就是对象和资源, 他们永远都是按引用传递, 这样就造成一个问题, 对象和资源在除了zval中的引用计数以外, 还需要一个全局的引用计数, 这样才能保证内存可以回收. 所以在PHP5的时代, 以对象为例, 它有俩套引用计数, 一个是zval中的, 另外一个是obj自身的计数:<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> _zend_object_store_bucket &#123;</div><div class="line">    zend_bool destructor_called;</div><div class="line">    zend_bool valid;</div><div class="line">    <span class="keyword">union</span> _store_bucket &#123;</div><div class="line">        <span class="keyword">struct</span> _store_object &#123;</div><div class="line">            <span class="keyword">void</span> *object;</div><div class="line">            <span class="keyword">zend_objects_store_dtor_t</span> dtor;</div><div class="line">            <span class="keyword">zend_objects_free_object_storage_t</span> free_storage;</div><div class="line">            <span class="keyword">zend_objects_store_clone_t</span> clone;</div><div class="line">            <span class="keyword">const</span> zend_object_handlers *handlers;</div><div class="line">            zend_uint refcount;</div><div class="line">            gc_root_buffer *buffered;</div><div class="line">        &#125; obj;</div><div class="line">        <span class="keyword">struct</span> &#123;</div><div class="line">            <span class="keyword">int</span> next;</div><div class="line">        &#125; free_list;</div><div class="line">    &#125; bucket;</div><div class="line">&#125; zend_object_store_bucket;</div></pre></td></tr></table></figure></p>
+<p>除了上面提到的两套引用以外, 如果我们要获取一个object, 则我们需要通过如下方式:</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line">EG(objects_store).object_buckets[Z_OBJ_HANDLE_P(z)].bucket.obj</div></pre></td></tr></table></figure>
+<p>经过漫长的多次内存读取, 才能获取到真正的objec对象本身. 效率可想而知.</p>
+<p>这一切都是因为Zend引擎最初设计的时候, 并没有考虑到后来的对象. 一个良好的设计, 一旦有了意外, 就会导致整个结构变得复杂, 维护性降低, 这是一个很好的例子.</p>
+<p>第四, 我们知道PHP中, 大量的计算都是面向字符串的, 然而因为引用计数是作用在zval的, 那么就会导致如果要拷贝一个字符串类型的zval, 我们别无他法只能复制这个字符串. 当我们把一个zval的字符串作为key添加到一个数组里的时候, 我们别无他法只能复制这个字符串. 虽然在PHP5.4的时候, 我们引入了INTERNED STRING, 但是还是不能根本解决这个问题.</p>
+<p>还比如, PHP中大量的结构体都是基于Hashtable实现的, 增删改查Hashtable的操作占据了大量的CPU时间, 而字符串要查找首先要求它的Hash值, 理论上我们完全可以把一个字符串的Hash值计算好以后, 就存下来, 避免再次计算等等</p>
+<p>第五, 这个是关于引用的, PHP5的时代, 我们采用写时分离, 但是结合到引用这里就有了一个经典的性能问题:</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">dummy</span><span class="params">($array)</span> </span>&#123;&#125;</div><div class="line"></div><div class="line">    $array = range(<span class="number">1</span>, <span class="number">100000</span>);</div><div class="line"></div><div class="line">    $b = &amp;$array;</div><div class="line"></div><div class="line">    dummy($array);</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<p>当我们调用dummy的时候, 本来只是简单的一个传值就行的地方, 但是因为$array曾经引用赋值给了$b, 所以导致$array变成了一个引用, 于是此处就会发生分离, 导致数组复制, 从而极大的拖慢性能, 这里有一个简单的测试:</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$array = range(<span class="number">1</span>, <span class="number">100000</span>);</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">dummy</span><span class="params">($array)</span> </span>&#123;&#125;</div><div class="line"></div><div class="line">$i = <span class="number">0</span>;</div><div class="line">$start = microtime(<span class="keyword">true</span>);</div><div class="line"><span class="keyword">while</span>($i++ &lt; <span class="number">100</span>) &#123;</div><div class="line">    dummy($array);</div><div class="line">&#125;</div><div class="line"></div><div class="line">printf(<span class="string">"Used %sS\n"</span>, microtime(<span class="keyword">true</span>) - $start);</div><div class="line"></div><div class="line">$b = &amp;$array; <span class="comment">//注意这里, 假设我不小心把这个Array引用给了一个变量</span></div><div class="line">$i = <span class="number">0</span>;</div><div class="line">$start = microtime(<span class="keyword">true</span>);</div><div class="line"><span class="keyword">while</span>($i++ &lt; <span class="number">100</span>) &#123;</div><div class="line">    dummy($array);</div><div class="line">&#125;</div><div class="line">printf(<span class="string">"Used %sS\n"</span>, microtime(<span class="keyword">true</span>) - $start);</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<p>我们在5.6下运行这个例子, 得到如下结果:<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">$ php-5.6/sapi/cli/php /tmp/1.php</div><div class="line">Used 0.00045204162597656S</div><div class="line">Used 4.2051479816437S</div></pre></td></tr></table></figure></p>
+<p>相差1万倍之多. 这就造成, 如果在一大段代码中, 我不小心把一个变量变成了引用(比如foreach as &amp;$v), 那么就有可能触发到这个问题, 造成严重的性能问题, 然而却又很难排查.</p>
+<p>第六, 也是最重要的一个, 为什么说它重要呢? 因为这点促成了很大的性能提升, 我们习惯了在PHP5的时代调用<code>MAKE_STD_ZVAL</code>在堆内存上分配一个zval, 然后对他进行操作, 最后呢通过<code>RETURN_ZVAL</code>把这个zval的值”copy”给<code>return_value</code>, 然后又销毁了这个zval, 比如<code>pathinfo</code>这个函数:<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line">PHP_FUNCTION(pathinfo)</div><div class="line">&#123;</div><div class="line">.....</div><div class="line">    MAKE_STD_ZVAL(tmp);</div><div class="line">    array_init(tmp);</div><div class="line">.....</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (opt == PHP_PATHINFO_ALL) &#123;</div><div class="line">        RETURN_ZVAL(tmp, <span class="number">0</span>, <span class="number">1</span>);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">.....</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这个tmp变量, 完全是一个临时变量的作用, 我们又何必在堆内存分配它呢? <code>MAKE_STD_ZVAL/ALLOC_ZVAL</code>在PHP5的时候, 到处都有, 是一个非常常见的用法, 如果我们能把这个变量用栈分配, 那无论是内存分配, 还是缓存友好, 都是非常有利的</p>
+<p>还有很多, 我就不一一详细列举了, 但是我相信你们也有了和我们当时一样的想法, zval必须得改改了, 对吧? </p>
+<h4 id="PHP7"><a href="#PHP7" class="headerlink" title="PHP7"></a>PHP7</h4><h5 id="现在的zval"><a href="#现在的zval" class="headerlink" title="现在的zval"></a>现在的zval</h5><p>到了PHP7中, zval变成了如下的结构, 要说明的是, 这个是现在的结构, 已经和PHPNG时候有了一些不同了, 因为我们新增加了一些解释 (联合体的字段), 但是总体大小, 结构, 是和PHPNG的时候一致的:<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">struct</span> _zval_struct &#123;</div><div class="line">    <span class="keyword">union</span> &#123;</div><div class="line">        zend_long         lval;             <span class="comment">/* long value */</span></div><div class="line">        <span class="keyword">double</span>            dval;             <span class="comment">/* double value */</span></div><div class="line">        zend_refcounted  *counted;</div><div class="line">        zend_string      *str;</div><div class="line">        zend_array       *arr;</div><div class="line">        zend_object      *obj;</div><div class="line">        zend_resource    *res;</div><div class="line">        zend_reference   *ref;</div><div class="line">        zend_ast_ref     *ast;</div><div class="line">        zval             *zv;</div><div class="line">        <span class="keyword">void</span>             *ptr;</div><div class="line">        zend_class_entry *ce;</div><div class="line">        zend_function    *func;</div><div class="line">        <span class="keyword">struct</span> &#123;</div><div class="line">            <span class="keyword">uint32_t</span> w1;</div><div class="line">            <span class="keyword">uint32_t</span> w2;</div><div class="line">        &#125; ww;</div><div class="line">    &#125; value;</div><div class="line">    <span class="keyword">union</span> &#123;</div><div class="line">        <span class="keyword">struct</span> &#123;</div><div class="line">            ZEND_ENDIAN_LOHI_4(</div><div class="line">                zend_uchar    type,         <span class="comment">/* active type */</span></div><div class="line">                zend_uchar    type_flags,</div><div class="line">                zend_uchar    const_flags,</div><div class="line">                zend_uchar    reserved)     <span class="comment">/* call info for EX(This) */</span></div><div class="line">        &#125; v;</div><div class="line">        <span class="keyword">uint32_t</span> type_info;</div><div class="line">    &#125; u1;</div><div class="line">    <span class="keyword">union</span> &#123;</div><div class="line">        <span class="keyword">uint32_t</span>     var_flags;</div><div class="line">        <span class="keyword">uint32_t</span>     next;                 <span class="comment">/* hash collision chain */</span></div><div class="line">        <span class="keyword">uint32_t</span>     cache_slot;           <span class="comment">/* literal cache slot */</span></div><div class="line">        <span class="keyword">uint32_t</span>     lineno;               <span class="comment">/* line number (for ast nodes) */</span></div><div class="line">        <span class="keyword">uint32_t</span>     num_args;             <span class="comment">/* arguments number for EX(This) */</span></div><div class="line">        <span class="keyword">uint32_t</span>     fe_pos;               <span class="comment">/* foreach position */</span></div><div class="line">        <span class="keyword">uint32_t</span>     fe_iter_idx;          <span class="comment">/* foreach iterator index */</span></div><div class="line">    &#125; u2;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>虽然看起来变得好大, 但其实你仔细看, 全部都是联合体, 这个新的zval在64位环境下,现在只需要16个字节(2个指针size), 它主要分为俩个部分, <code>value</code>和扩充字段, 而扩充字段又分为<code>u1</code>和<code>u2</code>俩个部分, 其中<code>u1</code>是type info,  <code>u2</code>是各种辅助字段.</p>
+<p>其中<code>value</code>部分, 是一个<code>size_t</code>大小(一个指针大小), 可以保存一个指针, 或者一个<code>long</code>, 或者一个<code>double</code>.</p>
+<p>而type info部分则保存了这个zval的类型. 扩充辅助字段则会在多个其他地方使用, 比如<code>next</code>, 就用在取代Hashtable中原来的拉链指针, 这部分会在以后介绍HashTable的时候再来详解.</p>
+<h5 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h5><p>PHP7中的zval的类型做了比较大的调整, 总体来说有如下17种类型:<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">/* regular data types */</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> IS_UNDEF                    0</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> IS_NULL                     1</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> IS_FALSE                    2</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> IS_TRUE                     3</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> IS_LONG                     4</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> IS_DOUBLE                   5</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> IS_STRING                   6</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> IS_ARRAY                    7</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> IS_OBJECT                   8</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> IS_RESOURCE                 9</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> IS_REFERENCE                10</span></div><div class="line"></div><div class="line"><span class="comment">/* constant expressions */</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> IS_CONSTANT                 11</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> IS_CONSTANT_AST             12</span></div><div class="line"></div><div class="line"><span class="comment">/* fake types */</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> _IS_BOOL                    13</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> IS_CALLABLE                 14</span></div><div class="line"></div><div class="line"><span class="comment">/* internal types */</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> IS_INDIRECT                 15</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> IS_PTR                      17</span></div></pre></td></tr></table></figure></p>
+<p>其中PHP5的时候的<code>IS_BOOL</code>类型, 现在拆分成了<code>IS_FALSE</code>和<code>IS_TRUE</code>俩种类型. 而原来的引用是一个标志位, 现在的引用是一种新的类型.</p>
+<p>对于<code>IS_INDIRECT</code>和<code>IS_PTR</code>来说, 这俩个类型是用在内部的保留类型, 用户不会感知到, 这部分会在后续介绍HashTable的时候也一并介绍.</p>
+<p>从PHP7开始, 对于在zval的<code>value</code>字段中能保存下的值, 就不再对他们进行引用计数了, 而是在拷贝的时候直接赋值, 这样就省掉了大量的引用计数相关的操作, 这部分类型有:<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">IS_LONG</div><div class="line">IS_DOUBLE</div></pre></td></tr></table></figure></p>
+<p>当然对于那种根本没有值, 只有类型的类型, 也不需要引用计数了:<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">IS_NULL</div><div class="line">IS_FALSE</div><div class="line">IS_TRUE</div></pre></td></tr></table></figure></p>
+<p>而对于复杂类型, 一个<code>size_t</code>保存不下的, 那么我们就用<code>value</code>来保存一个指针, 这个指针指向这个具体的值, 引用计数也随之作用于这个值上, 而不在是作用于zval上了.</p>
+<p><img src="/images/zval.png" alt="zval示意图"></p>
+<p>以<code>IS_ARRAY</code>为例:</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">struct</span> _zend_array &#123;</div><div class="line">    zend_refcounted_h gc;</div><div class="line">    <span class="keyword">union</span> &#123;</div><div class="line">        <span class="keyword">struct</span> &#123;</div><div class="line">            ZEND_ENDIAN_LOHI_4(</div><div class="line">                zend_uchar    flags,</div><div class="line">                zend_uchar    nApplyCount,</div><div class="line">                zend_uchar    nIteratorsCount,</div><div class="line">                zend_uchar    reserve)</div><div class="line">        &#125; v;</div><div class="line">        <span class="keyword">uint32_t</span> flags;</div><div class="line">    &#125; u;</div><div class="line">    <span class="keyword">uint32_t</span>          nTableMask;</div><div class="line">    Bucket           *arData;</div><div class="line">    <span class="keyword">uint32_t</span>          nNumUsed;</div><div class="line">    <span class="keyword">uint32_t</span>          nNumOfElements;</div><div class="line">    <span class="keyword">uint32_t</span>          nTableSize;</div><div class="line">    <span class="keyword">uint32_t</span>          nInternalPointer;</div><div class="line">    zend_long         nNextFreeElement;</div><div class="line">    <span class="keyword">dtor_func_t</span>       pDestructor;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p><code>zval.value.arr</code>将指向上面的这样的一个结构体, 由它实际保存一个数组, 引用计数部分保存在<code>zend_refcounted_h</code>结构中:<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> _zend_refcounted_h &#123;</div><div class="line">    <span class="keyword">uint32_t</span>         refcount;          <span class="comment">/* reference counter 32-bit */</span></div><div class="line">    <span class="keyword">union</span> &#123;</div><div class="line">        <span class="keyword">struct</span> &#123;</div><div class="line">            ZEND_ENDIAN_LOHI_3(</div><div class="line">                zend_uchar    type,</div><div class="line">                zend_uchar    flags,    <span class="comment">/* used for strings &amp; objects */</span></div><div class="line">                <span class="keyword">uint16_t</span>      gc_info)  <span class="comment">/* keeps GC root number (or 0) and color */</span></div><div class="line">        &#125; v;</div><div class="line">        <span class="keyword">uint32_t</span> type_info;</div><div class="line">    &#125; u;</div><div class="line">&#125; zend_refcounted_h;</div></pre></td></tr></table></figure></p>
+<p>所有的复杂类型的定义, 开始的时候都是<code>zend_refcounted_h</code>结构, 这个结构里除了引用计数以外, 还有GC相关的结构. 从而在做GC回收的时候, GC不需要关心具体类型是什么, 所有的它都可以当做<code>zend_refcounted*</code>结构来处理.</p>
+<p>另外有一个需要说明的就是大家可能会好奇的<code>ZEND_ENDIAN_LOHI_4</code>宏, 这个宏的作用是简化赋值, 它会保证在大端或者小端的机器上, 它定义的字段都按照一样顺序排列存储, 从而我们在赋值的时候, 不需要对它的字段分别赋值, 而是可以统一赋值, 比如对于上面的array结构为例, 就可以通过:<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line">arr1.u.flags = arr2.u.flags;</div></pre></td></tr></table></figure></p>
+<p>一次完成相当于如下的赋值序列:<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line">arr1.u.v.flags              = arr2.u.v.flags;</div><div class="line">arr1.u.v.nApplyCount        = arr2.u.v.nApplyCount;</div><div class="line">arr1.u.v.nIteratorsCount    = arr2.u.v.nIteratorsCount;</div><div class="line">arr1.u.v.reserve            = arr2.u.v.reserve;</div></pre></td></tr></table></figure></p>
+<p>还有一个大家可能会问到的问题是, 为什么不把type类型放到zval类型的前面, 因为我们知道当我们去用一个zval的时候, 首先第一点肯定是先去获取它的类型. 这里的一个原因是, 一个是俩者差别不大, 另外就是考虑到如果以后JIT的话, zval的类型如果能够通过类型推导获得, 就根本没有必要去读取它的type值了.</p>
+<h5 id="标志位"><a href="#标志位" class="headerlink" title="标志位"></a>标志位</h5><p>除了数据类型以外， 以前的经验也告诉我们， 一个数据除了它的类型以外， 还应该有很多其他的属性， 比如对于INTERNED STRING，它是一种在整个PHP请求期都存在的字符串(比如你写在代码中的字面量), 它不会被引用计数回收. 在5.4的版本中我们是通过预先申请一块内存， 然后再这个内存中分配字符串， 最后用指针地址来比较， 如果一个字符串是属于INTERNED STRING的内存范围内， 就认为它是INTERNED STRING. 这样做的缺点显而易见， 就是当内存不够的时候， 我们就没有办法分配INTERNED STRING了， 另外也非常丑陋， 所以如果一个字符串能有一些属性定义则这个实现就可以变得很优雅.</p>
+<p>还有， 比如现在我们对于<code>IS_LONG</code>, <code>IS_TRUE</code>等类型不再进行引用计数了， 那么当我们拿到一个zval的时候如何判断它需要不需要引用计数呢？ 想当然的我们可能会说用:<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">if</span> (Z_TYPE_P(zv) &gt;= IS_STRING) &#123;</div><div class="line">  <span class="comment">//需要引用计数</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>但是你忘了， 还有INTERNED STRING的存在啊， 所以你也许要这么写了：<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">if</span> (Z_TYPE_P(zv) &gt;= IS_STRING &amp;&amp; !IS_INTERNED(Z_STR_P(zv))) &#123;</div><div class="line">  <span class="comment">//需要引用计数</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>是不是已经让你感觉到有点不对劲了? 嗯，别急， 还有呢， 我们还在5.6的时候引入了常量数组， 这个数组呢会存储在Opcache的共享内存中， 它也不需要引用计数：  </p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">if</span> (Z_TYPE_P(zv) &gt;= IS_STRING &amp;&amp; !IS_INTERNED(Z_STR_P(zv))</div><div class="line">    &amp;&amp; (Z_TYPE_P(zv) != IS_ARRAY || !Z_IS_IMMUTABLE(Z_ARRVAL(zv)))) &#123;</div><div class="line"> <span class="comment">//需要引用计数</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>你是不是也觉得这简直太丑陋了， 简直不能忍受这样墨迹的代码， 对吧？</p>
+<p>是的，我们早想到了，回头看之前的zval定义， 注意到<code>type_flags</code>了么? 我们引入了一个标志位， 叫做<code>IS_TYPE_REFCOUNTED</code>, 它会保存在<code>zval.u1.v.type_flags</code>中， 我们对于需要引用计数的类型就赋予这个标志， 所以上面的判断就可以变得很优雅：<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">if</span> (!(Z_TYPE_FLAGS(zv) &amp; IS_TYPE_REFCOUNTED)) &#123;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>而对于INTERNED STRING来说， 这个<code>IS_STR_INTERNED</code>标志位应该是作用于字符串本身而不是zval的.</p>
+<p>那么类似这样的标志位一共有多少呢？作用于zval的有：<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line">IS_TYPE_CONSTANT            <span class="comment">//是常量类型</span></div><div class="line">IS_TYPE_IMMUTABLE           <span class="comment">//不可变的类型， 比如存在共享内存的数组</span></div><div class="line">IS_TYPE_REFCOUNTED          <span class="comment">//需要引用计数的类型</span></div><div class="line">IS_TYPE_COLLECTABLE         <span class="comment">//可能包含循环引用的类型(IS_ARRAY, IS_OBJECT)</span></div><div class="line">IS_TYPE_COPYABLE            <span class="comment">//可被复制的类型， 还记得我之前讲的对象和资源的例外么？ 对象和资源就不是</span></div><div class="line">IS_TYPE_SYMBOLTABLE         <span class="comment">//zval保存的是全局符号表， 这个在我之前做了一个调整以后没用了， 但还保留着兼容，</span></div><div class="line">                            <span class="comment">//下个版本会去掉</span></div></pre></td></tr></table></figure></p>
+<p>作用于字符串的有:<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line">IS_STR_PERSISTENT           <span class="comment">//是malloc分配内存的字符串</span></div><div class="line">IS_STR_INTERNED             <span class="comment">//INTERNED STRING</span></div><div class="line">IS_STR_PERMANENT            <span class="comment">//不可变的字符串， 用作哨兵作用</span></div><div class="line">IS_STR_CONSTANT             <span class="comment">//代表常量的字符串</span></div><div class="line">IS_STR_CONSTANT_UNQUALIFIED <span class="comment">//带有可能命名空间的常量字符串</span></div></pre></td></tr></table></figure></p>
+<p>作用于数组的有:<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">define</span> IS_ARRAY_IMMUTABLE  <span class="comment">//同IS_TYPE_IMMUTABLE</span></span></div></pre></td></tr></table></figure></p>
+<p>作用于对象的有：<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line">IS_OBJ_APPLY_COUNT          <span class="comment">//递归保护</span></div><div class="line">IS_OBJ_DESTRUCTOR_CALLED    <span class="comment">//析构函数已经调用</span></div><div class="line">IS_OBJ_FREE_CALLED          <span class="comment">//清理函数已经调用</span></div><div class="line">IS_OBJ_USE_GUARDS           <span class="comment">//魔术方法递归保护</span></div><div class="line">IS_OBJ_HAS_GUARDS           <span class="comment">//是否有魔术方法递归保护标志</span></div></pre></td></tr></table></figure></p>
+<p>有了这些预留的标志位， 我们就会很方便的做一些以前不好做的事情， 就比如我自己的Taint扩展， 现在把一个字符串标记为污染的字符串就会变得无比简单：<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">/* it's important that make sure </span></div><div class="line"> * this value is not used by Zend or</div><div class="line"> * any other extension agianst string */</div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> IS_STR_TAINT_POSSIBLE    (1&lt;&lt;7)</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> TAINT_MARK(str)     (GC_FLAGS((str)) |= IS_STR_TAINT_POSSIBLE)</span></div></pre></td></tr></table></figure></p>
+<p>这个标记就会一直随着这个字符串的生存而存在的， 省掉了我之前的很多tricky的做法.</p>
+<h4 id="ZVAL预先分配"><a href="#ZVAL预先分配" class="headerlink" title="ZVAL预先分配"></a>ZVAL预先分配</h4><p> 前面我们说过, PHP5的zval分配采用的是堆上分配内存, 也就是在PHP预案代码中随处可见的MAKE_STD_ZVAL和ALLOC_ZVAL宏. 我们也知道了本来一个zval只需要24个字节, 但是算上gc_info, 其实分配了32个字节, 再加上PHP自己的内存管理在分配内存的时候都会在内存前面保留一部分信息:<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> _zend_mm_block &#123;</div><div class="line">    zend_mm_block_info info;</div><div class="line"><span class="meta">#<span class="meta-keyword">if</span> ZEND_DEBUG</span></div><div class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> magic;</div><div class="line"><span class="meta"># <span class="meta-keyword">ifdef</span> ZTS</span></div><div class="line">    THREAD_T thread_id;</div><div class="line"><span class="meta"># <span class="meta-keyword">endif</span></span></div><div class="line">    zend_mm_debug_info debug;</div><div class="line"><span class="meta">#<span class="meta-keyword">elif</span> ZEND_MM_HEAP_PROTECTION</span></div><div class="line">    zend_mm_debug_info debug;</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div><div class="line">&#125; zend_mm_block;</div></pre></td></tr></table></figure></p>
+<p>  从而导致实际上我们只需要24字节的内存, 但最后竟然分配48个字节之多.</p>
+<p>  然而大部分的zval, 尤其是扩展函数内的zval, 我们想想它接受的参数来自外部的zval, 它把返回值返回给return_value, 这个也是来自外部的zval, 而中间变量的zval完全可以采用栈上分配. 也就是说大部分的内部函数都不需要在堆上分配内存, 它需要的zval都可以来自外部.</p>
+<p>  于是当时我们做了一个大胆的想法, 所有的zval都不需要单独申请. </p>
+<p>  而这个也很容易证明, PHP脚本中使用的zval, 要么存在于符号表, 要么就以临时变量(<code>IS_TMP_VAR</code>)或者编译变量(<code>IS_CV</code>)的形式存在. 前者存在于一个Hashtable中, 而在PHP7中Hashtable默认保存的就是zval, 这部分的zval完全可以在Hashtable分配的时候一次性分配出来, 后面的存在于execute_data之后, 数量也在编译时刻确定好了, 也可以随着execute_data一次性分配, 所以我们确实不再需要单独在堆上申请zval了.</p>
+<p>  所以, 在PHP7开始, 我们移除了MAKE_STD_ZVAL/ALLOC_ZVAL宏, 不再支持存堆内存上申请zval. 函数内部使用的zval要么来自外面输入, 要么使用在栈上分配的临时zval.</p>
+<p>  在后来的实践中, 总结出来的可能对于开发者来说最大的变化就是, 之前的一些内部函数, 通过一些操作获得一些信息, 然后分配一个zval, 返回给调用者的情况:<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> zval * <span class="title">php_internal_function</span><span class="params">()</span> </span>&#123;</div><div class="line">    .....</div><div class="line">    str = external_function();</div><div class="line"> </div><div class="line">    MAKE_STD_ZVAL(zv);</div><div class="line"></div><div class="line">    ZVAL_STRING(zv, str, <span class="number">0</span>);</div><div class="line"></div><div class="line">    <span class="keyword">return</span> zv;</div><div class="line">&#125;</div><div class="line">PHP_FUNCTION(test) &#123;</div><div class="line">    RETURN_ZVAL(php_internal_function(), <span class="number">1</span>, <span class="number">1</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>  要么修改为, 这个zval由调用者传递:</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">php_internal_function</span><span class="params">(zval *zv)</span> </span>&#123;</div><div class="line">    .....</div><div class="line">    str = external_function();</div><div class="line"> </div><div class="line">    ZVAL_STRING(zv, str);</div><div class="line">    efree(str);</div><div class="line">&#125;</div><div class="line"></div><div class="line">PHP_FUNCTION(test) &#123;</div><div class="line">    php_internal_function(return_value);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>   要么修改为, 这个函数返回原始素材:<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">char</span> * <span class="title">php_internal_function</span><span class="params">()</span> </span>&#123;</div><div class="line">    .....</div><div class="line">    str = external_function();</div><div class="line">    <span class="keyword">return</span> str;</div><div class="line">&#125;</div><div class="line"></div><div class="line">PHP_FUNCTION(test) &#123;</div><div class="line">    str = php_internal_function();</div><div class="line">    RETURN_STRING(str);</div><div class="line">    efree(str);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>  (这块还没想好怎么说, 本来我是要引出Hashtable不再存在zval**, 从而引出引用类型的存在的必要性, 但是如果不先讲Hashtable的结构, 这个引出貌似很突兀, 先这么着吧, 以后再来修改)</p>
+<p>  到现在我们基本上把zval的变化概况介绍完毕, 抽象的来说, 其实在PHP7中的zval, 已经变成了一个值指针, 它要么保存着原始值, 要么保存着指向一个保存原始值的指针. 也就是说现在的zval相当于PHP5的时候的zval <em>. 只不过相比于zval </em>, 直接存储zval, 我们可以省掉一次指针解引用, 从而提高缓存友好性.</p>
+<p>  其实PHP7的性能, 我们并没有引入什么新的技术模式, 不过就是主要来自, 持续不懈的降低内存占用, 提高缓存友好性, 降低执行的指令数的这些原则而来的, 可以说PHP7的重构就是这三个原则.</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/qrcode_for_gh_b81f9d06ec2e_258.jpg" alt="小弟 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>扫一下呗，反正我也不怎么发～</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/PHP/" rel="tag">#PHP</a>
+          
+            <a href="/tags/PHP7/" rel="tag">#PHP7</a>
+          
+            <a href="/tags/zval/" rel="tag">#zval</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/14/how-to-use-hexo-post-articles-on-multiple-pcs/" rel="next" title="如何使用 hexo 在多台 PC 发布文章？">
+                <i class="fa fa-chevron-left"></i> 如何使用 hexo 在多台 PC 发布文章？
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/22/deeper-understanding-php7-reference/" rel="prev" title="深入理解 PHP7 之 REFERENCE">
+                深入理解 PHP7 之 REFERENCE <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+  </div>
+
+
+          </div>
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://tva1.sinaimg.cn/crop.0.0.414.414.180/62d98a55jw1e6lb32mfm7j20bo0bo0to.jpg"
+               alt="小弟" />
+          <p class="site-author-name" itemprop="name">小弟</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">164</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">114</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+        
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/jixiaod" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/jixiaod" target="_blank" title="Code">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  Code
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.douban.com/people/ttihgiesr" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2008 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="author" itemprop="copyrightHolder"> 『百作坊』 Generated by <a href="https://hexo.io">Hexo</a> & Theme by <a href="https://github.com/jixiaod/hexo-theme-next">Next</a> & Public by <a href="https://pages.github.com">Github Pages</a>.</span>
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+</body>
+</html>

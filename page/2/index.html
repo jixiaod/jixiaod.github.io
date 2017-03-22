@@ -207,6 +207,250 @@
             
               
                 
+                <a class="post-title-link" href="/2017/01/19/minesweeper-on-wechat-app/" itemprop="url">
+                  扫雷 - 微信小程序
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-19T10:55:08+08:00" content="2017-01-19">
+              2017-01-19
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Javascript/" itemprop="url" rel="index">
+                    <span itemprop="name">Javascript</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>微信小程序这几天很火，9号正式发布，今天19号过了10天，到现在略有降温的趋势。个大厂商对微信小程序的态度很不看好，最激进的要数[罗辑思维]，直接下架了自己的[得到APP]。滴滴、京东等APP也只保留了最精简的功能，某些担心过于完善的功能会抢夺APP本身的用户。不过这也印证了小程序的初衷，小而精、用完即走。（并不否认腾讯微信平台确实流氓的事实）</p>
+<blockquote>
+<p>PS：墨迹天气也开发了微信小程序版本，并且在1月9号第一时间发布，欢迎使用。</p>
+</blockquote>
+<p>作为技术人员，怎能不亲手试试小程序开发呢？扫雷 Minesweeper</p>
+<h2 id="实现思路："><a href="#实现思路：" class="headerlink" title="实现思路："></a>实现思路：</h2><ul>
+<li>如果不了解扫雷的游戏规则，请自行 Google</li>
+<li>绘制一张 10*10 的地图，并且标注地雷和非地雷，并且需要用数字表示每个点周围地雷的数量</li>
+<li>用 mineMap[x][y] 表示一个点位<ul>
+<li>mineMap[x][y] &lt; 0 (代码中 == -1) 初始状态</li>
+<li>0 &lt; mineMap[x][y] &lt; 9 该点周围地雷的数量</li>
+<li>mineMap[x][y] == 9 表示该点是地雷</li>
+<li>mineMap[x][y] &gt; 9 （代码中 == 10）表示该点插旗</li>
+</ul>
+</li>
+</ul>
+<h2 id="Github"><a href="#Github" class="headerlink" title="Github"></a>Github</h2><ul>
+<li><a href="https://github.com/jixiaod/wechat-app-minesweeper" target="_blank" rel="external">https://github.com/jixiaod/wechat-app-minesweeper</a></li>
+</ul>
+<h2 id="如何跑起来？"><a href="#如何跑起来？" class="headerlink" title="如何跑起来？"></a>如何跑起来？</h2><ul>
+<li>下载 &amp; 安装 <a href="https://mp.weixin.qq.com/debug/wxadoc/dev/devtools/download.html" target="_blank" rel="external">微信小程序开发工具</a> </li>
+<li>配置 wechat-app-minesweeper 代码目录到开发工具即可</li>
+</ul>
+<h2 id="玩法"><a href="#玩法" class="headerlink" title="玩法"></a>玩法</h2><ul>
+<li>需要注意的是，由于没有鼠标右键标记Flag，简单做了 Flag 切换，开启后，方可标记Flag</li>
+<li>最初的想法是通过 tap 和 longtap 来区分扫雷和Flag，但是开发工具不能区分这俩个事件，只能作罢</li>
+</ul>
+<p><img src="/images/wechat-minesweeper.png" alt=""></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/12/27/reading-note-the-trime-minister-of-qing-dynasty/" itemprop="url">
+                  ［读书笔记］－ 《大清相国》
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-12-27T19:18:35+08:00" content="2016-12-27">
+              2016-12-27
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/读书笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">读书笔记</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><strong>很多事情不像表面上那么简单，尤其是在官场，要考虑点更多。</strong>发生的时间、涉及的官员、所涉及到官员之间的关系、地位、各自的立场。</p>
+<p>皇上：要顾全皇族的利益，凡事涉及皇族，一定是要偏袒皇族，照顾其颜面。朝中大臣以和为贵，可以接受做官贪赃枉法，但是对上对皇上要有敬畏之心，对下对百姓不能做太过分出格。</p>
+<p>陈廷敬：心怀天下百姓，一心要肃清官场腐败。</p>
+<p>鳌拜／明珠／索额图：一人之下，万人之上。任人唯亲，独揽大权。</p>
+<p>高士其：墙头草，唯利是图。</p>
+<p>等等……</p>
+<p>书中围绕陈廷敬一生为官，发生的诸多故事展开。故事的来龙去脉都大同小异，朝廷出了什么事（比如大户统筹案、宝泉局毁钱鬻铜案等），然后派陈廷敬微服私访查明真相，结果又查出来了个大贪官，然后最终如何处置这点事儿。</p>
+<p>事故虽然不算太精彩，但更精彩的部分是揣摩为官的道理。如何看准官场的风向，想要参人，也要看这个人是参得参不得。皇上用的人参不得，皇上宠信的大臣参不得，皇上宠信的大臣的人也要看情况是不是可以参。总之要先摸清皇上的意思，最简单的情况，皇上示意可以参，你参就一点毛病没有。</p>
+<p><strong>身为人臣，最忌讳功高盖主。</strong>虽然在书的最后章节里，皇上对陈廷敬的评价是“宽大老成，几近完人！”，但是请注意也只是“几近”哦，因为完人只有皇帝他老人家而已。此时陈廷敬也已是七旬老人，事君也已有四十八年，可又能怎样呢？得到皇上嘉许时不也还要赶忙连连扣头谢恩。所以你陈廷敬如果是完人，那皇上又是什么呢？</p>
+<p>陈廷敬一心要肃清官场，整天参来参去。弄的皇帝很不开心，但是陈廷敬为官清廉，又没有确着的罪证。皇上只好让张英随便编个理由参他，导致陈廷敬第一次被贬。连明珠后来都跟萨穆哈都说：“你以为陈廷敬真的有罪？他根本就没罪！”。</p>
+<p>后来，陈廷敬自己也有所悟：“我让皇上知道天下没几个好官了，我就完了；我让天下人知道大清没几个清官了，天下就完了。”</p>
+<p><strong>皇上也得哄着。</strong>如果让皇上觉得你认为他是傻逼，你就完了！！！你只能比皇上更傻逼……</p>
+<p>最终，陈廷敬用“等”、“忍”、“稳”、“恨”四字诀，扳倒了明珠和索额图，坐上了大清相国的位置。等待时机，逆境要忍，做事要稳，下手要狠。</p>
+<p>好吧，挺难的，突然想到冯小刚给广告词：“做人做事，安全第一……”。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/12/14/cancer-is-not-far-from-us/" itemprop="url">
                   癌症离我们不远
                 </a>
@@ -1185,286 +1429,6 @@
   </article>
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/09/25/understanding-select-poll-epoll-io-mutiplexing/" itemprop="url">
-                  理解 select、poll 和 epoll
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-09-25T15:26:48+08:00" content="2016-09-25">
-              2016-09-25
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/底层原理/" itemprop="url" rel="index">
-                    <span itemprop="name">底层原理</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>select、poll 和 epoll 都是 Linux API 提供的 IO 复用方式。<em>IO多路复用是指内核一旦发现进程指定的一个或者多个IO条件准备读取，它就通知该进程。</em><a href="http://www.zhihu.com/question/32163005/answer/55772739" target="_blank" rel="external">知乎上的回答</a> 非常好的解释了什么事IO多路复用，用机场航班调度问题的解释的非常清晰，看完之后豁然开朗。</p>
-<p>select、poll 和 epoll 都是阻塞的，用 select 来举例，写法大概是这样：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">while</span> <span class="literal">true</span> &#123;</div><div class="line">    select(fds[])</div><div class="line">    <span class="keyword">for</span> i in fds[] &#123;</div><div class="line">        <span class="keyword">if</span> i has data <span class="comment">// 事件是否就绪</span></div><div class="line">            read until unavailable</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>上面的代码在执行到 select 时，会阻塞整个程序执行，直到有就绪的描述符才会返回，从而继续向下执行程序。现在如果把上面为代码中的 select 那一行删除，那么程序就会一直循环确认程序中是否准备好的文件描述符。这样在高程序在大量并发连接中只有少量活跃的情况下的系统，就浪费了非常多的CPU资源。现在通过IO复用，在没有就绪的描述符准备好时，就暂时将程序阻塞，从而提高了CPU的利用率。</p>
-<p>但是 select 的返回时，我们仅仅是知道有IO事件发生，但并不知道是那个或那几个事件准备好了？于是我们只能轮询所有的描述符，查找到具体就绪可以操作的描述符，然后再进行操作处理。</p>
-<blockquote>
-<p>传统的 select/poll 另一个致命弱点就是当你拥有一个很大的 socket 集合，不过由于网络延时，任一时间只有部分的 socket 是“活跃”的，但是 select/poll 每次调用都会线性扫描全部的集合，导致效率呈现线性下降。但是epoll不存在这个问题，它只会对“活跃”的 socket 进行操作 — 这是因为在内核实现中 epoll 是根据每个 fd 上面的 callback 函数实现的。那么，只有“活跃”的 socket 才会主动的去调用 callback 函数，其他 idle 状态 socket 则不会，在这点上，epoll 实现了一个“伪”AIO，因为这时候推动力在 OS 内核。</p>
-</blockquote>
-<p>epoll 可以理解为 event poll，基于事件驱动。<code>epoll_ctl</code>注册事件并注册 <code>callback</code> 回调函数，<code>epoll_wait</code>只返回发生的事件。不同于 select 和 poll，把哪个描述符发生了怎样的 IO 事件返回，这样就避免了像 select/poll 对所有的事件的轮询操作。复杂度降低到了O(1)。epoll 的伪代码如下：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">while</span> <span class="literal">true</span> &#123;</div><div class="line">    ready_events[] = epoll_wait(epollfd)</div><div class="line">    <span class="keyword">for</span> i in ready_events[] &#123;</div><div class="line">        read or write till</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<blockquote>
-<p>epoll是Linux内核为处理大批量文件描述符而作了改进的poll，是Linux下多路复用IO接口select/poll的增强版本，它能显著提高程序在大量并发连接中只有少量活跃的情况下的系统CPU利用率。另一点原因就是获取事件的时候，它无须遍历整个被侦听的描述符集，只要遍历那些被内核IO事件异步唤醒而加入Ready队列的描述符集合就行了。epoll除了提供select/poll那种IO事件的水平触发（Level Triggered）外，还提供了边缘触发（Edge Triggered），这就使得用户空间程序有可能缓存IO状态，减少epoll_wait/epoll_pwait的调用，提高应用程序效率。</p>
-</blockquote>
-<p>使用 epoll 的优点有：</p>
-<p>使用 epoll 的优点有：</p>
-<ul>
-<li>select 最不能忍受的是一个进程所打开的FD是有一定限制的，由 FD_SETSIZE 设置，默认是 1024。这对于连接数量比较大的服务器来说根本不能满足。虽然也可以选择多进程的解决方案( Apache 就是这样实现的)，不过虽然 linux 上面创建进程的代价比较小，但仍旧是不可忽视的，加上进程间数据同步远比不上线程间同步的高效，所以也不是一种完美的方案。不过 epoll 没有这个限制，监视的描述符数量不受限制，它所支持的 fd 上限是最大可以打开文件的数目，这个数字一般远大于 2048,举个例子,在 1GB 内存的机器上大约是 10 万左右，具体数目可以 cat /proc/sys/fs/file-max 察看,一般来说这个数目和系统内存关系很大。</li>
-<li>IO 的效率不会随着监视 fd 的数量的增长而下降。epoll 不同于 select 和 poll 轮询的方式，而是通过每个 fd 定义的回调函数来实现的。只有就绪的 fd 才会执行回调函数。</li>
-<li>epoll除了提供select/poll那种IO事件的水平触发（Level Triggered）外，还提供了边缘触发（Edge Triggered），这就使得用户空间程序有可能缓存IO状态，减少epoll_wait/epoll_pwait的调用，提高应用程序效率。<ul>
-<li>水平触发模式，文件描述符状态发生变化后，如果没有采取行动，它将后面反复通知，这种情况下编程相对简单，libevent 等开源库很多都是使用的这种模式。</li>
-<li>边沿触发模式，只告诉进程哪些文件描述符刚刚变为就绪状态，只说一遍，如果没有采取行动，那么它将不会再次告知。理论上边缘触发的性能要更高一些，但是代码实现相当复杂（Nginx 使用的边缘触发）。</li>
-</ul>
-</li>
-<li>mmap 加速内核与用户空间的信息传递。无论是 select，poll 还是 epoll 都需要内核把FD消息通知给用户空间，如何避免不必要的内存拷贝就很重要，在这点上，epoll 是通过内核与用户空间 mmap 同一块内存实现的。而如果你像我一样从2.5内核就关注 epoll 的话，一定不会忘记手工 mmap 这一步的。</li>
-</ul>
-<p>最后，自己之前理解的 Nginx 中只支持 epoll也是不对的。Nginx 封装了很多事件方法，epoll 只是其支持的一种方式，在linux系统中应用最广。还支持select、poll、kqueue等方式，在配置文件中也可以配置处理请求的方式选择哪种，见<a href="http://nginx.org/en/docs/events.html" target="_blank" rel="external">Connection processing methods</a></p>
-<p>epoll 仅是在 linux 下支持 IO 复用技术，比如我的 Mac OS 的Unix 系统就不支持epoll。Windows下 IOCP 和 BSD 的 kqueue。Libevent 将不同平台的 IO 复用技术封装统一的接口，使程序可以跨平台。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/09/19/the-four-levels-of-database-isolation-for-transactions/" itemprop="url">
-                  事务的四个隔离级别
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-09-19T11:09:40+08:00" content="2016-09-19">
-              2016-09-19
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/数据库/" itemprop="url" rel="index">
-                    <span itemprop="name">数据库</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>Mysql/InnoDB 支持四个事务隔离级别，默认是可重复读（REPEATABLE-READ）。四个事务级别逐渐增强，保证数据有更高的一致性。但级别越高，性能越差。</p>
-<table>
-<thead>
-<tr>
-<th>隔离级别</th>
-<th>脏读</th>
-<th>不可重复读</th>
-<th>幻读</th>
-<th>锁</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>未提交读(Read uncommitted)</td>
-<td>可能</td>
-<td>可能</td>
-<td>可能</td>
-<td>不锁表，隔离级别最低，并发性能高</td>
-</tr>
-<tr>
-<td>提交读(Read commited)</td>
-<td>不可能</td>
-<td>可能</td>
-<td>可能</td>
-<td>锁定正在读取的行</td>
-</tr>
-<tr>
-<td>可重复读(Repeatable read)</td>
-<td>不可能</td>
-<td>不可能</td>
-<td>可能</td>
-<td>锁定所读取的所有行</td>
-</tr>
-<tr>
-<td>串行读(Serializable)</td>
-<td>不可能</td>
-<td>不可能</td>
-<td>不可能</td>
-<td>锁表</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li>未提交读：允许脏读，也就是可能读取到其他会话中未提交的事务修改的数据。</li>
-<li>提交读：只能读到已经提交的数据。（不重复读）</li>
-<li>可重复读：在同一个事务内的查询都是事务开始时刻是一致的，InnoDB的默认级别。在SQL标准中，该隔离级别消除了不可重复读，但是还是存在幻读。</li>
-<li>串行读：完全串行化的读，每次读都需要获得表级共享锁，读写相互都会阻塞。</li>
-</ul>
-<p>脏读(dirty read)：指当一个事务正在访问数据，并且对数据进行了修改，而该次修改还没有提交到数据库中。这时，另一个事务也访问这个数据，然后使用了这个数据。</p>
-<p>不可重复读(nonrepeatable read)：指在一个事务内，多次读同一数据。在这个事务还没有结束时，另一个事务也访问该同一数据。那么，在第一个事务中的俩次读数据之间，由于第二个事务的修改，和第一个事务读取到的数据可能是不一样的。这样就发生了在一个事务内俩次读到的数据是不一样的，因此称为不可重复读。（不可重复读在于修改同样条件的数据）</p>
-<p>幻读(phantom read)：第一个事务对一个表中的数据做了修改，这个修改涉及到表中的全部数据行。同时，第二个事务也修改这个表中的数据，插入一行新的数据。那么，以后就会发生操作第一个事务的用户发现表中还有没有修改的数据行，就好象发生了幻觉一样。（幻读是在于新增或删除表中数据）</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-    
   </section>
 
   
@@ -1505,7 +1469,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">162</span>
+              <span class="site-state-item-count">164</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1522,7 +1486,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">111</span>
+                <span class="site-state-item-count">114</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

@@ -207,6 +207,235 @@
             
               
                 
+                <a class="post-title-link" href="/2012/05/15/iphone-back-glass-sucks/" itemprop="url">
+                  iphone 玻璃的后壳完败了
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2012-05-15T00:00:09+08:00" content="2012-05-15">
+              2012-05-15
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/杂/" itemprop="url" rel="index">
+                    <span itemprop="name">杂</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>前几天为了跟外地的新女友用skype电话，买了个iphone。话说如果光为了用skype，也没有必要买iphone，主要是为了体验一下吧。</p>
+<p>昨天，iphone掉地上摔碎了。声音很脆～后盖摔细碎～心疼的不行，毕竟没买几天。</p>
+<p>才发现iphone后壳竟然是尼玛玻璃的，iphone4 和 4s为了在外观上达到一定水平，不惜牺牲其质量，一不小心就分身碎骨。那么多人给iphone带个套套其中一个原因也是保护作用，但是肯定影响起外形。</p>
+<p>打电话问买给我手机那个人，山寨的iphone后壳从50，80，100不等的几种，原装的200多。</p>
+<p>传说下一代iphone会使用“液体金属”，不仅好看，而且强度高—抗摔。</p>
+<p>时代在发展，科技在进步，总归是越来越好呗。</p>
+<p>没有了乔老爷，苹果究竟会更好，还是更坏。对于这个new ipad诟病反正不少，对于一个有人生，没人起名字的产品，我反正觉得差强人意。</p>
+<p>10月份iphone 5会出，期待吧。到时候要不要出血，卖肾买一个呢，到时候看吧。</p>
+<p>&nbsp;</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2012/05/10/auto-complete-with-redis/" itemprop="url">
+                  redis 实现自动匹配搜索 Auto Complete with Redis
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2012-05-10T12:03:38+08:00" content="2012-05-10">
+              2012-05-10
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/PHP/" itemprop="url" rel="index">
+                    <span itemprop="name">PHP</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>目前需要实现一个站内搜索的功能，类似google，baidu实时匹配搜索内容。</p>
+<p>1.安装redis</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~# wget http://redis.googlecode.com/files/redis-2.4.13.tar.gz</div><div class="line">~# tar zxvf redis-2.4.13.tar.gz</div><div class="line">~# cd redis-2.4.13</div><div class="line">~# make</div></pre></td></tr></table></figure>
+<p>启动redis服务</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">～# src/redis-server</div></pre></td></tr></table></figure>
+<p>测试命令行</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">～# src/redis-cli</div></pre></td></tr></table></figure>
+<p>具体命令介绍，可参考<a href="http://manual.csser.com/redis/index.html" target="_blank" rel="external">http://manual.csser.com/redis/index.html</a></p>
+<p>2.安装phpredis扩展</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~# `wget --no-check-certificate http:``//github``.com``/owlient/phpredis/tarball/master` `-O phpredis.``tar``.gz`</div><div class="line"></div><div class="line">~# tar  zxvf phpredis.tar.gz</div><div class="line"></div><div class="line">~# cd phpredis</div><div class="line"></div><div class="line">~# phpize</div><div class="line"></div><div class="line">~# ./configure</div><div class="line"></div><div class="line">~# make &amp;&amp; make install</div></pre></td></tr></table></figure>
+<p>在php的lib目录 能够找到redis.so  —-&gt; /usr/lib/php5/20090626+lfs/redis.so (我的安装环境ubuntu 11.10)</p>
+<p>添加到php.ini</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">extension= /usr/lib/php5/20090626+lfs/redis.so</div></pre></td></tr></table></figure>
+<p>重启php-cgi</p>
+<p>3.导入词库到redis存储脚本</p>
+<p>词库文件words.txt 格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">中国红酒网逸香</div><div class="line">中国葡萄酒年均消费量</div><div class="line">中国葡萄酒生厂商</div><div class="line">中国年均葡萄酒个人消费量</div><div class="line">中国葡萄酒产业迎来成熟期</div><div class="line">中国葡萄酒勃艮第</div><div class="line">中国烟台</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">/*</div><div class="line">class redis</div><div class="line">@author tiger &lt;ji.xiaod@gmail.com&gt;</div><div class="line">*/</div><div class="line">class redis_client</div><div class="line">&#123;</div><div class="line">public $red;</div><div class="line">public $params = array();</div><div class="line">public function __construct()&#123;&#125;</div><div class="line"></div><div class="line">public function vendor_init($params)</div><div class="line">&#123;</div><div class="line">$this-&gt;params = $params;</div><div class="line">$this-&gt;connect();</div><div class="line">&#125;</div><div class="line"></div><div class="line">public function connect()</div><div class="line">&#123;</div><div class="line">$this-&gt;red = new Redis();</div><div class="line">$p = $this-&gt;params;</div><div class="line">try&#123;</div><div class="line">$this-&gt;red-&gt;connect($p[&apos;redis_host&apos;], $p[&apos;redis_port&apos;]);</div><div class="line">&#125;catch(Exception $e) &#123;</div><div class="line">die(&apos;RedisException : Can\&apos;t connect to &apos; .$p[&apos;redis_host&apos;].&apos;:&apos;.$p[&apos;redis_port&apos;]);</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">/*</div><div class="line">load dict file into redis store.</div><div class="line">*/</div><div class="line">public function load_dict( $file )</div><div class="line">&#123;</div><div class="line">$rkey = $this-&gt;params[&apos;redis_key&apos;];</div><div class="line">if( !$this-&gt;red-&gt;exists($rkey) ) &#123;</div><div class="line">$lines = file($file);</div><div class="line">foreach ( $lines as $str ) &#123;</div><div class="line"></div><div class="line">//echo $str;</div><div class="line">$strLen = mb_strlen($str, &apos;utf-8&apos;);</div><div class="line">for($i=1; $i &amp;lt; $strLen; $i++ )&#123;</div><div class="line"></div><div class="line">$prefix = mb_substr ( $str, 0, $i*1, &apos;utf-8&apos; );</div><div class="line">$redis-&gt;zAdd($rkey, 0, $prefix);</div><div class="line">&#125;</div><div class="line">$redis-&gt;zAdd($rkey, 0, $prefix.&apos;*&apos;);</div><div class="line"></div><div class="line">&#125;</div><div class="line">&#125;else&#123;</div><div class="line">die(&apos;Redis key exists: &apos; . $rkey);</div><div class="line">&#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">public function autocomplete( $prefix, $count=10 )</div><div class="line">&#123;</div><div class="line">$r = $this-&gt;red;</div><div class="line">$result = array();</div><div class="line">$rangelen = 50;</div><div class="line">$start = $r-&gt;zRank( &apos;dicts&apos;, $prefix );</div><div class="line">if( !$start ) &#123;</div><div class="line">return $result;</div><div class="line">//die(JSONP(&apos;&apos;, 10004, &apos;Prefix not exists&apos;));</div><div class="line">&#125;</div><div class="line">while( count($result) &amp;lt; $count) &#123;</div><div class="line">$range = $r-&gt;zRange( &apos;dicts&apos;, $start, $start+$rangelen-1 );</div><div class="line">$start += $rangelen;</div><div class="line">if(!$range || count($range) == 0 ) break;</div><div class="line">foreach($range as $entry) &#123;</div><div class="line">$minLen = min( strlen($entry), strlen($prefix) );</div><div class="line">if ( substr($entry, 0, $minLen) != substr($prefix, 0, $minLen) ) &#123;</div><div class="line">$count = count($result);</div><div class="line">&#125;</div><div class="line">if ( substr($entry, -1)==&apos;*&apos; &amp;&amp; count($result) != $count)&#123;</div><div class="line">array_push($result, substr($entry, 0, -1));</div><div class="line"></div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line">return $result;</div><div class="line">&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2012/05/02/how-to-use-google-drive/" itemprop="url">
                   google drive 使用
                 </a>
@@ -822,211 +1051,6 @@
   </article>
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2010/10/20/Remove-duplicate-element-in-array/" itemprop="url">
-                  去除数组中的重复元素
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2010-10-20T15:44:50+08:00" content="2010-10-20">
-              2010-10-20
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/PHP/" itemprop="url" rel="index">
-                    <span itemprop="name">PHP</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>用现在数组的value去作新数组的索引，并记录此索引位置的值为1。判断新入住的元素，如果此索引的value为1，说明已经存在，跳过。<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;?php</div><div class="line">$arr=array(1,2,3,2,3,4);</div><div class="line">$c=array();</div><div class="line">$b=array();</div><div class="line">for($i=0;$i&lt;count($arr);$i++)&#123;</div><div class="line">    if(!$b[0+intval($arr[$i])])&#123;</div><div class="line">         $b[intval($arr[$i])]=1;</div><div class="line">         echo $i.&apos;&lt;br /&gt;&apos;;</div><div class="line">         array_push($c,$arr[$i]);       </div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">var_dump($c);</div><div class="line">?&gt;</div></pre></td></tr></table></figure></p>
-<p>output:<br>array<br> 0 =&gt; int 1<br> 1 =&gt; int 2<br> 2 =&gt; int 3<br> 3 =&gt; int 4</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2010/10/11/Robynn-and-Kendy/" itemprop="url">
-                  思念是一种病
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2010-10-11T00:19:48+08:00" content="2010-10-11">
-              2010-10-11
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/杂/" itemprop="url" rel="index">
-                    <span itemprop="name">杂</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <div align="center"><br>思念是一种感觉<br>这种感觉不像触电<br>更像烙铁在心里留下的烙印<br>爸爸、妈妈、姐姐<br>还有同学、朋友<br><br>看着过往的老照片<br>不是发呆，而是在思念<br><br>他们说过的话、做过的事<br>回想<br>把记忆打开<br>哪怕是争吵<br>现在都是一份温馨<br><br>思念会上瘾<br>因为思念是一种病<br></div>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-    
   </section>
 
   
@@ -1067,7 +1091,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">162</span>
+              <span class="site-state-item-count">164</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1084,7 +1108,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">111</span>
+                <span class="site-state-item-count">114</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
