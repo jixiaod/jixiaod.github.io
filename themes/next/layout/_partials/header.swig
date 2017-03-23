@@ -34,7 +34,8 @@
         
     </ul>
   {% endif %}
-  {% include 'localsearch.swig' %}
-     
+  <div class="site-search"> 
+    {% include 'localsearch.swig' %}
+  </div>
 </nav>
 
