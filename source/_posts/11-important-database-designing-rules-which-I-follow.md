@@ -3,7 +3,7 @@ title: 11 个我遵循的重要数据库设计原则
 date: 2016-07-16 16:15:01
 tags:
     - 数据库设计
-    - Mysql
+    - mysql
 categories:
     - 数据库
 

@@ -1,7 +1,7 @@
 ---
 title: Mysql 优化
 tags:
-    - Mysql
+    - mysql
 categories:
   - 数据库
 date: 2010-07-18 21:02:37
