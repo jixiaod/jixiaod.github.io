@@ -28,13 +28,6 @@
     </url>
 
     <url>
-        <loc>http://blog.100dos.com/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/</loc>
-        <lastmod>2017-03-14T11:26:40.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>http://blog.100dos.com/categories/%E6%9D%82/</loc>
         <lastmod>2017-03-14T11:26:40.000Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -93,6 +86,13 @@
     <url>
         <loc>http://blog.100dos.com/categories/PHP/</loc>
         <lastmod>2017-03-22T09:30:10.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://blog.100dos.com/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/</loc>
+        <lastmod>2017-03-23T03:19:32.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
