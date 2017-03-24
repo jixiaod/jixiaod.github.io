@@ -5,7 +5,7 @@
 # Site
 title: 百作坊
 subtitle: 100dos.com
-description:
+description: 纪录工作和生活
 author: 小弟
 language: zh-Hans
 timezone: PRC
@@ -51,6 +51,9 @@ tag_map:
 
 sitemap:
     path: sitemap.xml
+
+baidusitemap:
+    path: baidusitemap.xml
 
 search:
   path: search.xml

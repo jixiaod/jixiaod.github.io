@@ -6,7 +6,8 @@
 favicon: /favicon.ico
 
 # Set default keywords (Use a comma to separate)
-keywords: "百作坊, 百作坊博客, 百作坊Blog, 小弟, 纪刚, LNMP Stack, Web, PHP, 工作和生活, 不只眼前的苟且, 还有诗和远方"
+keywords: "百作坊, 百作坊博客, 百作坊BLOG, Linux, Nginx, PHP, Mysql, Javascript, Java, 数据库, 技术架构, 系统设计, 读书笔记"
+description: "纪录工作和生活"
 
 # Set rss to false to disable feed link.
 # Leave rss as empty to use site's feed link.
