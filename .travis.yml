@@ -14,7 +14,7 @@ after_success:
   - git config user.name "Ji Gang" 
   - git config user.email "ji.xiaod@gmail.com"
   - git add --all .
-  - git commit -m "Travis CI Auto Builder"
+  - git commit -m "travis ci auto build"
   - git push https://$Personal_access_tokens@github.com/jixiaod/jixiaod.github.io.git master
 branches:
   only:
