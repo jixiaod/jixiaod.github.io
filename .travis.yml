@@ -1,0 +1,20 @@
+language: node_js
+node_js:
+  - "5.4.0"
+cache:
+  directories:
+    - node_modules
+before_script:
+  - git clone --branch master https://github.com/jixiaod/jixiaod.github.io.git public
+script:
+  - npm run build
+after_success:
+  - cd public
+  - git config user.name "Ji Gang" 
+  - git config user.email "ji.xiaod@gmail.com"
+  - git add --all .
+  - git commit -m "Travis CI Auto Builder"
+  - git push https://$Personal_access_tokens@github.com/jixiaod/jixiaod.github.io.git master
+branches:
+  only:
+    - hexo
