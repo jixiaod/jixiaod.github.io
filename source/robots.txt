@@ -10,4 +10,7 @@ Disallow: /js/
 Disallow: /css/
 
 Sitemap: http://blog.100dos.com/sitemap.xml
-Sitemap: http://blog.100dos.com/baidusitemap.xml
+Sitemap: http://blog.100dos.com/page-sitemap.xml
+Sitemap: http://blog.100dos.com/category-sitemap.xml 
+Sitemap: http://blog.100dos.com/tag-sitemap.xml  
+Sitemap: http://blog.100dos.com/post-sitemap.xml 
