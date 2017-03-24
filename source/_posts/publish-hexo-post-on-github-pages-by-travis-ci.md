@@ -1,5 +1,5 @@
 ---
-title: publish-hexo-post-on-github-pages-by-travis-ci
+title: Travis CI 持续集成 Hexo 的 Github Pages的博客
 date: 2017-03-24 14:45:17
 tags:
     - hexo
@@ -45,7 +45,7 @@ branches:
 具体Travis 使用参见[官方文档](https://docs.travis-ci.com)，针对以上配置的说明流程如下：
 
 - before_script：检出 master 分支代码到 public 文件目录。需要知道的是，在此之前 travis 已经帮你把hexo代码检出来了，实际上 public 目录是在 hexo 的目录之下。
-- script: `npm run build` 参见 package.json，实际执行的是 `hexo generate`，从新生成了静态文件。
+- script: `npm run build` 参见 [package.json](https://github.com/jixiaod/jixiaod.github.io/blob/hexo/package.json)，实际执行的是 `hexo generate`，从新生成了静态文件。
 - after_success: 最后把所有修改提交到了 master 分支，我们是用 `$Personal_access_tokens` 获得的 github 权限。
 
 现在发布一篇文章只需要：
