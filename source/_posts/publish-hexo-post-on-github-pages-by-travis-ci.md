@@ -57,7 +57,7 @@ branches:
 ~(hexo)$ git push origin hexo
 ```
 
-剩下的工作，travis 帮我搞定了，比原来简化了许多。
+剩下的工作，travis 全都能搞定了，比原来简化了许多。
 
 还有一个需要注意的是，第一次 build 的时候报了一个莫名其妙的错误，“No Rakefile found (looking for: rakefile, Rakefile, rakefile.rb, Rakefile.rb)”。后来发现是 `.travis.yml` 配置中 Nodejs 的版本写的有问题。所以 build 前检查 `.travis.yml` 是否书写正确很有必要，可以在[http://lint.travis-ci.org](http://lint.travis-ci.org) 检查是否有问题。
 
