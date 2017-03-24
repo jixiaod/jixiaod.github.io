@@ -64,3 +64,4 @@ branches:
 - 第一次 build 的时候报了一个莫名其妙的错误，“No Rakefile found (looking for: rakefile, Rakefile, rakefile.rb, Rakefile.rb)”。后来发现是Nodejs 的版本写的有问题。所以 build 前检查 `.travis.yml` 是否书写正确很有必要，可以在[http://lint.travis-ci.org](http://lint.travis-ci.org) 检查是否有问题。
 - Could not find .travis.yml, using standard configuration.
     * 从新同步 Travis CI 账号跟 Github的账号。在 Account 页面，点击 Sync acount
+    * 也可能是你弄错了build的分支，正在build的分支里确实没有 `.travis.yml` 文件。
