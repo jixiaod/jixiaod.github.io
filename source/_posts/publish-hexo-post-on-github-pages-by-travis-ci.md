@@ -14,6 +14,7 @@ categories:
 首先，用 Github 账号创建 [Travis CI](https://travis-ci.org/) 账号，直接用 Github 账号登录，并赋予权限即可。并在项目列表选择并创建 Travis CI 项目 `jixiaod / jixiaod.github.io`项目。
 
 接着，在 Github 的配置里生成 `Personal access tokens`，然后在Travis CI里配置的 Environment Variables 里配置添加，一会要在 `.travis.yml` 中使用。并设置 `hexo` 为默认分支，在 `git push origin hexo` 时，触发 travis  build。 
+![](/images/travsi-ci-personal-access-token.png)
 
 编写 `.travis.yml` 文件，参考[我的配置](https://github.com/jixiaod/jixiaod.github.io/blob/hexo/.travis.yml) 
 
@@ -59,5 +60,7 @@ branches:
 
 剩下的工作，travis 全都能搞定了，比原来简化了许多。
 
-还有一个需要注意的是，第一次 build 的时候报了一个莫名其妙的错误，“No Rakefile found (looking for: rakefile, Rakefile, rakefile.rb, Rakefile.rb)”。后来发现是 `.travis.yml` 配置中 Nodejs 的版本写的有问题。所以 build 前检查 `.travis.yml` 是否书写正确很有必要，可以在[http://lint.travis-ci.org](http://lint.travis-ci.org) 检查是否有问题。
-
+#### 俩个遇到的错误解决：
+- 第一次 build 的时候报了一个莫名其妙的错误，“No Rakefile found (looking for: rakefile, Rakefile, rakefile.rb, Rakefile.rb)”。后来发现是Nodejs 的版本写的有问题。所以 build 前检查 `.travis.yml` 是否书写正确很有必要，可以在[http://lint.travis-ci.org](http://lint.travis-ci.org) 检查是否有问题。
+- Could not find .travis.yml, using standard configuration.
+    * 从新同步 Travis CI 账号跟 Github的账号。在 Account 页面，点击 Sync acount
