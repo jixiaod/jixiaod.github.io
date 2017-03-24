@@ -27,7 +27,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="百作坊, 百作坊博客, 百作坊Blog, 小弟, 纪刚, LNMP Stack, Web, PHP, 工作和生活, 不只眼前的苟且, 还有诗和远方" />
+  <meta name="keywords" content="百作坊, 百作坊博客, 百作坊BLOG, Linux, Nginx, PHP, Mysql, Javascript, Java, 数据库, 技术架构, 系统设计, 读书笔记" />
 
 
 
@@ -42,12 +42,15 @@
 
 
 
+<meta name="description" content="纪录工作和生活">
 <meta property="og:type" content="website">
 <meta property="og:title" content="百作坊">
 <meta property="og:url" content="http://blog.100dos.com/page/17/index.html">
 <meta property="og:site_name" content="百作坊">
+<meta property="og:description" content="纪录工作和生活">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="百作坊">
+<meta name="twitter:description" content="纪录工作和生活">
 
 
 
@@ -67,7 +70,7 @@
   <link rel="canonical" href="http://blog.100dos.com/page/17/"/>
 
 
-  <title> 百作坊 </title>
+  <title> 百作坊, 百作坊博客, 百作坊BLOG, Linux, Nginx, PHP, Mysql, Javascript, Java, 数据库, 技术架构, 系统设计, 读书笔记 - 百作坊 - 纪录工作和生活 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -203,6 +206,223 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2009/09/12/sudo-apt-get-update-get-warning-problem/" itemprop="url">
+                  sudo apt-get update  提示“GPG签名验证错误”“没有公钥”
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2009-09-12T18:33:09+08:00" content="2009-09-12">
+              2009-09-12
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>如果你在”sudo apt-get update”时遇到：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">～ : GPG签名验证错误： http://ppa.launchpad.net jaunty Release: 由于没有公钥，下列签名无法进行验证： NO_PUBKEY 5A9BF3BB4E5E17B5</div><div class="line">     ～: 您可能需要运行 apt-get update 来解决这些问题</div></pre></td></tr></table></figure>
+<p>这个提示说需要添加公钥，解决方案就是添加”5A9BF3BB4E5E17B5″这个公钥：<br>在终端输入：<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~$ sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 5A9BF3BB4E5E17B5</div></pre></td></tr></table></figure></p>
+<p>有很多类似的有关添加公钥的问题，均可用以上方案解决。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2009/09/12/ubuntu-9.04-install-sun-java6-jdk-and-eclipse/" itemprop="url">
+                  ubuntu 9.04安装配置 sun-java6-jdk 和 eclipse
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2009-09-12T18:29:54+08:00" content="2009-09-12">
+              2009-09-12
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>安装eclipse<br>sudo apt-get install sun-java6-jdk</p>
+<p>配置jdk    sudo update-alternatives －－config java   选择 配置  jdk6(/usr/lib/jvm/java-6-openjdk/jre/bin/java)</p>
+<p>配置path 和java_home</p>
+<p>sudo gedit /etc/environment     添加如下两句</p>
+<p>配置PATH和JAVA_HOME</p>
+<p>CLASSPATH=/usr/lib/jvm/java-6-sun/lib<br>JAVA_HOME=/usr/lib/jvm/java-6-sun</p>
+<p>安装eclipse<br>sudo apt-get install eclipse</p>
+<p>将java-6-sun设置为系统默认<br>sudo update-java-alternatives -s java-6-sun</p>
+<p>配置jvm，此jvm为自己建立的文件<br>sudo gedit /etc/jvm<br>在里面加入<br>/usr/lib/jvm/java-6-sun</p>
+<p>sudo gedit /etc/eclipse/java_home<br>在最上方添加<br>/usr/lib/jvm/java-6-sun</p>
+<p>此时配置已经生效，可以使用eclipse写java了。。。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
     
       
 
@@ -840,235 +1060,6 @@ boot
   </article>
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2009/04/26/add-busybox-to-android/" itemprop="url">
-                  Android 中添加 Busybox
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2009-04-26T17:06:08+08:00" content="2009-04-26">
-              2009-04-26
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/linux/" itemprop="url" rel="index">
-                    <span itemprop="name">linux</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="Busybox-在-Android-中的安装"><a href="#Busybox-在-Android-中的安装" class="headerlink" title="Busybox 在 Android 中的安装"></a>Busybox 在 Android 中的安装</h2><p>注：我的 anroid 安装目录为  /opt/android  </p>
-<p>ramdisk的制作<br>与linux内核一样，ramdisk.img 也是cpio压缩。需要gunzip解压缩，然后用cpio解包。</p>
-<p>将android  /opt/android/out/target/product/generic中的的ramdisk.img文件复制一份到其他目录（不要把原来的弄坏了，我自己开始就弄得乱七八糟的，幸亏能从同学电脑靠分文件回来，要不要从新make android，那可爽了……）。<br>将ramdisk.img改名ramdisk.img.gz.<br>解压</p>
-<p>~$ gunzip ramdisk.img.gz ramdisk.img   // 又变成.img 文件</p>
-<p>新建一个文件夹ramdisk,进入ramdisk<br>~$ cpio -i -F ../ramdisk.img     //  解压文件到ramdisk中</p>
-<p>在ramdisk中找到init.rc文件，并修改init.rc文件 在PATH后加上busybox的路径，这个是busybox 将要在android的虚拟机中的安装路径<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~$setup the global environment</div><div class="line">    export PATH /data/busybox:/sbin:/system/sbin:/system/bin:/system/xbin</div><div class="line">    export LD_LIBRARY_PATH /system/lib</div><div class="line">    export ANDROID_BOOTLOGO 1</div><div class="line">    export ANDROID_ROOT /system</div><div class="line">    export ANDROID_ASSETS /system/app</div><div class="line">    export ANDROID_DATA /data</div><div class="line">    export EXTERNAL_STORAGE /sdcard</div><div class="line">    export HOME /   //注意这个别忘了</div><div class="line">    export BOOTCLASSPATH /system/framework/core.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/android.policy.jar:/system/framework/services.jar</div></pre></td></tr></table></figure></p>
-<p>重新打包成镜像文件<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">#cpio -i -t -F ../ramdisk.img &gt; list  //执行后你会发现生成了一个list 文件</div><div class="line">#cpio -o -H newc -O rd_ramdisk.img &lt; list  //打包生产新的镜像rd_ramdisk.img</div><div class="line">将这个镜像文件复制到 原来的目录下，使用新的镜像启动emulator </div><div class="line">#emulator -noskin -ramdisk rd_ramdisk.img</div></pre></td></tr></table></figure></p>
-<p>在android中安装busybox</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">//重新打开个终端</div><div class="line">#adb shell mkdir /data/busybox   //在虚拟机中建立文件夹busybox</div><div class="line">#adb push ../busybox /data/busybox  //写自己的busybox 所在的目录</div><div class="line">#adb shell  //进入android</div><div class="line">#cd /data/busybox  </div><div class="line">#chmod +x busybox </div><div class="line">#busybox   //应该能看到busybox的信息，否则就是哪一步有问题，好好看看。</div></pre></td></tr></table></figure>
-<h2 id="写个自己的busybox-命令-，并放到busybox中"><a href="#写个自己的busybox-命令-，并放到busybox中" class="headerlink" title="写个自己的busybox 命令 ，并放到busybox中"></a>写个自己的busybox 命令 ，并放到busybox中</h2><p>//我的busybox 版本 busybox-1.5.2  安装目录/usr/local/tool/busybox-1.5.2<br>写个自己的小程序hello.c  这个文件放到 /usr/local/tool/busybox-1.5.2/miscutils目录下，在这里编译到busybox中</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">#include &quot;busybox.h&quot;</div><div class="line">int hello_main(int argc, char **argv);</div><div class="line">int hello_main(int argc, char **argv)</div><div class="line">&#123;</div><div class="line">    printf(&quot;hello tiger\n&quot;);</div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>修改一些文件<br>1&gt;在/usr/local/tool/busybox-1.5.2/miscutils  找到 Config.in文件，在里面添加（位置放在最后吧）</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">config HELLO</div><div class="line">    bool &quot;hello&quot;</div><div class="line">    default y    //这里yes ,在menuconfig时就不用选了</div><div class="line">    help</div><div class="line">      The hello applet will print the config file with which</div><div class="line">      busybox was built.</div></pre></td></tr></table></figure>
-<p>2&gt;也是在miscutils 中找到Kbuild文件，添加（安字母顺序添加）</p>
-<p>lib-$(CONFIG_HELLO)       += hello.o               //将要添加的命令来源</p>
-<p>3&gt;到/usr/local/tool/busybox-1.5.2/include文件夹找到  applets.h</p>
-<p>USE_HELLO(APPLET(hello, _BB_DIR_BIN, _BB_SUID_NEVER)) //安字母顺序<br>这定义了命令名（hello），它在 Busybox 源代码中的函数名（hello_main），应该在哪里会为这个新命令创建链接（在这种情况中，它在 /bin 目录中），最后这个命令是否有权设置用户 id（在本例中是 no）</p>
-<p>4&gt;也是在include 文件夹中，usage.h文件（我添加到最后了）</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">#define hello_trivial_usage \</div><div class="line">       &quot;&quot;</div><div class="line">#define hello_full_usage \</div><div class="line">       &quot;Print the config file which built busybox&quot;</div></pre></td></tr></table></figure>
-<p>3.交叉工具链编译busybox</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~$ make menuconfig</div></pre></td></tr></table></figure>
-<p>配置内核，在Miscellaneous Utilities 注意看看自己的命令是不是在，并且被够选</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~$make</div></pre></td></tr></table></figure>
-<p>之后生成busybox ，在这个目录下/usr/local/tool/busybox-1.5.2 。当然还生成了其他的文件，我们只要这个。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2009/04/19/ubuntu8.10-install-jdk-6u10-linux-i586/" itemprop="url">
-                  ubuntu8.10安装jdk-6u10-linux-i586.bin
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2009-04-19T20:37:58+08:00" content="2009-04-19">
-              2009-04-19
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index">
-                    <span itemprop="name">Java</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>1、sun网站上下载jdk-6u10-linux-i586.bin；<br>2、一般默认下载到桌面；<br>3、比如安装到/usr/java目录下；<br>4、使用命令建立目录：sudo mkdir -v /sur/java；<br>5、拷贝下载的jdk-6u10-linux-i586.bin到以上建立的目录中：sudo cp -v /home/micheal/桌面/jdk-6u10- linux-i586.bin /usr/java；<br>6、进入安装目录：cd /usr/java；<br>7、赋予权限：sudo chmod u+x jdk-6u10-linux-i586.bin;<br>8、执行安装：sudo ./jdk-6u10-linux-i586.bin;<br>9、配置环境变量：<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">export JAVA_HOME=/usr/java/jdk1.6.0_10</div><div class="line">export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar</div><div class="line">export PATH=$PATH:$JAVA_HOME/bin</div></pre></td></tr></table></figure></p>
-<p>10、测试是否成功：<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~$ java -version</div><div class="line">java version &quot;1.6.0_10&quot;</div><div class="line">Java(TM) SE Runtime Environment (build 1.6.0_10-b33)</div><div class="line">Java HotSpot(TM) Client VM (build 11.0-b15, mixed mode, sharing)</div></pre></td></tr></table></figure></p>
-<p>见到这个信息就是你安装成功了！</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-    
   </section>
 
   
@@ -1105,12 +1096,12 @@ boot
                src="http://tva1.sinaimg.cn/crop.0.0.414.414.180/62d98a55jw1e6lb32mfm7j20bo0bo0to.jpg"
                alt="小弟" />
           <p class="site-author-name" itemprop="name">小弟</p>
-          <p class="site-description motion-element" itemprop="description"></p>
+          <p class="site-description motion-element" itemprop="description">纪录工作和生活</p>
         </div>
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">164</span>
+              <span class="site-state-item-count">166</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1127,7 +1118,7 @@ boot
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">113</span>
+                <span class="site-state-item-count">116</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -1202,7 +1193,7 @@ boot
   
   &copy;  2008 - 
   <span itemprop="copyrightYear">2017</span>
-  <span class="author" itemprop="copyrightHolder"> 『百作坊』 Generated by <a href="https://hexo.io">Hexo</a> & Theme by <a href="https://github.com/jixiaod/hexo-theme-next">Next</a> & Public by <a href="https://pages.github.com">Github Pages</a>.</span>
+  <span class="author" itemprop="copyrightHolder"> 『百作坊』 Generated by <a href="https://hexo.io" rel="external nofollow">Hexo</a> & Theme by <a href="https://github.com/jixiaod/hexo-theme-next" rel="external nofollow">Next</a> & Public by <a href="https://pages.github.com" rel="external nofollow">Github Pages</a>.</span>
 </div>
 
 

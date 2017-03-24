@@ -27,7 +27,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="百作坊, 百作坊博客, 百作坊Blog, 小弟, 纪刚, LNMP Stack, Web, PHP, 工作和生活, 不只眼前的苟且, 还有诗和远方" />
+  <meta name="keywords" content="百作坊, 百作坊博客, 百作坊BLOG, Linux, Nginx, PHP, Mysql, Javascript, Java, 数据库, 技术架构, 系统设计, 读书笔记" />
 
 
 
@@ -42,12 +42,15 @@
 
 
 
+<meta name="description" content="纪录工作和生活">
 <meta property="og:type" content="website">
 <meta property="og:title" content="百作坊">
 <meta property="og:url" content="http://blog.100dos.com/page/2/index.html">
 <meta property="og:site_name" content="百作坊">
+<meta property="og:description" content="纪录工作和生活">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="百作坊">
+<meta name="twitter:description" content="纪录工作和生活">
 
 
 
@@ -67,7 +70,7 @@
   <link rel="canonical" href="http://blog.100dos.com/page/2/"/>
 
 
-  <title> 百作坊 </title>
+  <title> 百作坊, 百作坊博客, 百作坊BLOG, Linux, Nginx, PHP, Mysql, Javascript, Java, 数据库, 技术架构, 系统设计, 读书笔记 - 百作坊 - 纪录工作和生活 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -203,6 +206,294 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/27/processes-and-threads/" itemprop="url">
+                  进程和线程
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-02-27T11:11:14+08:00" content="2017-02-27">
+              2017-02-27
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/底层原理/" itemprop="url" rel="index">
+                    <span itemprop="name">底层原理</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><a href="https://zh.wikipedia.org/wiki/行程" target="_blank" rel="external">进程</a>（process）是计算机中已运行程序的实体。关于进程需要知道的几点：</p>
+<ul>
+<li>进程是程序的基本执行实体。</li>
+<li>在面向线程设计的系统（如当代多数操作系统、Linux 2.6及更新的版本）中，进程本身不是基本运行单位，而是线程的容器。</li>
+<li>程序本身只是指令、数据及其组织形式的描述，进程才是程序（那些指令和数据）的真正运行实例。</li>
+<li>若干进程有可能与同一个程序相关系，且每个进程皆可以同步（循序）或异步（平行）的方式独立运行。</li>
+<li>现代计算机系统可在同一段时间内以进程的形式将多个程序加载到存储器中，并借由时间共享（或称时分复用），以在一个处理器上表现出同时（平行性）运行的感觉。</li>
+<li>同样的，使用多线程技术（多线程即每一个线程都代表一个进程内的一个独立执行上下文）的操作系统或计算机架构，同样程序的平行线程，可在多CPU主机或网络上真正同时运行（在不同的CPU上）。</li>
+<li>进程需要一些资源才能完成工作，如CPU使用时间、存储器、文件以及I/O设备，且为依序逐一进行，也就是每个CPU核心任何时间内仅能运行一项进程。</li>
+<li>进程在运行时，状态（state）会改变。进城的状态包括：<ul>
+<li>新生（new）：进程新产生中。</li>
+<li>运行（running）：正在运行。</li>
+<li>等待（waiting）：等待某事发生，例如等待用户输入完成。亦称“阻塞”（blocked）</li>
+<li>就绪（ready）：排班中，等待CPU。</li>
+<li>结束（terminated）：完成运行。</li>
+</ul>
+</li>
+<li>进程间通信（IPC Inter-process communication）:每个进程都有自己的一部分独立的系统资源，彼此是隔离的。为了能使不同的进程互相访问资源并进行协调工作，才有了进程间通信。</li>
+<li>进程控制块是操作系统能够支持多进程和提供多处理的结构。 </li>
+<li>当操作系统做进程切换时，它会执行两步操作，一是中断当前处理器中的进程，二是执行下一个进程。 不管是中断还是执行，进程控制块中的程序计数器、上下文数据和进程状态都会发生变化。</li>
+</ul>
+<p>在 PHP 中的 <a href="http://php.net/manual/zh/book.pcntl.php" target="_blank" rel="external">PCNTL</a> 扩展实现了Unix方式的进程创建，程序执行，信号处理以及进程的中断。但是只能 CLI 环境下使用，且在 Windows 平台不可用。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"></div><div class="line">$pid = pcntl_fork();</div><div class="line"><span class="comment">//父进程和子进程都会执行下面代码</span></div><div class="line"><span class="keyword">if</span> ($pid == <span class="number">-1</span>) &#123;</div><div class="line">    <span class="comment">//错误处理：创建子进程失败时返回-1.</span></div><div class="line">     <span class="keyword">die</span>(<span class="string">'could not fork'</span>);</div><div class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> ($pid) &#123;</div><div class="line">     <span class="comment">//父进程会得到子进程号，所以这里是父进程执行的逻辑</span></div><div class="line">     pcntl_wait($status); <span class="comment">//等待子进程中断，防止子进程成为僵尸进程。</span></div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">     <span class="comment">//子进程得到的$pid为0, 所以这里是子进程执行的逻辑。</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><a href="https://zh.wikipedia.org/wiki/线程" target="_blank" rel="external">线程</a>（thread）是操作系统能够进行运算调度的最小单位。</p>
+<ul>
+<li>它被包含在进程之中，是进程中的实际运作单位。</li>
+<li>一条线程指的是进程中一个单一顺序的控制流，一个进程中可以并发多个线程，每条线程并行执行不同的任务。</li>
+<li>在Unix System V及SunOS中也被称为轻量进程（lightweight processes），但轻量进程更多指内核线程（kernel thread），而把用户线程（user thread）称为线程。</li>
+<li>线程是独立调度和分派的基本单位。线程可以操作系统内核调度的内核线程，如Win32线程；由用户进程自行调度的用户线程，如Linux平台的POSIX Thread；或者由内核与用户进程，如Windows 7的线程，进行混合调度。</li>
+<li>同一进程中的多条线程将共享该进程中的全部系统资源，如虚拟地址空间，文件描述符和信号处理等等。但同一进程中的多个线程有各自的调用栈（call stack），自己的寄存器环境（register context），自己的线程本地存储（thread-local storage）。</li>
+<li>一个进程可以有很多线程，每条线程并行执行不同的任务。</li>
+<li>线程的四种基本状态：<ul>
+<li>产生（spawn）</li>
+<li>中断（block）</li>
+<li>非中断（unblock）</li>
+<li>结束（finish）</li>
+</ul>
+</li>
+</ul>
+<p>在PHP中有 <a href="http://php.net/manual/zh/intro.pthreads.php" target="_blank" rel="external">pthreads</a> 多线程扩展，实现了面向对象的 多线程 API。可以创建、读取、写入以及执行多线程应用，并可以在多个线程之间进行同步控制。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">workerThread</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($num)</span></span>&#123;</div><div class="line">        <span class="keyword">$this</span>-&gt;num = $num;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">run</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">while</span>(<span class="keyword">true</span>)&#123;</div><div class="line">            <span class="keyword">echo</span> <span class="keyword">$this</span>-&gt;num . <span class="string">"\n"</span>;</div><div class="line">            sleep(<span class="number">1</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">for</span> ($i=<span class="number">0</span>; $i &lt; <span class="number">50</span>; $i++)&#123;</div><div class="line">    $workers[$i] = <span class="keyword">new</span> workerThread($i);</div><div class="line">    $workers[$i]-&gt;start();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>线程较之进程，其优势在于一个快，不管是创建新的线程还是终止一个线程；或者是线程间的切换还是线程间共享数据或通信，其速度与进程相比都有较大的优势。进程和线程区别：</p>
+<ul>
+<li>线程是在一个进程内的，可以共享内存变量实现线程间通信。<ul>
+<li>而进程间通信是要借助于<a href="https://zh.wikipedia.org/wiki/行程間通訊" target="_blank" rel="external">进程间通信（IPC）</a>，文件、管道、消息队列等等。</li>
+</ul>
+</li>
+<li>线程比进程更轻量级，开大量进程会比线程消耗更多系统资源。<ul>
+<li>比如 PHP-FPM 模块。通常情况下，一个PHP-FPM 进程占用的内存为10M左右，假如支持10000并发，就需要100G的内存。一台物理机的资源是有限的，就那么多CPU和内存，决定了单独依靠 PHP-FPM 不可能开发出单机百万级并发的系统。</li>
+</ul>
+</li>
+</ul>
+<p>我们用多进程和多线程的很大因素是为了解决并发问题，先理清一个概念并发和并行是不是一个意思？</p>
+<blockquote>
+<p>并发和并行的区别就是一个处理器同时处理多个任务和多个处理器或者是多核的处理器同时处理多个不同的任务。 前者是逻辑上的同时发生（simultaneous），而后者是物理上的同时发生。</p>
+</blockquote>
+<p>由于进程的性能问题，我们觉得并发使用的更多的线程，而不是进程。在处理网络请求时，多线程模型下，可以采用一个独立线程接受请求然后派发到各个 worker 线程的方式。但是使用多线程也存在一些问题：</p>
+<ul>
+<li>线程读写变量存在同步问题，需要加锁</li>
+<li>锁的粒度过大会有性能问题，可能会导致只有1个线程在运行，其他线程都在等待锁。这样就不是并行了</li>
+<li>同时使用多个锁，逻辑复杂，一旦某个锁没被正确释放，可能会发生线程死锁</li>
+<li>某个线程发生致命错误会导致整个进程崩溃</li>
+</ul>
+<p>多进程方式更加稳定，另外利用进程间通信（IPC）也可以实现数据共享。至于为什么进程想对安全稳定，主要是依靠进程<a href="https://zh.wikipedia.org/zh-cn/沙盒_(電腦安全" target="_blank" rel="external">沙箱</a>)，可以查看这篇文章<a href="http://zkread.com/article/584903.html" target="_blank" rel="external">《为什么浏览器采用多进程模型》</a>。</p>
+<ul>
+<li>共享内存，这种方式和线程间读写变量是一样的，需要加锁，会有同步、死锁问题。</li>
+<li>消息队列，可以采用多个子进程抢队列模式，性能很好</li>
+<li>PIPE，UnixSock，TCP，UDP。可以使用read/write来传递数据，TCP/UDP方式使用socket来通信，子进程可以分布运行</li>
+</ul>
+<p>Swoole 框架的多进程和多线程的设计实用就非常合理，在需要稳定的时候使用进程，在需要效率的时候使用线程。盗个图</p>
+<p><img src="/images/swoole-process-threads.png" alt=""></p>
+<p>Swoole 中 worker/task 进程都是由 Manager 进程 Fork 并管理的。</p>
+<ul>
+<li>子进程结束运行时，Manager 进程负责回收此子进程，避免成为僵尸进程。并创建新的子进程</li>
+<li>服务器关闭时，Manager 进程将发送信号给所有子进程，通知子进程关闭服务</li>
+<li>服务器 reload 时，Manager进程会逐个关闭/重启子进程</li>
+</ul>
+<p>Swoole 提供了完善的进程管理机制，当Worker进程异常退出，如发生PHP的致命错误、被其他程序误杀，或达到 max_request 次数之后正常退出。主进程会重新拉起新的 Worker 进程。 Worker 进程内可以像普通的 apache+php 或者 php-fpm 中写代码。不需要像 Node.js 那样写异步回调的代码。</p>
+<p>Swoole 的Master主进程是一个多线程的程序，其中一组很重要的是Reactor线程。Swoole 在接收到一个请求连接之后，将这个链接分配给一个固定的Reactor线程，并由这个线程来监听socket。在socket可读时读取数据，并进行协议解析，将请求投递到Worker进程。在socket可写时将数据发送给TCP客户端。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/09/nearby-jobs/" itemprop="url">
+                  8w+拉勾网招聘数据帮你查询 - 家附近的工作
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-02-09T14:25:08+08:00" content="2017-02-09">
+              2017-02-09
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/流程-工具/" itemprop="url" rel="index">
+                    <span itemprop="name">流程&工具</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>从<a href="https://www.lagou.com/" target="_blank" rel="external">拉勾网</a>抓取的 86341 条招聘企业数据，企业地址匹配 LBS 经纬度取自<a href="http://lbs.amap.com/console/show/picker" target="_blank" rel="external">高德开放平台API</a>，成功匹配到 83090 条经纬度数据。没有做详细做企业主正在招聘岗位的数据，所以很大可能情况会遇到附近的公司没有招聘信息的情况，但是某些方面还是能大概了解自己附近有什么值得考虑的公司，有一定参考价值。</p>
+<h2 id="查询附近的工作"><a href="#查询附近的工作" class="headerlink" title="查询附近的工作"></a>查询附近的工作</h2><p>Github地址: <a href="https://github.com/jixiaod/NearbyJobs" target="_blank" rel="external">https://github.com/jixiaod/NearbyJobs</a></p>
+<h3 id="下载-mongo-数据包"><a href="#下载-mongo-数据包" class="headerlink" title="下载 mongo 数据包"></a>下载 mongo 数据包</h3><p><a href="https://github.com/jixiaod/NearbyJobs/blob/master/jobs.tar.gz" target="_blank" rel="external">https://github.com/jixiaod/NearbyJobs/blob/master/jobs.tar.gz</a></p>
+<h3 id="导入-mongo-数据"><a href="#导入-mongo-数据" class="headerlink" title="导入 mongo 数据"></a>导入 mongo 数据</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~# tar zxf jobs.tar.gz</div><div class="line">~# mongoimport -d jobs -c company --upsert jobs.json</div></pre></td></tr></table></figure>
+<h3 id="geo-查询"><a href="#geo-查询" class="headerlink" title="geo 查询"></a>geo 查询</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">// 进入mongodb，我的是默认环境</div><div class="line">~# mongo</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&gt; use jobs</div><div class="line">// 创建索引</div><div class="line">&gt; db.company.createIndex(&#123; &quot;loc&quot;: &quot;2d&quot; &#125;)</div><div class="line">// 查询附近的工作，自己的坐标可以从[高德开放平台API]获得。</div><div class="line">&gt; db.company.find(&#123;&quot;loc&quot;:&#123;&quot;$near&quot;:[116.673886,39.943799]&#125;&#125;,&#123;&quot;short_name&quot;:1, &quot;address&quot;:1&#125;)</div></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/jixiaod/NearbyJobs/master/nearby-jobs.png" alt=""></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
     
       
 
@@ -1187,266 +1478,6 @@
   </article>
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/10/14/centsos6.6-mysql5.7-install/" itemprop="url">
-                  CentOS 6.6 安装 mysql 5.7
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-10-14T12:05:45+08:00" content="2016-10-14">
-              2016-10-14
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/linux/" itemprop="url" rel="index">
-                    <span itemprop="name">linux</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>在 CentOS 的 yum 默认安装的是 mysql 5.5 版本，由于开发需要 5.6 以上版本，索性就装个 5.7。</p>
-<p>到官网下载对应的 rpm buddle 包，CentOS 6 选择选择如下对应的版本</p>
-<blockquote>
-<p><em>Red Hat Enterprise Linux 6 / Oracle Linux 6 (x86, 64-bit), RPM Bundle    5.7.15    440.2M</em><br><em>(mysql-5.7.15-1.el6.x86_64.rpm-bundle.tar)</em></p>
-</blockquote>
-<p>安装前，如果已经安装了 Mysql 5.5， 需要卸载旧版的 Mysql。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@v194 ~]# rpm -qa |grep mysql</div><div class="line">mysql-libs-5.1.73-7.el6.x86_64</div><div class="line">mysql-community-libs-5.6.33-2.el6.x86_64</div><div class="line">mysql-5.1.73-7.el6.x86_64</div><div class="line">mysql-community-server-5.6.28-2.el6.x86_64</div><div class="line"></div><div class="line">[root@v194 ~]# rpm -e --nodeps mysql-libs-5.1.73-7.el6.x86_64</div><div class="line">[root@v194 ~]# rpm -e --nodeps mysql-community-libs-5.6.33-2.el6.x86_64 mysql-5.1.73-7.el6.x86_64 mysql-community-server-5.6.28-2.el6.x86_64</div></pre></td></tr></table></figure>
-<p>删除旧的Mysql目录，不删会有问题。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@v194 ~]# ls  -l  /var/lib|grep mysql</div><div class="line">drwxr-xr-x  5 mysql    mysql    4096 11月 17 2015 mysql</div><div class="line">[root@v194 ~]# rm -rf /var/lib/mysql</div></pre></td></tr></table></figure>
-<p>解压安装下载的 bundle 包。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~# tar xf mysql-5.7.15-1.el6.x86_64.rpm-bundle.tar</div><div class="line">~# cd mysql-5.7.15-1</div></pre></td></tr></table></figure>
-<p><strong>按照common-&gt;libs-&gt;client-&gt;server 的顺序安装</strong>。</p>
-<p>[root@v194 ~]# rpm -ivh mysql-community-common-5.7.15-1.el6.x86_64.rpm<br>[root@v194 ~]# rpm -ivh mysql-community-libs-5.7.15-1.el6.x86_64.rpm<br>[root@v194 ~]# rpm -ivh mysql-community-client-5.7.15-1.el6.x86_64.rpm<br>[root@v194 ~]# rpm -ivh mysql-community-server-5.7.15-1.el6.x86_64.rpm</p>
-<p>启动 mysqld</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@v194 ~]# service mysqld start</div></pre></td></tr></table></figure>
-<p>找到临时登录密码</p>
-<p>Mysql 5.7 的密码不在是默认为空，而是在安装的log中。查找文件内容中的临时密码，密码为 yQO64H%Khrts</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@v194 ~]# vim /var/log/mysqld.log</div><div class="line">……</div><div class="line">2016-10-11T07:03:47.910712Z 1 [Note] A temporary password is generated for root@localhost: yQO64H%Khrts</div><div class="line">……</div></pre></td></tr></table></figure>
-<p>登录 Mysql 客户端<br>[root@v194 ~]# /usr/bin/mysql -uroot -pyQO64H%Khrts -h127.0.0.1 -P3306</p>
-<p>Mysql 5.7 必须要修改root 密码，<strong>并且 root 密码必须包含大写字母、数字和特殊字符</strong>。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">mysql&gt; alter user &apos;root&apos;@&apos;localhost&apos; identified by &apos;123abc!@#testABC&apos;;</div><div class="line">Query OK, 0 rows affected (0.00 sec)</div></pre></td></tr></table></figure>
-<p>…………</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/09/30/Lambdas-and-Closures-in-PHP/" itemprop="url">
-                  PHP 中的 Lambdas 和 Closures
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-09-30T15:14:55+08:00" content="2016-09-30">
-              2016-09-30
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/PHP/" itemprop="url" rel="index">
-                    <span itemprop="name">PHP</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>PHP 5.3 开始，添加了 Lambdas（匿名函数）和 CLosures（闭包）这俩个新的特性。函数式编程也越来越能够得到程序员的追捧。其他语言，比如 Javascript 或 Ruby 中也经常能看到匿名函数的实现。</p>
-<p>那么什，么是 Lambda 函数？</p>
-<p>一个匿名函数可以简单理解为一个没有被定义的函数。</p>
-<p>没有名字函数，允许临时创建一个没有指定命名的函数。最经常用作回调函数（callback）参数的值。当然，也有其它应用的情况。</p>
-<p>比如我们定义一个正式的函数定义，可能是下面这个样子：</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">greeting</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">     <span class="keyword">return</span> <span class="string">"Hello world."</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// call function</span></div><div class="line"><span class="keyword">echo</span> greeting();</div></pre></td></tr></table></figure>
-<p>一个 lambda 函数</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span><span class="params">()</span> </span>&#123;</div><div class="line">     <span class="keyword">return</span> <span class="string">"Hello world."</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>因为 lambda 函数没有命名，不能像正式的函数那样调用。需要把它赋值给一个变量。</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><div class="line">$greeting = <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>&#123;</div><div class="line">     <span class="keyword">return</span> <span class="string">"Hello world."</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// call function</span></div><div class="line"><span class="keyword">echo</span> $greeting();</div></pre></td></tr></table></figure>
-<p>或者把 lambda 函数作为另一个函数的参数。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">function shout ($message)</div><div class="line">&#123;</div><div class="line">     echo $message();</div><div class="line">&#125;</div><div class="line"></div><div class="line">shout(function()&#123;</div><div class="line">     return ‘Hello world.&apos;;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<p>为什么要使用 lambda 函数？</p>
-<p>通常使用匿名函数可以让我们摆脱那些在程序中只会调用一次的函数。很多时候，我们需要定义一个函数来执行一项任务，但并不意味着我们需要一直需要该函数，也不需要它之后还能被调用。这种时候，我们就可以使用匿名函数。</p>
-<p>在函数式编程中，lambdas 被称为一流的函数，因为它们能够：</p>
-<ul>
-<li>作为参数来传递。</li>
-<li>可在运行过程中创建并使用。</li>
-<li>从函数返回。</li>
-<li>分配给变量。</li>
-</ul>
-<p>可以使用内置函数 <code>create_function</code> ，作用是一样的。</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><div class="line">$greeting = create_function(<span class="string">''</span>, <span class="string">'echo "Hello world."'</span>);</div><div class="line"></div><div class="line">$greeting();</div></pre></td></tr></table></figure>
-<p>但是 <code>create_function</code> 的语法很繁琐。一方面，该代码是在一个大引证字符串中。因此，不要期望从 PHP 编辑器获得帮助，而且不要忘了尽量避免使用该代码串。此外，<code>create_function</code> 的代码是在执行时进行编译，而且结果函数无法被缓存。</p>
-<p>什么是 Closure ？</p>
-<p>如果 Lambdas 是没有名字的函数，那么 Closures 仅比 Lambdas 多一个上下文。就是说，Closure 是个匿名函数，在其创建时，将来自创建该函数的代码范围内得变量值附加到它本身。</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="comment">// Create a user</span></div><div class="line">$user = <span class="string">"Philip"</span>;</div><div class="line"></div><div class="line"><span class="comment">// Create a Closure</span></div><div class="line">$greeting = <span class="function"><span class="keyword">function</span><span class="params">()</span> <span class="title">use</span> <span class="params">($user)</span> </span>&#123;</div><div class="line">     <span class="keyword">echo</span> <span class="string">"Hello $user"</span>;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">// Greet the user</span></div><div class="line">$greeting(); <span class="comment">// Returns "Hello Philip"</span></div></pre></td></tr></table></figure>
-<p>从上面的例子能看到，在 Closure 定义中，通过 <code>use</code> 语句传递了 $user 变量, 所以 Closure 内部能够访问到 <code>$user</code> 。但是如果在 Closure 作用域内修改变量 <code>$user</code> 的值，并不会修改父作用域的 <code>$user</code> 值。如果希望修改父作用域的 <code>$user</code>，可以传递变量的引用 <code>&amp;$user</code> 给 Closure   。</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="comment">// Set counter</span></div><div class="line">$i = <span class="number">0</span>;</div><div class="line"></div><div class="line"><span class="comment">// Increase counter within the scope</span></div><div class="line"><span class="comment">// of the function</span></div><div class="line">$closure = <span class="function"><span class="keyword">function</span> <span class="params">()</span> <span class="title">use</span> <span class="params">($i)</span></span>&#123; $i++; &#125;;</div><div class="line"></div><div class="line"><span class="comment">// Run the function</span></div><div class="line">$closure();</div><div class="line"><span class="comment">// The global count hasn't changed</span></div><div class="line"><span class="keyword">echo</span> $i; <span class="comment">// Returns 0</span></div><div class="line"></div><div class="line"><span class="comment">// Reset count</span></div><div class="line">$i = <span class="number">0</span>;</div><div class="line"></div><div class="line"><span class="comment">// Increase counter within the scope</span></div><div class="line"><span class="comment">// of the function but pass it as a reference</span></div><div class="line">$closure = <span class="function"><span class="keyword">function</span> <span class="params">()</span> <span class="title">use</span> <span class="params">(&amp;$i)</span></span>&#123; $i++; &#125;;</div><div class="line"></div><div class="line"><span class="comment">// Run the function</span></div><div class="line">$closure();</div><div class="line"><span class="comment">// The global count has increased</span></div><div class="line"><span class="keyword">echo</span> $i; <span class="comment">// Returns 1</span></div></pre></td></tr></table></figure>
-<p>Closure 在作为回调函数的参数时，非常有用，比如 <code>array_map</code>、<code>array_filter</code>、<code>array_reduce</code>、<code>array_walk</code>等。</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="comment">// An array of names</span></div><div class="line">$users = <span class="keyword">array</span>(<span class="string">"John"</span>, <span class="string">"Jane"</span>, <span class="string">"Sally"</span>, <span class="string">"Philip"</span>);</div><div class="line"></div><div class="line"><span class="comment">// Pass the array to array_walk</span></div><div class="line">array_walk($users, <span class="function"><span class="keyword">function</span> <span class="params">($name)</span> </span>&#123;</div><div class="line">  <span class="keyword">echo</span> <span class="string">"Hello $name&lt;br&gt;"</span>;</div><div class="line">&#125;);</div><div class="line"><span class="comment">// Returns</span></div><div class="line"><span class="comment">// -&gt; Hello John</span></div><div class="line"><span class="comment">// -&gt; Hello Jane</span></div><div class="line"><span class="comment">// -&gt; ..</span></div></pre></td></tr></table></figure>
-<p>同样的，可通过 <code>use</code> 语句把父作用变量传递到 Closure 中。</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="comment">// Set a multiplier</span></div><div class="line">$multiplier = <span class="number">3</span>;</div><div class="line"></div><div class="line"><span class="comment">// Create a list of numbers</span></div><div class="line">$numbers = <span class="keyword">array</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>);</div><div class="line"></div><div class="line"><span class="comment">// Use array_walk to iterate</span></div><div class="line"><span class="comment">// through the list and multiply</span></div><div class="line">array_walk($numbers, <span class="function"><span class="keyword">function</span><span class="params">($number)</span> <span class="title">use</span><span class="params">($multiplier)</span></span>&#123;</div><div class="line">  <span class="keyword">echo</span> $number * $multiplier;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<p>在目前流行的 laravel 框架中，能看到如下处理路由的方法。</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><div class="line">Route::get(<span class="string">'user/(:any)'</span>, <span class="function"><span class="keyword">function</span><span class="params">($name)</span></span>&#123;</div><div class="line">  <span class="keyword">return</span> <span class="string">"Hello "</span> . $name;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<p>有没有觉得非常的简洁和清晰。利用这俩个新的特性，可以尝试重构之前的老代码，使得代码更简洁、更直观、更容易理解。也可以进一步学习函数式编程，感受新的开发模式和打破原有编码习惯。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-    
   </section>
 
   
@@ -1483,12 +1514,12 @@
                src="http://tva1.sinaimg.cn/crop.0.0.414.414.180/62d98a55jw1e6lb32mfm7j20bo0bo0to.jpg"
                alt="小弟" />
           <p class="site-author-name" itemprop="name">小弟</p>
-          <p class="site-description motion-element" itemprop="description"></p>
+          <p class="site-description motion-element" itemprop="description">纪录工作和生活</p>
         </div>
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">164</span>
+              <span class="site-state-item-count">166</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1505,7 +1536,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">113</span>
+                <span class="site-state-item-count">116</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -1580,7 +1611,7 @@
   
   &copy;  2008 - 
   <span itemprop="copyrightYear">2017</span>
-  <span class="author" itemprop="copyrightHolder"> 『百作坊』 Generated by <a href="https://hexo.io">Hexo</a> & Theme by <a href="https://github.com/jixiaod/hexo-theme-next">Next</a> & Public by <a href="https://pages.github.com">Github Pages</a>.</span>
+  <span class="author" itemprop="copyrightHolder"> 『百作坊』 Generated by <a href="https://hexo.io" rel="external nofollow">Hexo</a> & Theme by <a href="https://github.com/jixiaod/hexo-theme-next" rel="external nofollow">Next</a> & Public by <a href="https://pages.github.com" rel="external nofollow">Github Pages</a>.</span>
 </div>
 
 

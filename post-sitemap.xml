@@ -7,6 +7,38 @@
     </url>
 
     <url>
+        <loc>http://blog.100dos.com/2016/06/15/git-flow-and-code-review/</loc>
+        <lastmod>2017-03-24T08:45:37.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>http://blog.100dos.com/2016/04/11/startup-company-and-investment/</loc>
+        <lastmod>2017-03-24T08:44:34.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>http://blog.100dos.com/2017/03/24/publish-hexo-post-on-github-pages-by-travis-ci/</loc>
+        <lastmod>2017-03-24T07:27:35.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>http://blog.100dos.com/2017/03/24/copy-and-chage-on-write-with-php/</loc>
+        <lastmod>2017-03-24T04:09:10.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>http://blog.100dos.com/2016/07/16/11-important-database-designing-rules-which-I-follow/</loc>
         <lastmod>2017-03-23T03:19:32.000Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -47,6 +79,14 @@
     </url>
 
     <url>
+        <loc>http://blog.100dos.com/2015/10/30/about-javascript-block-scope-let-keyword/</loc>
+        <lastmod>2017-03-14T11:26:40.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>http://blog.100dos.com/2010/02/12/about-Three-Kingdoms-thought/</loc>
         <lastmod>2017-03-14T11:26:40.000Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -56,14 +96,6 @@
 
     <url>
         <loc>http://blog.100dos.com/2010/02/05/a-week-in-shenyang-work/</loc>
-        <lastmod>2017-03-14T11:26:40.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>http://blog.100dos.com/2015/10/30/about-javascript-block-scope-let-keyword/</loc>
         <lastmod>2017-03-14T11:26:40.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -119,7 +151,7 @@
     </url>
 
     <url>
-        <loc>http://blog.100dos.com/2015/11/06/javascript-arrow-functions/</loc>
+        <loc>http://blog.100dos.com/2010/08/06/javascript-function-inheritance-define/</loc>
         <lastmod>2017-03-14T11:26:40.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -127,7 +159,7 @@
     </url>
 
     <url>
-        <loc>http://blog.100dos.com/2010/08/06/javascript-function-inheritance-define/</loc>
+        <loc>http://blog.100dos.com/2015/11/06/javascript-arrow-functions/</loc>
         <lastmod>2017-03-14T11:26:40.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -167,7 +199,7 @@
     </url>
 
     <url>
-        <loc>http://blog.100dos.com/2016/09/02/reading-note-brief-history-of-humankind/</loc>
+        <loc>http://blog.100dos.com/2015/11/13/reading-note-series-university-road/</loc>
         <lastmod>2017-03-14T11:26:40.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -175,7 +207,7 @@
     </url>
 
     <url>
-        <loc>http://blog.100dos.com/2015/11/13/reading-note-series-university-road/</loc>
+        <loc>http://blog.100dos.com/2016/09/02/reading-note-brief-history-of-humankind/</loc>
         <lastmod>2017-03-14T11:26:40.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -223,7 +255,7 @@
     </url>
 
     <url>
-        <loc>http://blog.100dos.com/2016/09/25/understanding-select-poll-epoll-io-mutiplexing/</loc>
+        <loc>http://blog.100dos.com/2017/03/14/understand-aclocal-autoconf-automake-autoheader-configure/</loc>
         <lastmod>2017-03-14T11:26:40.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -231,7 +263,7 @@
     </url>
 
     <url>
-        <loc>http://blog.100dos.com/2017/03/14/understand-aclocal-autoconf-automake-autoheader-configure/</loc>
+        <loc>http://blog.100dos.com/2016/09/25/understanding-select-poll-epoll-io-mutiplexing/</loc>
         <lastmod>2017-03-14T11:26:40.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -311,6 +343,14 @@
     </url>
 
     <url>
+        <loc>http://blog.100dos.com/2010/01/03/add-external-jar-dependency/</loc>
+        <lastmod>2017-03-14T09:50:33.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>http://blog.100dos.com/2009/02/28/about-work-in-the-future/</loc>
         <lastmod>2017-03-14T09:50:33.000Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -320,14 +360,6 @@
 
     <url>
         <loc>http://blog.100dos.com/2009/04/26/add-busybox-to-android/</loc>
-        <lastmod>2017-03-14T09:50:33.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>http://blog.100dos.com/2010/01/03/add-external-jar-dependency/</loc>
         <lastmod>2017-03-14T09:50:33.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -375,7 +407,7 @@
     </url>
 
     <url>
-        <loc>http://blog.100dos.com/2016/08/29/debug-in-php/</loc>
+        <loc>http://blog.100dos.com/2010/01/01/create-jar-package/</loc>
         <lastmod>2017-03-14T09:50:33.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -383,7 +415,7 @@
     </url>
 
     <url>
-        <loc>http://blog.100dos.com/2010/01/01/create-jar-package/</loc>
+        <loc>http://blog.100dos.com/2016/08/29/debug-in-php/</loc>
         <lastmod>2017-03-14T09:50:33.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -407,7 +439,7 @@
     </url>
 
     <url>
-        <loc>http://blog.100dos.com/2010/01/01/enables-applet-to-operate-the-local-file/</loc>
+        <loc>http://blog.100dos.com/2009/02/28/excerpt-about-work/</loc>
         <lastmod>2017-03-14T09:50:33.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -415,7 +447,7 @@
     </url>
 
     <url>
-        <loc>http://blog.100dos.com/2009/02/28/excerpt-about-work/</loc>
+        <loc>http://blog.100dos.com/2010/01/01/enables-applet-to-operate-the-local-file/</loc>
         <lastmod>2017-03-14T09:50:33.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -543,14 +575,6 @@
     </url>
 
     <url>
-        <loc>http://blog.100dos.com/2014/11/05/mysql-index-and-query-optimization/</loc>
-        <lastmod>2017-03-14T09:50:33.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
         <loc>http://blog.100dos.com/2010/07/18/php-session/</loc>
         <lastmod>2017-03-14T09:50:33.000Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -559,7 +583,7 @@
     </url>
 
     <url>
-        <loc>http://blog.100dos.com/2014/07/02/push-your-kindle-the-zhihu-daily/</loc>
+        <loc>http://blog.100dos.com/2014/11/05/mysql-index-and-query-optimization/</loc>
         <lastmod>2017-03-14T09:50:33.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -575,7 +599,7 @@
     </url>
 
     <url>
-        <loc>http://blog.100dos.com/2015/04/10/relearning-php-1-why-we-always-ignor-trailer-php-tags/</loc>
+        <loc>http://blog.100dos.com/2014/07/02/push-your-kindle-the-zhihu-daily/</loc>
         <lastmod>2017-03-14T09:50:33.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -583,7 +607,7 @@
     </url>
 
     <url>
-        <loc>http://blog.100dos.com/2009/09/12/sudo-apt-get-update-get-warning-problem/</loc>
+        <loc>http://blog.100dos.com/2015/04/10/relearning-php-1-why-we-always-ignor-trailer-php-tags/</loc>
         <lastmod>2017-03-14T09:50:33.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -599,7 +623,7 @@
     </url>
 
     <url>
-        <loc>http://blog.100dos.com/2010/02/07/ubuntu-config-eclipse-icon/</loc>
+        <loc>http://blog.100dos.com/2009/09/12/sudo-apt-get-update-get-warning-problem/</loc>
         <lastmod>2017-03-14T09:50:33.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -608,6 +632,14 @@
 
     <url>
         <loc>http://blog.100dos.com/2009/09/12/ubuntu-9.04-install-sun-java6-jdk-and-eclipse/</loc>
+        <lastmod>2017-03-14T09:50:33.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>http://blog.100dos.com/2010/02/07/ubuntu-config-eclipse-icon/</loc>
         <lastmod>2017-03-14T09:50:33.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -679,14 +711,6 @@
     </url>
 
     <url>
-        <loc>http://blog.100dos.com/2015/07/03/1st-anniversary-for-moji/</loc>
-        <lastmod>2017-03-14T02:25:20.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
         <loc>http://blog.100dos.com/2009/12/23/2009-12-22/</loc>
         <lastmod>2017-03-14T02:25:20.000Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -695,7 +719,7 @@
     </url>
 
     <url>
-        <loc>http://blog.100dos.com/2010/10/11/Robynn-and-Kendy/</loc>
+        <loc>http://blog.100dos.com/2015/07/03/1st-anniversary-for-moji/</loc>
         <lastmod>2017-03-14T02:25:20.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -704,6 +728,14 @@
 
     <url>
         <loc>http://blog.100dos.com/2016/09/30/Lambdas-and-Closures-in-PHP/</loc>
+        <lastmod>2017-03-14T02:25:20.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>http://blog.100dos.com/2010/10/11/Robynn-and-Kendy/</loc>
         <lastmod>2017-03-14T02:25:20.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -735,6 +767,14 @@
     </url>
 
     <url>
+        <loc>http://blog.100dos.com/2014/05/30/blalba-about-redirect/</loc>
+        <lastmod>2017-03-14T02:25:20.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>http://blog.100dos.com/2010/08/05/apache-configuration-virtual-directory/</loc>
         <lastmod>2017-03-14T02:25:20.000Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -751,14 +791,6 @@
     </url>
 
     <url>
-        <loc>http://blog.100dos.com/2014/05/30/blalba-about-redirect/</loc>
-        <lastmod>2017-03-14T02:25:20.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
         <loc>http://blog.100dos.com/2016/05/15/build-blog-sys-by-hexo-on-github-pages/</loc>
         <lastmod>2017-03-14T02:25:20.000Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -767,7 +799,7 @@
     </url>
 
     <url>
-        <loc>http://blog.100dos.com/2015/06/04/build-proprietary-composer-package-services-with-packagist/</loc>
+        <loc>http://blog.100dos.com/2009/02/28/clothes-with-map/</loc>
         <lastmod>2017-03-14T02:25:20.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -775,7 +807,7 @@
     </url>
 
     <url>
-        <loc>http://blog.100dos.com/2009/02/28/clothes-with-map/</loc>
+        <loc>http://blog.100dos.com/2015/06/04/build-proprietary-composer-package-services-with-packagist/</loc>
         <lastmod>2017-03-14T02:25:20.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -831,7 +863,7 @@
     </url>
 
     <url>
-        <loc>http://blog.100dos.com/2016/06/15/git-flow-and-code-review/</loc>
+        <loc>http://blog.100dos.com/2009/01/04/hate-the-QQ5/</loc>
         <lastmod>2017-03-14T02:25:20.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -855,14 +887,6 @@
     </url>
 
     <url>
-        <loc>http://blog.100dos.com/2009/01/04/hate-the-QQ5/</loc>
-        <lastmod>2017-03-14T02:25:20.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
         <loc>http://blog.100dos.com/2009/03/01/have-nothing-to-say/</loc>
         <lastmod>2017-03-14T02:25:20.000Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -879,7 +903,7 @@
     </url>
 
     <url>
-        <loc>http://blog.100dos.com/2008/10/25/hisaxifuli/</loc>
+        <loc>http://blog.100dos.com/2015/12/07/home-sick/</loc>
         <lastmod>2017-03-14T02:25:20.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -887,7 +911,7 @@
     </url>
 
     <url>
-        <loc>http://blog.100dos.com/2015/12/07/home-sick/</loc>
+        <loc>http://blog.100dos.com/2008/10/25/hisaxifuli/</loc>
         <lastmod>2017-03-14T02:25:20.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -951,7 +975,7 @@
     </url>
 
     <url>
-        <loc>http://blog.100dos.com/2016/08/01/kong-cluster-introduction/</loc>
+        <loc>http://blog.100dos.com/2016/08/01/kong-cluster-configuration/</loc>
         <lastmod>2017-03-14T02:25:20.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -959,7 +983,7 @@
     </url>
 
     <url>
-        <loc>http://blog.100dos.com/2016/08/01/kong-cluster-configuration/</loc>
+        <loc>http://blog.100dos.com/2010/12/27/lasy-guy/</loc>
         <lastmod>2017-03-14T02:25:20.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -983,7 +1007,7 @@
     </url>
 
     <url>
-        <loc>http://blog.100dos.com/2010/12/27/lasy-guy/</loc>
+        <loc>http://blog.100dos.com/2016/08/01/kong-cluster-introduction/</loc>
         <lastmod>2017-03-14T02:25:20.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -1023,14 +1047,6 @@
     </url>
 
     <url>
-        <loc>http://blog.100dos.com/2009/10/02/my-paradise/</loc>
-        <lastmod>2017-03-14T02:25:20.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
         <loc>http://blog.100dos.com/2016/08/08/my-resume-zh/</loc>
         <lastmod>2017-03-14T02:25:20.000Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -1047,7 +1063,15 @@
     </url>
 
     <url>
-        <loc>http://blog.100dos.com/2016/02/28/php-date-to-lunar-extension-development/</loc>
+        <loc>http://blog.100dos.com/2009/10/02/my-paradise/</loc>
+        <lastmod>2017-03-14T02:25:20.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>http://blog.100dos.com/2009/11/05/plan/</loc>
         <lastmod>2017-03-14T02:25:20.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -1063,7 +1087,7 @@
     </url>
 
     <url>
-        <loc>http://blog.100dos.com/2009/11/05/plan/</loc>
+        <loc>http://blog.100dos.com/2016/02/28/php-date-to-lunar-extension-development/</loc>
         <lastmod>2017-03-14T02:25:20.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -1143,14 +1167,6 @@
     </url>
 
     <url>
-        <loc>http://blog.100dos.com/2010/10/06/starry-sky/</loc>
-        <lastmod>2017-03-14T02:25:20.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
         <loc>http://blog.100dos.com/2012/07/09/start-in-mac-air/</loc>
         <lastmod>2017-03-14T02:25:20.000Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -1159,7 +1175,7 @@
     </url>
 
     <url>
-        <loc>http://blog.100dos.com/2016/04/11/startup-company-and-investment/</loc>
+        <loc>http://blog.100dos.com/2010/10/06/starry-sky/</loc>
         <lastmod>2017-03-14T02:25:20.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -1191,14 +1207,6 @@
     </url>
 
     <url>
-        <loc>http://blog.100dos.com/2009/02/28/tao-can-steal/</loc>
-        <lastmod>2017-03-14T02:25:20.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
         <loc>http://blog.100dos.com/2009/09/05/the-first-day-at-zhongshan/</loc>
         <lastmod>2017-03-14T02:25:20.000Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -1223,6 +1231,14 @@
     </url>
 
     <url>
+        <loc>http://blog.100dos.com/2009/02/28/tao-can-steal/</loc>
+        <lastmod>2017-03-14T02:25:20.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>http://blog.100dos.com/2009/04/04/the-last-letter-to-you/</loc>
         <lastmod>2017-03-14T02:25:20.000Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -1231,23 +1247,15 @@
     </url>
 
     <url>
-        <loc>http://blog.100dos.com/2009/02/28/the-love-cannot-tell/</loc>
-        <lastmod>2017-03-14T02:25:20.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>http://blog.100dos.com/2009/01/03/the-love-that-cannot-stop/</loc>
-        <lastmod>2017-03-14T02:25:20.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
         <loc>http://blog.100dos.com/2010/10/08/the-most-important/</loc>
+        <lastmod>2017-03-14T02:25:20.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>http://blog.100dos.com/2009/02/28/the-love-cannot-tell/</loc>
         <lastmod>2017-03-14T02:25:20.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -1271,7 +1279,7 @@
     </url>
 
     <url>
-        <loc>http://blog.100dos.com/2015/12/30/thrift-a-cross-language-rpc-framework/</loc>
+        <loc>http://blog.100dos.com/2009/01/03/the-love-that-cannot-stop/</loc>
         <lastmod>2017-03-14T02:25:20.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -1280,6 +1288,14 @@
 
     <url>
         <loc>http://blog.100dos.com/2010/09/26/to-write-for-write/</loc>
+        <lastmod>2017-03-14T02:25:20.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>http://blog.100dos.com/2015/12/30/thrift-a-cross-language-rpc-framework/</loc>
         <lastmod>2017-03-14T02:25:20.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>

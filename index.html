@@ -27,7 +27,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="百作坊, 百作坊博客, 百作坊Blog, 小弟, 纪刚, LNMP Stack, Web, PHP, 工作和生活, 不只眼前的苟且, 还有诗和远方" />
+  <meta name="keywords" content="百作坊, 百作坊博客, 百作坊BLOG, Linux, Nginx, PHP, Mysql, Javascript, Java, 数据库, 技术架构, 系统设计, 读书笔记" />
 
 
 
@@ -42,12 +42,15 @@
 
 
 
+<meta name="description" content="纪录工作和生活">
 <meta property="og:type" content="website">
 <meta property="og:title" content="百作坊">
 <meta property="og:url" content="http://blog.100dos.com/index.html">
 <meta property="og:site_name" content="百作坊">
+<meta property="og:description" content="纪录工作和生活">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="百作坊">
+<meta name="twitter:description" content="纪录工作和生活">
 
 
 
@@ -67,7 +70,7 @@
   <link rel="canonical" href="http://blog.100dos.com/"/>
 
 
-  <title> 百作坊 </title>
+  <title> 百作坊, 百作坊博客, 百作坊BLOG, Linux, Nginx, PHP, Mysql, Javascript, Java, 数据库, 技术架构, 系统设计, 读书笔记 - 百作坊 - 纪录工作和生活 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -203,6 +206,247 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/03/24/publish-hexo-post-on-github-pages-by-travis-ci/" itemprop="url">
+                  Travis CI 持续集成 Hexo 的 Github Pages的博客
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-03-24T14:45:17+08:00" content="2017-03-24">
+              2017-03-24
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/流程-工具/" itemprop="url" rel="index">
+                    <span itemprop="name">流程&工具</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>之前重新梳理了 <a href="http://blog.100dos.com/2017/03/14/how-to-use-hexo-post-articles-on-multiple-pcs/">Hexo 博客的发布流程</a>，可以还是觉得麻烦。毕竟操作太多，容易出错。于是想到了用 Travis CI 简化一下，效果不错，省去了不少步骤。现在只需要在 hexo 分支撰写 blog，然后push到github就可以了。Travis 会帮助完成剩下的merge hexo分支、生成静态文件、提交 master 这些工作。</p>
+<p>首先，用 Github 账号创建 <a href="https://travis-ci.org/" target="_blank" rel="external">Travis CI</a> 账号，直接用 Github 账号登录，并赋予权限即可。并在项目列表选择并创建 Travis CI 项目 <code>jixiaod / jixiaod.github.io</code>项目。</p>
+<p>接着，在 Github 的配置里生成 <code>Personal access tokens</code>，然后在Travis CI里配置的 Environment Variables 里配置添加，一会要在 <code>.travis.yml</code> 中使用。并设置 <code>hexo</code> 为默认分支，在 <code>git push origin hexo</code> 时，触发 travis  build。<br><img src="/images/travsi-ci-personal-access-token.png" alt=""></p>
+<p>编写 <code>.travis.yml</code> 文件，参考<a href="https://github.com/jixiaod/jixiaod.github.io/blob/hexo/.travis.yml" target="_blank" rel="external">我的配置</a> </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">language: node_js</div><div class="line">sudo: required</div><div class="line">node_js:</div><div class="line">  - 5.4.0</div><div class="line">cache:</div><div class="line">  directories:</div><div class="line">    - node_modules</div><div class="line">before_script:</div><div class="line">  - git clone --branch master https://github.com/jixiaod/jixiaod.github.io.git public</div><div class="line">script:</div><div class="line">  - npm run build</div><div class="line">after_success:</div><div class="line">  - cd public</div><div class="line">  - git config user.name &quot;Ji Gang&quot;</div><div class="line">  - git config user.email &quot;ji.xiaod@gmail.com&quot;</div><div class="line">  - git add --all .</div><div class="line">  - git commit -m &quot;travis ci auto build&quot;</div><div class="line">  - git push https://$Personal_access_tokens@github.com/jixiaod/jixiaod.github.io.git master</div><div class="line">branches:</div><div class="line">  only:</div><div class="line">    - hexo</div></pre></td></tr></table></figure>
+<p>具体Travis 使用参见<a href="https://docs.travis-ci.com" target="_blank" rel="external">官方文档</a>，针对以上配置的说明流程如下：</p>
+<ul>
+<li>before_script：检出 master 分支代码到 public 文件目录。需要知道的是，在此之前 travis 已经帮你把hexo代码检出来了，实际上 public 目录是在 hexo 的目录之下。</li>
+<li>script: <code>npm run build</code> 参见 <a href="https://github.com/jixiaod/jixiaod.github.io/blob/hexo/package.json" target="_blank" rel="external">package.json</a>，实际执行的是 <code>hexo generate</code>，从新生成了静态文件。</li>
+<li>after_success: 最后把所有修改提交到了 master 分支，我们是用 <code>$Personal_access_tokens</code> 获得的 github 权限。</li>
+</ul>
+<p>现在发布一篇文章只需要：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~(hexo)$ hexo new XXXX</div><div class="line">~(hexo)$ git add .</div><div class="line">~(hexo)$ git commit -m &apos;xxx&apos;</div><div class="line">~(hexo)$ git push origin hexo</div></pre></td></tr></table></figure>
+<p>剩下的工作，travis 全都能搞定了，比原来简化了许多。</p>
+<h4 id="俩个遇到的错误解决："><a href="#俩个遇到的错误解决：" class="headerlink" title="俩个遇到的错误解决："></a>俩个遇到的错误解决：</h4><ul>
+<li>第一次 build 的时候报了一个莫名其妙的错误，“No Rakefile found (looking for: rakefile, Rakefile, rakefile.rb, Rakefile.rb)”。后来发现是Nodejs 的版本写的有问题。所以 build 前检查 <code>.travis.yml</code> 是否书写正确很有必要，可以在<a href="http://lint.travis-ci.org" target="_blank" rel="external">http://lint.travis-ci.org</a> 检查是否有问题。</li>
+<li>Could not find .travis.yml, using standard configuration.<ul>
+<li>从新同步 Travis CI 账号跟 Github的账号。在 Account 页面，点击 Sync acount</li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/03/24/copy-and-chage-on-write-with-php/" itemprop="url">
+                  理解 PHP 的写时复制和写时改变
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-03-24T11:45:33+08:00" content="2017-03-24">
+              2017-03-24
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/PHP/" itemprop="url" rel="index">
+                    <span itemprop="name">PHP</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>对于这样一段代码：</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$a = <span class="number">1</span>;</div><div class="line">xdebug_debug_zval(<span class="string">'a'</span>);</div><div class="line">$b = $a;</div><div class="line">xdebug_debug_zval(<span class="string">'a'</span>);</div></pre></td></tr></table></figure>
+<p>output<br><figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">tiger➜/opt/work/tmp» /opt/php.5.6.25/bin/php ref_count.php                                                                                                                                             [11:17:01]</div><div class="line">a: (refcount=1, is_ref=0)=1</div><div class="line">a: (refcount=2, is_ref=0)=1</div></pre></td></tr></table></figure></p>
+<p>第一行 <code>$a = 1</code>，第二行把 <code>$a</code> 赋值给 <code>$b</code>。这样的话，<code>$a</code> 和 <code>$b</code> 其实都是1，如果在内存中存两份的话，不仅多浪费一块内存，而且还多了分配和管理内存的开销。是的，PHP也是采取内存共享的策略，对于上面的一段代码，<code>$a</code> 和 <code>$b</code> 其实都是指向了一块共享内存，同一个 zval。</p>
+<p><code>refcount</code> 就是当前的zval被引用的计数，当第一行代码<code>$a=1;</code> 创建这个变量时，只有 <code>$a</code> 指向这个zval，所以 <code>refcount</code> 等于1。当<code>$b=$a</code> 执行时，变量 <code>$b</code>也指向了这个 zval，所以 <code>refcount</code> 加1。</p>
+<p>现在我们来看看什么是<strong>写时复制 Copy on Write</strong>，看下面一段代码</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$a = <span class="number">1</span>;</div><div class="line">$b = $a;</div><div class="line">xdebug_debug_zval(<span class="string">'a'</span>);</div><div class="line">$b = <span class="number">2</span>;</div><div class="line">xdebug_debug_zval(<span class="string">'a'</span>);</div></pre></td></tr></table></figure>
+<p>output<br><figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">tiger➜/opt/work/tmp» /opt/php.5.6.25/bin/php ref_count.php                                                                                                                                             [11:16:22]</div><div class="line">a: (refcount=2, is_ref=0)=1</div><div class="line">a: (refcount=1, is_ref=0)=1</div></pre></td></tr></table></figure></p>
+<p>代码第四行，我们对 <code>$b</code> 重新赋值 2。PHP 在修改变量之前会先检查当前 zval 的 <code>refcount</code> 是否大于1，原本 <code>$a</code> 和 <code>$b</code> 都指向同一个zval，<code>refcount</code>  &gt; 1。PHP 就会复制出一个新的 zval 来，原来的 zval 的 <code>refcount</code> 减 1。使得变脸 <code>$a</code> 和 <code>$b</code> 分离，这个机制就是<strong>写时复制</strong> 。</p>
+<p>再来看看什么是<strong>写时改变 Change on Write</strong></p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$a = <span class="number">1</span>;</div><div class="line">xdebug_debug_zval(<span class="string">'a'</span>);</div><div class="line">$b =&amp; $a;</div><div class="line">xdebug_debug_zval(<span class="string">'a'</span>);</div><div class="line">$b = <span class="number">2</span>;</div><div class="line">xdebug_debug_zval(<span class="string">'a'</span>);</div></pre></td></tr></table></figure>
+<p>output<br><figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">tiger➜/opt/work/tmp» /opt/php.5.6.25/bin/php ref_count.php                                                                                                                                             [11:33:20]</div><div class="line">a: (refcount=1, is_ref=0)=1</div><div class="line">a: (refcount=2, is_ref=1)=1</div><div class="line">a: (refcount=2, is_ref=1)=2</div></pre></td></tr></table></figure></p>
+<p>这段代码执行后，<code>$a</code> 也会呗修改成2。当 <code>$b =&amp; $a;</code> 执行时，<code>is_ref</code> 被设置为1。此时虽然 zal 的 <code>refcount</code> 是2，但是对 <code>$b</code> 重新赋值并不会触发写时复制，而是先判断了 <code>is_ref</code> 是否等于 1。<code>is_ref</code> 等于1 则不分离，这就是<strong>写时改变</strong>。</p>
+<p>需要注意的是，我用的PHP的5.6.25版本，在PHP7中，由于zval的结构体进行了优化，所以并不适用。而且像 <code>debug_zval_dump</code> 也不好用了。</p>
+<blockquote>
+<p>debug_zval_dump’s refcount was already a bit broken before PHP 7 came along: since call-time pass-by-ref is not available, theoretically the refcount should always be 1 or 2, but that’s not terribly helpful. Then PHP 7 started making more changes to how variables move around.</p>
+<p>Since 7.1.2 the example shows refcount(3), which is more useful but blatantly contradictory to the docs. <a href="https://3v4l.org/ntX3A" target="_blank" rel="external">https://3v4l.org/ntX3A</a> In PHP 5.6 it shows refcount(1) which is less useful but agrees with the docs.</p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
     
       
 
@@ -974,294 +1218,6 @@
   </article>
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/02/27/processes-and-threads/" itemprop="url">
-                  进程和线程
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-02-27T11:11:14+08:00" content="2017-02-27">
-              2017-02-27
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/底层原理/" itemprop="url" rel="index">
-                    <span itemprop="name">底层原理</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><a href="https://zh.wikipedia.org/wiki/行程" target="_blank" rel="external">进程</a>（process）是计算机中已运行程序的实体。关于进程需要知道的几点：</p>
-<ul>
-<li>进程是程序的基本执行实体。</li>
-<li>在面向线程设计的系统（如当代多数操作系统、Linux 2.6及更新的版本）中，进程本身不是基本运行单位，而是线程的容器。</li>
-<li>程序本身只是指令、数据及其组织形式的描述，进程才是程序（那些指令和数据）的真正运行实例。</li>
-<li>若干进程有可能与同一个程序相关系，且每个进程皆可以同步（循序）或异步（平行）的方式独立运行。</li>
-<li>现代计算机系统可在同一段时间内以进程的形式将多个程序加载到存储器中，并借由时间共享（或称时分复用），以在一个处理器上表现出同时（平行性）运行的感觉。</li>
-<li>同样的，使用多线程技术（多线程即每一个线程都代表一个进程内的一个独立执行上下文）的操作系统或计算机架构，同样程序的平行线程，可在多CPU主机或网络上真正同时运行（在不同的CPU上）。</li>
-<li>进程需要一些资源才能完成工作，如CPU使用时间、存储器、文件以及I/O设备，且为依序逐一进行，也就是每个CPU核心任何时间内仅能运行一项进程。</li>
-<li>进程在运行时，状态（state）会改变。进城的状态包括：<ul>
-<li>新生（new）：进程新产生中。</li>
-<li>运行（running）：正在运行。</li>
-<li>等待（waiting）：等待某事发生，例如等待用户输入完成。亦称“阻塞”（blocked）</li>
-<li>就绪（ready）：排班中，等待CPU。</li>
-<li>结束（terminated）：完成运行。</li>
-</ul>
-</li>
-<li>进程间通信（IPC Inter-process communication）:每个进程都有自己的一部分独立的系统资源，彼此是隔离的。为了能使不同的进程互相访问资源并进行协调工作，才有了进程间通信。</li>
-<li>进程控制块是操作系统能够支持多进程和提供多处理的结构。 </li>
-<li>当操作系统做进程切换时，它会执行两步操作，一是中断当前处理器中的进程，二是执行下一个进程。 不管是中断还是执行，进程控制块中的程序计数器、上下文数据和进程状态都会发生变化。</li>
-</ul>
-<p>在 PHP 中的 <a href="http://php.net/manual/zh/book.pcntl.php" target="_blank" rel="external">PCNTL</a> 扩展实现了Unix方式的进程创建，程序执行，信号处理以及进程的中断。但是只能 CLI 环境下使用，且在 Windows 平台不可用。</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"></div><div class="line">$pid = pcntl_fork();</div><div class="line"><span class="comment">//父进程和子进程都会执行下面代码</span></div><div class="line"><span class="keyword">if</span> ($pid == <span class="number">-1</span>) &#123;</div><div class="line">    <span class="comment">//错误处理：创建子进程失败时返回-1.</span></div><div class="line">     <span class="keyword">die</span>(<span class="string">'could not fork'</span>);</div><div class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> ($pid) &#123;</div><div class="line">     <span class="comment">//父进程会得到子进程号，所以这里是父进程执行的逻辑</span></div><div class="line">     pcntl_wait($status); <span class="comment">//等待子进程中断，防止子进程成为僵尸进程。</span></div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">     <span class="comment">//子进程得到的$pid为0, 所以这里是子进程执行的逻辑。</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><a href="https://zh.wikipedia.org/wiki/线程" target="_blank" rel="external">线程</a>（thread）是操作系统能够进行运算调度的最小单位。</p>
-<ul>
-<li>它被包含在进程之中，是进程中的实际运作单位。</li>
-<li>一条线程指的是进程中一个单一顺序的控制流，一个进程中可以并发多个线程，每条线程并行执行不同的任务。</li>
-<li>在Unix System V及SunOS中也被称为轻量进程（lightweight processes），但轻量进程更多指内核线程（kernel thread），而把用户线程（user thread）称为线程。</li>
-<li>线程是独立调度和分派的基本单位。线程可以操作系统内核调度的内核线程，如Win32线程；由用户进程自行调度的用户线程，如Linux平台的POSIX Thread；或者由内核与用户进程，如Windows 7的线程，进行混合调度。</li>
-<li>同一进程中的多条线程将共享该进程中的全部系统资源，如虚拟地址空间，文件描述符和信号处理等等。但同一进程中的多个线程有各自的调用栈（call stack），自己的寄存器环境（register context），自己的线程本地存储（thread-local storage）。</li>
-<li>一个进程可以有很多线程，每条线程并行执行不同的任务。</li>
-<li>线程的四种基本状态：<ul>
-<li>产生（spawn）</li>
-<li>中断（block）</li>
-<li>非中断（unblock）</li>
-<li>结束（finish）</li>
-</ul>
-</li>
-</ul>
-<p>在PHP中有 <a href="http://php.net/manual/zh/intro.pthreads.php" target="_blank" rel="external">pthreads</a> 多线程扩展，实现了面向对象的 多线程 API。可以创建、读取、写入以及执行多线程应用，并可以在多个线程之间进行同步控制。</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">workerThread</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($num)</span></span>&#123;</div><div class="line">        <span class="keyword">$this</span>-&gt;num = $num;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">run</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">while</span>(<span class="keyword">true</span>)&#123;</div><div class="line">            <span class="keyword">echo</span> <span class="keyword">$this</span>-&gt;num . <span class="string">"\n"</span>;</div><div class="line">            sleep(<span class="number">1</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">for</span> ($i=<span class="number">0</span>; $i &lt; <span class="number">50</span>; $i++)&#123;</div><div class="line">    $workers[$i] = <span class="keyword">new</span> workerThread($i);</div><div class="line">    $workers[$i]-&gt;start();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>线程较之进程，其优势在于一个快，不管是创建新的线程还是终止一个线程；或者是线程间的切换还是线程间共享数据或通信，其速度与进程相比都有较大的优势。进程和线程区别：</p>
-<ul>
-<li>线程是在一个进程内的，可以共享内存变量实现线程间通信。<ul>
-<li>而进程间通信是要借助于<a href="https://zh.wikipedia.org/wiki/行程間通訊" target="_blank" rel="external">进程间通信（IPC）</a>，文件、管道、消息队列等等。</li>
-</ul>
-</li>
-<li>线程比进程更轻量级，开大量进程会比线程消耗更多系统资源。<ul>
-<li>比如 PHP-FPM 模块。通常情况下，一个PHP-FPM 进程占用的内存为10M左右，假如支持10000并发，就需要100G的内存。一台物理机的资源是有限的，就那么多CPU和内存，决定了单独依靠 PHP-FPM 不可能开发出单机百万级并发的系统。</li>
-</ul>
-</li>
-</ul>
-<p>我们用多进程和多线程的很大因素是为了解决并发问题，先理清一个概念并发和并行是不是一个意思？</p>
-<blockquote>
-<p>并发和并行的区别就是一个处理器同时处理多个任务和多个处理器或者是多核的处理器同时处理多个不同的任务。 前者是逻辑上的同时发生（simultaneous），而后者是物理上的同时发生。</p>
-</blockquote>
-<p>由于进程的性能问题，我们觉得并发使用的更多的线程，而不是进程。在处理网络请求时，多线程模型下，可以采用一个独立线程接受请求然后派发到各个 worker 线程的方式。但是使用多线程也存在一些问题：</p>
-<ul>
-<li>线程读写变量存在同步问题，需要加锁</li>
-<li>锁的粒度过大会有性能问题，可能会导致只有1个线程在运行，其他线程都在等待锁。这样就不是并行了</li>
-<li>同时使用多个锁，逻辑复杂，一旦某个锁没被正确释放，可能会发生线程死锁</li>
-<li>某个线程发生致命错误会导致整个进程崩溃</li>
-</ul>
-<p>多进程方式更加稳定，另外利用进程间通信（IPC）也可以实现数据共享。至于为什么进程想对安全稳定，主要是依靠进程<a href="https://zh.wikipedia.org/zh-cn/沙盒_(電腦安全" target="_blank" rel="external">沙箱</a>)，可以查看这篇文章<a href="http://zkread.com/article/584903.html" target="_blank" rel="external">《为什么浏览器采用多进程模型》</a>。</p>
-<ul>
-<li>共享内存，这种方式和线程间读写变量是一样的，需要加锁，会有同步、死锁问题。</li>
-<li>消息队列，可以采用多个子进程抢队列模式，性能很好</li>
-<li>PIPE，UnixSock，TCP，UDP。可以使用read/write来传递数据，TCP/UDP方式使用socket来通信，子进程可以分布运行</li>
-</ul>
-<p>Swoole 框架的多进程和多线程的设计实用就非常合理，在需要稳定的时候使用进程，在需要效率的时候使用线程。盗个图</p>
-<p><img src="/images/swoole-process-threads.png" alt=""></p>
-<p>Swoole 中 worker/task 进程都是由 Manager 进程 Fork 并管理的。</p>
-<ul>
-<li>子进程结束运行时，Manager 进程负责回收此子进程，避免成为僵尸进程。并创建新的子进程</li>
-<li>服务器关闭时，Manager 进程将发送信号给所有子进程，通知子进程关闭服务</li>
-<li>服务器 reload 时，Manager进程会逐个关闭/重启子进程</li>
-</ul>
-<p>Swoole 提供了完善的进程管理机制，当Worker进程异常退出，如发生PHP的致命错误、被其他程序误杀，或达到 max_request 次数之后正常退出。主进程会重新拉起新的 Worker 进程。 Worker 进程内可以像普通的 apache+php 或者 php-fpm 中写代码。不需要像 Node.js 那样写异步回调的代码。</p>
-<p>Swoole 的Master主进程是一个多线程的程序，其中一组很重要的是Reactor线程。Swoole 在接收到一个请求连接之后，将这个链接分配给一个固定的Reactor线程，并由这个线程来监听socket。在socket可读时读取数据，并进行协议解析，将请求投递到Worker进程。在socket可写时将数据发送给TCP客户端。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/02/09/nearby-jobs/" itemprop="url">
-                  8w+拉勾网招聘数据帮你查询 - 家附近的工作
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-02-09T14:25:08+08:00" content="2017-02-09">
-              2017-02-09
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/流程-工具/" itemprop="url" rel="index">
-                    <span itemprop="name">流程&工具</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>从<a href="https://www.lagou.com/" target="_blank" rel="external">拉勾网</a>抓取的 86341 条招聘企业数据，企业地址匹配 LBS 经纬度取自<a href="http://lbs.amap.com/console/show/picker" target="_blank" rel="external">高德开放平台API</a>，成功匹配到 83090 条经纬度数据。没有做详细做企业主正在招聘岗位的数据，所以很大可能情况会遇到附近的公司没有招聘信息的情况，但是某些方面还是能大概了解自己附近有什么值得考虑的公司，有一定参考价值。</p>
-<h2 id="查询附近的工作"><a href="#查询附近的工作" class="headerlink" title="查询附近的工作"></a>查询附近的工作</h2><p>Github地址: <a href="https://github.com/jixiaod/NearbyJobs" target="_blank" rel="external">https://github.com/jixiaod/NearbyJobs</a></p>
-<h3 id="下载-mongo-数据包"><a href="#下载-mongo-数据包" class="headerlink" title="下载 mongo 数据包"></a>下载 mongo 数据包</h3><p><a href="https://github.com/jixiaod/NearbyJobs/blob/master/jobs.tar.gz" target="_blank" rel="external">https://github.com/jixiaod/NearbyJobs/blob/master/jobs.tar.gz</a></p>
-<h3 id="导入-mongo-数据"><a href="#导入-mongo-数据" class="headerlink" title="导入 mongo 数据"></a>导入 mongo 数据</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~# tar zxf jobs.tar.gz</div><div class="line">~# mongoimport -d jobs -c company --upsert jobs.json</div></pre></td></tr></table></figure>
-<h3 id="geo-查询"><a href="#geo-查询" class="headerlink" title="geo 查询"></a>geo 查询</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">// 进入mongodb，我的是默认环境</div><div class="line">~# mongo</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&gt; use jobs</div><div class="line">// 创建索引</div><div class="line">&gt; db.company.createIndex(&#123; &quot;loc&quot;: &quot;2d&quot; &#125;)</div><div class="line">// 查询附近的工作，自己的坐标可以从[高德开放平台API]获得。</div><div class="line">&gt; db.company.find(&#123;&quot;loc&quot;:&#123;&quot;$near&quot;:[116.673886,39.943799]&#125;&#125;,&#123;&quot;short_name&quot;:1, &quot;address&quot;:1&#125;)</div></pre></td></tr></table></figure>
-<p><img src="https://raw.githubusercontent.com/jixiaod/NearbyJobs/master/nearby-jobs.png" alt=""></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-    
   </section>
 
   
@@ -1298,12 +1254,12 @@
                src="http://tva1.sinaimg.cn/crop.0.0.414.414.180/62d98a55jw1e6lb32mfm7j20bo0bo0to.jpg"
                alt="小弟" />
           <p class="site-author-name" itemprop="name">小弟</p>
-          <p class="site-description motion-element" itemprop="description"></p>
+          <p class="site-description motion-element" itemprop="description">纪录工作和生活</p>
         </div>
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">164</span>
+              <span class="site-state-item-count">166</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1320,7 +1276,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">113</span>
+                <span class="site-state-item-count">116</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -1395,7 +1351,7 @@
   
   &copy;  2008 - 
   <span itemprop="copyrightYear">2017</span>
-  <span class="author" itemprop="copyrightHolder"> 『百作坊』 Generated by <a href="https://hexo.io">Hexo</a> & Theme by <a href="https://github.com/jixiaod/hexo-theme-next">Next</a> & Public by <a href="https://pages.github.com">Github Pages</a>.</span>
+  <span class="author" itemprop="copyrightHolder"> 『百作坊』 Generated by <a href="https://hexo.io" rel="external nofollow">Hexo</a> & Theme by <a href="https://github.com/jixiaod/hexo-theme-next" rel="external nofollow">Next</a> & Public by <a href="https://pages.github.com" rel="external nofollow">Github Pages</a>.</span>
 </div>
 
 

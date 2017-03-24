@@ -27,7 +27,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="百作坊, 百作坊博客, 百作坊Blog, 小弟, 纪刚, LNMP Stack, Web, PHP, 工作和生活, 不只眼前的苟且, 还有诗和远方" />
+  <meta name="keywords" content="百作坊, 百作坊博客, 百作坊BLOG, Linux, Nginx, PHP, Mysql, Javascript, Java, 数据库, 技术架构, 系统设计, 读书笔记" />
 
 
 
@@ -42,12 +42,15 @@
 
 
 
+<meta name="description" content="纪录工作和生活">
 <meta property="og:type" content="website">
 <meta property="og:title" content="百作坊">
 <meta property="og:url" content="http://blog.100dos.com/page/15/index.html">
 <meta property="og:site_name" content="百作坊">
+<meta property="og:description" content="纪录工作和生活">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="百作坊">
+<meta name="twitter:description" content="纪录工作和生活">
 
 
 
@@ -67,7 +70,7 @@
   <link rel="canonical" href="http://blog.100dos.com/page/15/"/>
 
 
-  <title> 百作坊 </title>
+  <title> 百作坊, 百作坊博客, 百作坊BLOG, Linux, Nginx, PHP, Mysql, Javascript, Java, 数据库, 技术架构, 系统设计, 读书笔记 - 百作坊 - 纪录工作和生活 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -203,6 +206,234 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2010/01/01/enables-applet-to-operate-the-local-file/" itemprop="url">
+                  java applet 数字签名  使applet能操作本地文件
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2010-01-01T17:32:08+08:00" content="2010-01-01">
+              2010-01-01
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>我做的是一个基于applet的聊天系统。由于IE的安全策略不允许applet有太多的权限。如果涉及到了本地资源，对APPLET一定要进行数字签名和认证。</p>
+<p>我开始用的是jdk1.6 ，它的bin文件里命令很不全。于是乎我装了下jdk1.5，命令还是蛮全的。。。。</p>
+<p>cmd 到命令行模式：<br>cd 到 jdk1.5的bin目录下，（我懒得设置系统变量，开始设置没好使，我就不管了，又不是非搞不可……）</p>
+<p>命令如下：<br>1.生成钥匙<br>keytool -genkey -keystore client.keystore -alias client<br>生成一个client.keystore的文件。会要求输入一个密码，要记住还要用的。还有一些垃圾问题，问题直接pass掉就好。。。</p>
+<p>2.用生成的钥匙为jar文件签名。<br>jarsigner -keystore client.keystore ChatClient.jar client</p>
+<p>其中的jar包如何生成，上一篇已经说过了。。。</p>
+<p>3．将公共钥匙导入到一个cer文件中，这个cer文件就是要拷贝到客户端的唯一文件 。</p>
+<p>keytool -export -keystore client.keystore -alias client-file client.cer</p>
+<p>这样就会生成另外一个 client.cer文件。</p>
+<p>拷贝这3个文件到你的web服务器的目录下。。。。加上你原来写好的调用applet的html文件，恩……应该可以运行了。。。。</p>
+<p>祝大家开心。。。。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2010/01/01/create-jar-package/" itemprop="url">
+                  如何打 Jar 包？
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2010-01-01T09:11:26+08:00" content="2010-01-01">
+              2010-01-01
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>这段时间太忙，应该把自己学到的东西总结一下。以备不时之需，也可公大家参考。。</p>
+<p>让大家少走点弯路……</p>
+<p>用eclipse 的工具很方便的生成的jar包 。</p>
+<p>右键项目Export -&gt;java-&gt;jar file生成jar包。关于MANIFEST.MF文件也可以导入自己写的，也可以通过eclipse来自动生成。</p>
+<p>对于有main函数的程序，通过Main class来设置jar包的程序入口，设置好main class 的jar包可以直接运行。</p>
+<p>////////////////</p>
+<p>Manifest-Version: 1.0<br>Main-Class: com.izforge.izpack.installer.Installer<br>Class-Path:</p>
+<p>////////////////</p>
+<p>Manifest-Version:1.0 版本号<br>Main-Class 包含main函数的class文件。。注意不要写文件的扩展名 .class ，而且文件夹用 . 来分隔。<br>Class-Path 是引用的jar包</p>
+<p>如果是applet程序没有main函数直接打包就可以。在html中引用的时候，同样按照.class文件所在写出路径，比如：</p>
+<applet code="”src/client/applet.class”" archive="”MyApplet.jar”">
+
+<p>这样在你的MyApplet.jar 中，打开的结构src/client/appet.class 能够找到applet.class。<br>对于applet的功能如果涉及到文件读写。就要对jar包“数字签名”或“数字证书”，因为IE对applet的安全策略不允许applet对本地文件的操作。关于数字签名，下篇在写。</p>
+<p>因为资料都在公司那里，一会去公司在发出来。。。今天还有个同学过来湾，哎呀。。。晚上又要喝多了。。。</p>
+<p>喝多也要吐啊。。</p>
+</applet>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
     
       
 
@@ -853,213 +1084,6 @@
   </article>
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2009/12/02/ubuntu-shutdown-commands/" itemprop="url">
-                  ubuntu 关机命令
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2009-12-02T21:58:35+08:00" content="2009-12-02">
-              2009-12-02
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/linux/" itemprop="url" rel="index">
-                    <span itemprop="name">linux</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>关机命令 shutdown<br>1)shutdown –help<br>可以查看shutdown命令如何使用，当然也可以使用man shutdown命令。<br>2）shutdown -h now 现在立即关机<br>3）shutdown -r now 现在立即重启<br>4）shutdown -r +3 三分钟后重启<br>5）shutdown -h +3 “The System will shutdown after 3 minutes” 提示使用者将在三分钟后关机<br>6）shutdown -r 20:23 在20：23时将重启计算机<br>7）shutdown -r 20:23 &amp; 可以将在20：23时重启的任务放到后台去，用户可以继续操作终端</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2009/12/01/java3d-cube-load/" itemprop="url">
-                  Java3D 立方体 加载纹理
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2009-12-01T15:45:26+08:00" content="2009-12-01">
-              2009-12-01
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index">
-                    <span itemprop="name">Java</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>研究了很久的java3d，从昨天开始研究怎么加载纹理，今天终于搞定。原本想用数组加载图片，但是总是ava.lang.NullPointerException。于是就放弃了 一个个加载。。有点傻～java3d <wbr>立方体 <wbr>加载纹理java3d <wbr>立方体 <wbr>加载纹理java3d <wbr>立方体 <wbr>加载纹理</p>
-<p>本人rookie，高手路过多提携。。。java3d <wbr>立方体 <wbr>加载纹理</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">import java.applet.Applet;</div><div class="line">import java.awt.BorderLayout;</div><div class="line">import java.awt.GraphicsConfiguration;</div><div class="line"></div><div class="line">import javax.media.j3d.Appearance;</div><div class="line">import javax.media.j3d.BoundingSphere;</div><div class="line">import javax.media.j3d.BranchGroup;</div><div class="line">import javax.media.j3d.Canvas3D;</div><div class="line">import javax.media.j3d.Material;</div><div class="line">import javax.media.j3d.Texture2D;</div><div class="line">import javax.media.j3d.TextureAttributes;</div><div class="line">import javax.media.j3d.TransformGroup;</div><div class="line"></div><div class="line">import com.sun.j3d.utils.applet.MainFrame;</div><div class="line">import com.sun.j3d.utils.behaviors.mouse.MouseRotate;</div><div class="line">import com.sun.j3d.utils.behaviors.mouse.MouseTranslate;</div><div class="line">import com.sun.j3d.utils.behaviors.mouse.MouseWheelZoom;</div><div class="line">import com.sun.j3d.utils.geometry.Box;</div><div class="line">import com.sun.j3d.utils.image.TextureLoader;</div><div class="line">import com.sun.j3d.utils.universe.SimpleUniverse;</div><div class="line"></div><div class="line"></div><div class="line">public class SimpleCube extends Applet &#123;</div><div class="line">    </div><div class="line">     </div><div class="line">public BranchGroup createSceneGraph() &#123;</div><div class="line">BranchGroup objRoot = new BranchGroup();</div><div class="line"></div><div class="line">TransformGroup trans = new TransformGroup();</div><div class="line">trans.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);</div><div class="line">trans.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);</div><div class="line"></div><div class="line">//加载正方体的六个面</div><div class="line"></div><div class="line"></div><div class="line">//.1   </div><div class="line">TextureLoader myloader=new TextureLoader(new String(&quot;image/1.jpg&quot;),this);</div><div class="line">//创建纹理</div><div class="line">Texture2D mytext=(Texture2D) myloader.getTexture();</div><div class="line">//将纹理和外观绑定</div><div class="line">Appearance apperarance = new Appearance();</div><div class="line">apperarance.setTexture(mytext);</div><div class="line"></div><div class="line">TextureAttributes myTexAtt = new TextureAttributes();</div><div class="line">myTexAtt.setTextureMode(TextureAttributes.MODULATE);</div><div class="line">apperarance.setTextureAttributes(myTexAtt);</div><div class="line"></div><div class="line">Material mat = new Material();</div><div class="line">apperarance.setMaterial(mat);</div><div class="line"></div><div class="line">//.2</div><div class="line">TextureLoader myloader2=new TextureLoader(new String(&quot;image/2.jpg&quot;),this);</div><div class="line">//创建纹理</div><div class="line">Texture2D mytext2=(Texture2D) myloader2.getTexture();</div><div class="line">//将纹理和外观绑定</div><div class="line">Appearance apperarance2 = new Appearance();</div><div class="line">apperarance2.setTexture(mytext2);</div><div class="line"></div><div class="line">TextureAttributes myTexAtt2 = new TextureAttributes();</div><div class="line">myTexAtt2.setTextureMode(TextureAttributes.MODULATE);</div><div class="line">apperarance2.setTextureAttributes(myTexAtt2);</div><div class="line"></div><div class="line">Material mat2 = new Material();</div><div class="line">apperarance2.setMaterial(mat2);</div><div class="line"></div><div class="line">//.3</div><div class="line">TextureLoader myloader3=new TextureLoader(new String(&quot;image/3.jpg&quot;),this);</div><div class="line">//创建纹理</div><div class="line">Texture2D mytext3=(Texture2D) myloader3.getTexture();</div><div class="line">//将纹理和外观绑定</div><div class="line">Appearance apperarance3 = new Appearance();</div><div class="line">apperarance3.setTexture(mytext3);</div><div class="line"></div><div class="line">TextureAttributes myTexAtt3 = new TextureAttributes();</div><div class="line">myTexAtt3.setTextureMode(TextureAttributes.MODULATE);</div><div class="line">apperarance3.setTextureAttributes(myTexAtt3);</div><div class="line"></div><div class="line">Material mat3 = new Material();</div><div class="line">apperarance3.setMaterial(mat3);</div><div class="line"></div><div class="line">//.4</div><div class="line">TextureLoader myloader4=new TextureLoader(new String(&quot;image/4.jpg&quot;),this);</div><div class="line">//创建纹理</div><div class="line">Texture2D mytext4=(Texture2D) myloader4.getTexture();</div><div class="line">//将纹理和外观绑定</div><div class="line">Appearance apperarance4 = new Appearance();</div><div class="line">apperarance4.setTexture(mytext4);</div><div class="line"></div><div class="line">TextureAttributes myTexAtt4 = new TextureAttributes();</div><div class="line">myTexAtt4.setTextureMode(TextureAttributes.MODULATE);</div><div class="line">apperarance4.setTextureAttributes(myTexAtt4);</div><div class="line"></div><div class="line">Material mat4 = new Material();</div><div class="line">apperarance4.setMaterial(mat4);</div><div class="line"></div><div class="line">//.5</div><div class="line">TextureLoader myloader5=new TextureLoader(new String(&quot;image/5.jpg&quot;),this);</div><div class="line">//创建纹理</div><div class="line">Texture2D mytext5=(Texture2D) myloader5.getTexture();</div><div class="line">//将纹理和外观绑定</div><div class="line">Appearance apperarance5 = new Appearance();</div><div class="line">apperarance5.setTexture(mytext5);</div><div class="line"></div><div class="line">TextureAttributes myTexAtt5 = new TextureAttributes();</div><div class="line">myTexAtt5.setTextureMode(TextureAttributes.MODULATE);</div><div class="line">apperarance5.setTextureAttributes(myTexAtt5);</div><div class="line"></div><div class="line">Material mat5 = new Material();</div><div class="line">apperarance5.setMaterial(mat5);</div><div class="line"></div><div class="line">//.6</div><div class="line">TextureLoader myloader6=new TextureLoader(new String(&quot;image/6.jpg&quot;),this);</div><div class="line">//创建纹理</div><div class="line">Texture2D mytext6=(Texture2D) myloader6.getTexture();</div><div class="line">//将纹理和外观绑定</div><div class="line">Appearance apperarance6 = new Appearance();</div><div class="line">apperarance6.setTexture(mytext6);</div><div class="line"></div><div class="line">TextureAttributes myTexAtt6 = new TextureAttributes();</div><div class="line">myTexAtt6.setTextureMode(TextureAttributes.MODULATE);</div><div class="line">apperarance6.setTextureAttributes(myTexAtt6);</div><div class="line"></div><div class="line">Material mat6 = new Material();</div><div class="line">apperarance6.setMaterial(mat6);</div><div class="line"></div><div class="line"></div><div class="line">//一个立方体</div><div class="line">Box box = new Box(0.4f, 0.4f, 0.4f, Box.GENERATE_TEXTURE_COORDS, new Appearance()) ;</div><div class="line">box.getShape(Box.FRONT).setAppearance(apperarance);</div><div class="line">box.getShape(Box.LEFT).setAppearance(apperarance2);</div><div class="line">box.getShape(Box.RIGHT).setAppearance(apperarance3);</div><div class="line">box.getShape(Box.BACK).setAppearance(apperarance4);</div><div class="line">box.getShape(Box.TOP).setAppearance(apperarance5);</div><div class="line">box.getShape(Box.BOTTOM).setAppearance(apperarance6);</div><div class="line"></div><div class="line"></div><div class="line">objRoot.addChild(trans);</div><div class="line">trans.addChild(box);</div><div class="line">//trans.addChild(cylin);</div><div class="line"></div><div class="line"></div><div class="line">//鼠标的旋转</div><div class="line">MouseRotate myMouseRotate = new MouseRotate();</div><div class="line">myMouseRotate.setTransformGroup(trans);</div><div class="line">myMouseRotate.setSchedulingBounds(new BoundingSphere());</div><div class="line">objRoot.addChild(myMouseRotate);</div><div class="line"></div><div class="line"></div><div class="line">//鼠标的平移</div><div class="line">MouseTranslate translate=new MouseTranslate();</div><div class="line">translate.setTransformGroup(trans);</div><div class="line">translate.setSchedulingBounds(new BoundingSphere());</div><div class="line">objRoot.addChild(translate);</div><div class="line"></div><div class="line">//鼠标的放大</div><div class="line">MouseWheelZoom zoom=new MouseWheelZoom();</div><div class="line">zoom.setTransformGroup(trans);</div><div class="line">zoom.setSchedulingBounds(new BoundingSphere());</div><div class="line">objRoot.addChild(zoom);</div><div class="line"></div><div class="line">objRoot.compile();</div><div class="line"></div><div class="line">return objRoot;</div><div class="line">&#125;</div><div class="line"></div><div class="line">public SimpleCube() &#123;</div><div class="line">   </div><div class="line">setLayout(new BorderLayout());</div><div class="line">GraphicsConfiguration config =</div><div class="line">SimpleUniverse.getPreferredConfiguration();</div><div class="line">Canvas3D canvas3D = new Canvas3D(config);</div><div class="line">add(&quot;Center&quot;, canvas3D);</div><div class="line"></div><div class="line">BranchGroup scene = createSceneGraph();</div><div class="line">SimpleUniverse simpleU = new SimpleUniverse(canvas3D);</div><div class="line"></div><div class="line">simpleU.getViewingPlatform().setNominalViewingTransform();</div><div class="line">simpleU.addBranchGraph(scene);</div><div class="line">&#125;</div><div class="line">public static void main(String[] args) &#123;</div><div class="line">new MainFrame(new SimpleCube(), 500, 500);</div><div class="line"></div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><img src="/images/others/62d98a55g79a601a32841.jpeg" alt=""></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-    
   </section>
 
   
@@ -1096,12 +1120,12 @@
                src="http://tva1.sinaimg.cn/crop.0.0.414.414.180/62d98a55jw1e6lb32mfm7j20bo0bo0to.jpg"
                alt="小弟" />
           <p class="site-author-name" itemprop="name">小弟</p>
-          <p class="site-description motion-element" itemprop="description"></p>
+          <p class="site-description motion-element" itemprop="description">纪录工作和生活</p>
         </div>
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">164</span>
+              <span class="site-state-item-count">166</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1118,7 +1142,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">113</span>
+                <span class="site-state-item-count">116</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -1193,7 +1217,7 @@
   
   &copy;  2008 - 
   <span itemprop="copyrightYear">2017</span>
-  <span class="author" itemprop="copyrightHolder"> 『百作坊』 Generated by <a href="https://hexo.io">Hexo</a> & Theme by <a href="https://github.com/jixiaod/hexo-theme-next">Next</a> & Public by <a href="https://pages.github.com">Github Pages</a>.</span>
+  <span class="author" itemprop="copyrightHolder"> 『百作坊』 Generated by <a href="https://hexo.io" rel="external nofollow">Hexo</a> & Theme by <a href="https://github.com/jixiaod/hexo-theme-next" rel="external nofollow">Next</a> & Public by <a href="https://pages.github.com" rel="external nofollow">Github Pages</a>.</span>
 </div>
 
 
