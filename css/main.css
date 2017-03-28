@@ -1567,7 +1567,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #ff3;
+  background: #6081ff;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -1866,7 +1866,7 @@ pre .javascript .function {
   text-align: center;
 }
 .category-all-page .category-all {
-  margin-top: 20px;
+  padding: 0 0 0 80px;
 }
 .category-all-page .category-list {
   margin: 0;
@@ -1875,6 +1875,7 @@ pre .javascript .function {
 }
 .category-all-page .category-list-item {
   margin: 5px 10px;
+  font-size: 18px;
 }
 .category-all-page .category-list-count {
   color: #bbb;
