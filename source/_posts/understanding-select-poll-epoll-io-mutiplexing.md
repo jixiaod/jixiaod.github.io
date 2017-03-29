@@ -2,8 +2,9 @@
 title: 理解 select、poll 和 epoll
 date: 2016-09-25 15:26:48
 tags:
+    - select
+    - poll
     - epoll
-    - IO
 categories:
     - 底层原理
 
