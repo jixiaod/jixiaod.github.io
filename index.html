@@ -228,6 +228,155 @@
             
               
                 
+                <a class="post-title-link" href="/2017/04/07/php-garbage-collection-collect-cycles/" itemprop="url">
+                  PHP 的垃圾回收机制－理解PHP如何解决循环引用导致的内存泄漏问题
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-04-07T16:00:53+08:00" content="2017-04-07">
+              2017-04-07
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/PHP/" itemprop="url" rel="index">
+                    <span itemprop="name">PHP</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h5 id="先来看一下什么是循环引用问题？"><a href="#先来看一下什么是循环引用问题？" class="headerlink" title="先来看一下什么是循环引用问题？"></a>先来看一下什么是循环引用问题？</h5><p>在 PHP 5.2 中使用的垃圾回收算法是 Reference Counting（引用计数）。非常简单，为每个 zval 分配一个计数器，当一个 zval 建立时计数器初始化为1，以后每有一个新变量引用此 zval，则计数器加1，而每当减少一个引用的变量则计数器减 1，当垃圾回收机制运作的时候，将所有计数器为0的zval销毁并回收其占用的内存。但是对于以下代码，把数组作为一个元素添加到自己，自身引用自身。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$a = <span class="keyword">array</span>( <span class="string">'one'</span> );</div><div class="line">$a[] =&amp; $a;</div><div class="line">xdebug_debug_zval( <span class="string">'a'</span> );</div><div class="line"><span class="meta">?&gt;</span></div><div class="line"></div><div class="line"><span class="comment">// output </span></div><div class="line">a: (refcount=<span class="number">2</span>, is_ref=<span class="number">1</span>)=<span class="keyword">array</span> (</div><div class="line">   <span class="number">0</span> =&gt; (refcount=<span class="number">1</span>, is_ref=<span class="number">0</span>)=<span class="string">'one'</span>,</div><div class="line">   <span class="number">1</span> =&gt; (refcount=<span class="number">2</span>, is_ref=<span class="number">1</span>)=...</div><div class="line">)</div></pre></td></tr></table></figure>
+<p><img src="/images/php/loop-array.png" alt=""><br>能看到数组变量 <code>a</code> 同时也是这个数组的第二个元素<code>1</code> 指向的变量容器中 <code>refcount</code> 为 2。上面的输出结果中的”…”说明发生了递归操作， 显然在这种情况下”…”表示指向原始数组。</p>
+<p>跟刚刚一样，对一个变量调用 unset，将从符号表中删除这个引用，且它指向的 zval 的引用次数也减 1。所以，如果我们在执行完上面的代码后，对变量 <code>$a</code> 调用 unset， 那么变量 <code>$a</code> 和数组元素 <code>1</code> 所指向的变量容器的引用次数减 1，变成 1。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="comment">// output</span></div><div class="line">(refcount=<span class="number">1</span>, is_ref=<span class="number">1</span>)=<span class="keyword">array</span> (</div><div class="line">   <span class="number">0</span> =&gt; (refcount=<span class="number">1</span>, is_ref=<span class="number">0</span>)=<span class="string">'one'</span>,</div><div class="line">   <span class="number">1</span> =&gt; (refcount=<span class="number">1</span>, is_ref=<span class="number">1</span>)=...</div><div class="line">)</div></pre></td></tr></table></figure>
+<p><img src="/images/php/leak-array.png" alt=""></p>
+<p>尽管不再有任何作用域中的<strong>任何</strong>符号表中的引用指向这个 zval，由于数组元素 <code>1</code> 仍然指向数组本身，所以这个 zval 不能被清除 。因为没有另外的符号指向它，所以没有办法清除这个结构，结果就会导致内存泄漏。</p>
+<p>这就是循环引用，虽然 PHP 将在脚本执行结束时会清除这个数据结构，但是在 PHP 清除之前，将耗费不少内存。这中问题如果出现很难被发现。仅仅一两次倒没什么，但是如果出现几千次，甚至几十万次的内存泄漏，这显然是个大问题。尤其是当PHP被作为守护进程，长时间运行时。</p>
+<h5 id="那么PHP是如何解决的呢？"><a href="#那么PHP是如何解决的呢？" class="headerlink" title="那么PHP是如何解决的呢？"></a>那么PHP是如何解决的呢？</h5><p>PHP 5.3 的垃圾回收算法仍然以引用计数为基础，但是不再使用简单计数，而是使用了同步回收算法，这个算法由IBM的工程师在论文 Concurrent Cycle Collection in Reference Counted Systems 中提出，包括Java的垃圾回收机制中也有在使用该算法。</p>
+<p>下面我们来看看PHP的实现。猜测对象回收时应该会有垃圾回收调用，所以找到Object对象释放的函数。 在 Zend/zend_objects_API.h <code>zend_object_release</code> 函数中</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="keyword">static</span> zend_always_inline void zend_object_release(zend_object *obj)</div><div class="line">&#123;</div><div class="line">    <span class="keyword">if</span> (--GC_REFCOUNT(obj) == <span class="number">0</span>) &#123;</div><div class="line">        zend_objects_store_del(obj);</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (UNEXPECTED(GC_MAY_LEAK((zend_refcounted*)obj))) &#123;</div><div class="line">        gc_possible_root((zend_refcounted*)obj);</div><div class="line">    &#125;   </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>当一个对象被释放时（调用 <code>zend_object_release</code> 函数），根据简单的引用计数原则，如果引用计数减少到 0，所在变量容器将被清除（free）。否则引用计数减少到非 0 值时，会产生垃圾周期（即调用 <code>gc_possible_root</code> 函数）。这个函数的名字有点奇怪，possible root 可能根？看一下 <code>gc_possible_root</code> 函数内容，在 Zend/zend_gc.c 中 <code>gc_possible_root</code>。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line">ZEND_API void ZEND_FASTCALL gc_possible_root(zend_refcounted *ref)</div><div class="line">&#123;</div><div class="line">    gc_root_buffer *newRoot;</div><div class="line">    newRoot = GC_G(unused);</div><div class="line"></div><div class="line">   <span class="comment">// ....... 省略部分代码</span></div><div class="line"></div><div class="line">    GC_TRACE_SET_COLOR(ref, GC_PURPLE);</div><div class="line">    GC_INFO(ref) = (newRoot - GC_G(buf)) | GC_PURPLE;</div><div class="line">    newRoot-&gt;ref = ref;</div><div class="line"></div><div class="line">    newRoot-&gt;next = GC_G(roots).next;</div><div class="line">    newRoot-&gt;prev = &amp;GC_G(roots);</div><div class="line">    GC_G(roots).next-&gt;prev = newRoot;</div><div class="line">    GC_G(roots).next = newRoot;</div><div class="line">    <span class="comment">// ....</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这个函数把可能根（possible roots）放在了 <code>GC_G(roots)</code> 中，这个 <code>GC_G(roots)</code> 是一个双向链表。结构如下：</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line">typedef struct _gc_root_buffer &#123;</div><div class="line">    zend_refcounted          *ref;</div><div class="line">    struct _gc_root_buffer   *next;     <span class="comment">/* double-linked list               */</span></div><div class="line">    struct _gc_root_buffer   *prev;</div><div class="line">    uint32_t                 refcount;</div><div class="line">&#125; gc_root_buffer;</div></pre></td></tr></table></figure>
+<p>并且这个链表的长度是定义是 <code>#define GC_ROOT_BUFFER_MAX_ENTRIES 10001</code>。猜测简单解决循环引用原理：因为已经没有任何符号指向循环引用指向的zval，于是用这个<em>可能根双向链表</em>来记录可能产生内存泄漏的结构体。</p>
+<p>接着往下看代码， <code>GC_TRACE_SET_COLOR(ref, GC_PURPLE);</code> 设置颜色为紫色，关于颜色的定义可以在代码注释中看到：</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line">* Colors and its meaning</div><div class="line">* ----------------------</div><div class="line">*</div><div class="line">* BLACK  (GC_BLACK)   - In use or free. </div><div class="line">* GREY   (GC_GREY)    - Possible member of cycle.</div><div class="line">* WHITE  (GC_WHITE)   - Member of garbage cycle.</div><div class="line">* PURPLE (GC_PURPLE)  - Possible root of cycle.</div><div class="line">*</div></pre></td></tr></table></figure>
+<p>紫色表示<em>疑似垃圾（Possible root of cycle）</em>。我们可以推测 PHP 把可能存在内存泄露的引用存放到 Possible roots 里，这样在清理垃圾时，就避免不得不检查所有引用计数。</p>
+<p>现在有了垃圾回收的<em>疑似垃圾</em>的一个链表。那么是在何时清除这些垃圾呢？</p>
+<p>回看 <code>gc_possible_root</code> 函数中，调用了 <code>gc_collect_cycles</code> ，这个函数其实就是 <code>zend_gc_collect_cycles</code>，在 Zend/zend.c 的 <code>zend_startup</code>中定义实现。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="comment">/* Set up the default garbage collection implementation. */</span></div><div class="line">gc_collect_cycles = zend_gc_collect_cycles;</div></pre></td></tr></table></figure>
+<p>在来看<code>gc_collect_cycles</code>的调用条件，在Zend/zend_gc.c 中 <code>gc_possible_root</code>中</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="comment">// 略...</span></div><div class="line">    newRoot = GC_G(unused);</div><div class="line">    <span class="keyword">if</span> (newRoot) &#123;</div><div class="line">        GC_G(unused) = newRoot-&gt;prev;</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (GC_G(first_unused) != GC_G(last_unused)) &#123;</div><div class="line">        newRoot = GC_G(first_unused);</div><div class="line">        GC_G(first_unused)++;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">if</span> (!GC_G(gc_enabled)) &#123;</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        &#125;    </div><div class="line">        GC_REFCOUNT(ref)++;</div><div class="line">        gc_collect_cycles();</div><div class="line">        GC_REFCOUNT(ref)--;</div><div class="line">        <span class="keyword">if</span> (UNEXPECTED(GC_REFCOUNT(ref)) == <span class="number">0</span>) &#123;</div><div class="line">            zval_dtor_func(ref);</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        &#125;    </div><div class="line">        <span class="keyword">if</span> (UNEXPECTED(GC_INFO(ref))) &#123;</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        &#125;    </div><div class="line">        newRoot = GC_G(unused);</div><div class="line">        <span class="keyword">if</span> (!newRoot) &#123;</div><div class="line"><span class="comment">#if ZEND_GC_DEBUG</span></div><div class="line">            <span class="keyword">if</span> (!GC_G(gc_full)) &#123;</div><div class="line">                fprintf(stderr, <span class="string">"GC: no space to record new root candidate\n"</span>);</div><div class="line">                GC_G(gc_full) = <span class="number">1</span>;</div><div class="line">            &#125;    </div><div class="line"><span class="comment">#endif</span></div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        &#125;    </div><div class="line">        GC_G(unused) = newRoot-&gt;prev;</div><div class="line">    &#125;</div><div class="line"><span class="comment">// 略...</span></div></pre></td></tr></table></figure>
+<p>看下上面的 if else 在什么条件下能被执行到。<code>unused</code>、<code>first_unused</code>、<code>last_unused</code>在<code>_zend_gc_globals</code>中。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line">typedef struct _zend_gc_globals &#123;</div><div class="line">  <span class="comment">// ...</span></div><div class="line">    gc_root_buffer   *buf;              <span class="comment">/* preallocated arrays of buffers   */</span></div><div class="line">    gc_root_buffer    roots;            <span class="comment">/* list of possible roots of cycles */</span></div><div class="line">    gc_root_buffer   *unused;           <span class="comment">/* list of unused buffers           */</span></div><div class="line">    gc_root_buffer   *first_unused;     <span class="comment">/* pointer to first unused buffer   */</span></div><div class="line">    gc_root_buffer   *last_unused;      <span class="comment">/* pointer to last unused buffer    */</span></div><div class="line"></div><div class="line">  <span class="comment">// ...</span></div><div class="line">&#125; zend_gc_globals;</div></pre></td></tr></table></figure>
+<p>于是可以得出结论，仅仅在根缓冲区满了时（也就是<code>GC_ROOT_BUFFER_MAX_ENTRIES</code> 不够时），才对缓冲区内部所有不同的变量容器执行垃圾回收操作。</p>
+<p>那么是如何进行垃圾回收的呢？看 <code>zend_gc_collect_cycles</code> 函数就好了。在注释中也有描述</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"></div><div class="line"> * Flow</div><div class="line">* =====</div><div class="line">*</div><div class="line">* The garbage collect cycle starts from <span class="string">'gc_mark_roots'</span>, which traverses the</div><div class="line">* possible roots, <span class="keyword">and</span> calls mark_grey <span class="keyword">for</span> roots are marked purple with</div><div class="line">* depth-first traverse.</div><div class="line">*</div><div class="line">* After all possible roots are traversed <span class="keyword">and</span> marked,</div><div class="line">* gc_scan_roots will be called, <span class="keyword">and</span> each root will be called with</div><div class="line">* gc_scan(root-&gt;ref)</div><div class="line">*</div><div class="line">* gc_scan checkes the colors of possible members.</div><div class="line">*</div><div class="line">* <span class="keyword">If</span> the node is marked <span class="keyword">as</span> grey <span class="keyword">and</span> the refcount &gt; <span class="number">0</span></div><div class="line">*    gc_scan_black will be called on that node to scan it<span class="string">'s subgraph.</span></div><div class="line">* otherwise (refcount == 0), it marks the node white.</div><div class="line">*</div><div class="line">* A node MAY be added to possbile roots when ZEND_UNSET_VAR happens or</div><div class="line">* zend_assign_to_variable is called only when possible garbage node is</div><div class="line">* produced.</div><div class="line">* gc_possible_root() will be called to add the nodes to possible roots.</div><div class="line">*</div><div class="line">*</div><div class="line">* For objects, we call their get_gc handler (by default 'zend_std_get_gc<span class="string">') to</span></div><div class="line">* get the object properties to scan.</div><div class="line">*</div></pre></td></tr></table></figure>
+<p>过程：</p>
+<ol>
+<li>垃圾回收周期从 <code>gc_mark_roots</code> 函数开始，深度优先遍历所有<em>可能根</em>，调用 <code>mark_grey</code> 把原标记为紫色（Possible root of cycle）的root标记为灰色（Possible member of cycle）。</li>
+<li>当所有的root都被遍历并且标记之后，调用 <code>gc_scan_roots</code> ，然后每个root 执行 <code>gc_scan(root-&gt;ref)</code>。</li>
+<li><code>gc_scan</code> 检查所有的疑似垃圾成员。</li>
+<li>如果节点被标记为灰色，并且 refcount &gt; 0，该节点执行 <code>gc_scan_black</code>扫描它的子图。否则（ refcount == 0），标记节点为白色（Member of garbage cycle 垃圾周期）。</li>
+<li>最后被标记为白色的节点会被真正的清除。代码就不贴了，都在<code>zend_gc_collect_cycles</code>函数中。可以说一下，对于 object 调用的是efree(p)。</li>
+</ol>
+<h5 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h5><ol>
+<li>PHP的垃圾回收使用的是同步回收算法（Concurrent Cycle Collection in Reference Counted Systems）。</li>
+<li>基本原来是通过一个双向链表来存储可能存在内存泄漏的zval引用，解决因为符号表中已经不存在指向zval的引用导致无法删除zval的问题。</li>
+<li>当可能存在内存泄漏的引用被释放时，比如 <code>unset</code> 一个 Object，就把该引用添加到可能根的链表中。</li>
+<li>同时判断可能根链表是否已满，如果已满（也就是<code>GC_ROOT_BUFFER_MAX_ENTRIES</code> 不够时），则开启垃圾回收周期。在<code>shutdown_executor</code>（脚本执行结束）时，也会开始垃圾回收周期。</li>
+<li><code>zend_gc_collect_cycles</code> 垃圾回收周期中，深度遍历所有可能根。用 BLACK、GREY、WHITE、PURPLE 来记录回收周期中变量的状态，最终清楚垃圾变量。</li>
+</ol>
+<h5 id="References："><a href="#References：" class="headerlink" title="References："></a>References：</h5><ul>
+<li>引用计数基本知识 <a href="http://php.net/manual/zh/features.gc.refcounting-basics.php" target="_blank" rel="external">http://php.net/manual/zh/features.gc.refcounting-basics.php</a></li>
+<li>回收周期(Collecting Cycles)  <a href="http://php.net/manual/zh/features.gc.collecting-cycles.php" target="_blank" rel="external">http://php.net/manual/zh/features.gc.collecting-cycles.php</a></li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/03/24/publish-hexo-post-on-github-pages-by-travis-ci/" itemprop="url">
                   Travis CI 持续集成 Hexo 的 Github Pages的博客
                 </a>
@@ -1103,122 +1252,6 @@
   </article>
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/03/03/installing-centos7-nginx1-10-3-php7-mysql5-7/" itemprop="url">
-                  CentOS 7 从零开始搭建 LNMP 环境（nginx/1.10.3 PHP/7.1.2 Mysql/5.7.17）
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-03-03T10:10:36+08:00" content="2017-03-03">
-              2017-03-03
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/linux/" itemprop="url" rel="index">
-                    <span itemprop="name">linux</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>最近买了 Linode VPS 服务。5刀每月，只有1G的内存，编译 Mysql 内存溢出，然后升级到2G内存的版本，每月10刀……以下纪录 LNMP 环境安装过程：</p>
-<h2 id="安装-Nginx"><a href="#安装-Nginx" class="headerlink" title="安装 Nginx"></a>安装 Nginx</h2><figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">~<span class="comment"># yum install wget</span></div><div class="line">~<span class="comment"># wget http://nginx.org/download/nginx-1.10.3.tar.gz</span></div><div class="line">~<span class="comment"># tar zxf nginx-1.10.3.tar.gz</span></div><div class="line">~<span class="comment"># cd nginx-1.10.3</span></div><div class="line"></div><div class="line">~<span class="comment"># yum install pcre-devel pcre openssl openssl-devel</span></div><div class="line">~<span class="comment"># yum install gcc</span></div><div class="line">~<span class="comment"># ./configure --prefix=/opt/nginx</span></div><div class="line">~<span class="comment"># make &amp; make install</span></div></pre></td></tr></table></figure>
-<p>修改配置文件，启动 Nginx服务<br><figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">~<span class="comment"># /opt/nginx/sbin/nginx</span></div></pre></td></tr></table></figure></p>
-<p>重启<br><figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">~<span class="comment"># /opt/nginx/sbin/nginx -s reload</span></div></pre></td></tr></table></figure></p>
-<h2 id="安装-PHP"><a href="#安装-PHP" class="headerlink" title="安装 PHP"></a>安装 PHP</h2><figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">~<span class="comment"># wget http://jp2.php.net/get/php-7.1.2.tar.gz/from/this/mirror</span></div><div class="line">~<span class="comment"># tar zxf mirror</span></div><div class="line">~<span class="comment"># cd php-7.1.2</span></div></pre></td></tr></table></figure>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">~<span class="comment"># yum install zlib-devel zlib libxml2 libxml2-devel  libpng libpng-devel libcurl-devel curl libcurl libzip-devel libzip gd bzip2-devel bzip2</span></div><div class="line"></div><div class="line">~<span class="comment"># ./configure --prefix=/opt/php  --enable-fpm --with-openssl  --with-zlib  --with-mysqli=mysqlnd  --enable-pcntl --enable-soap --enable-zip --enable-sockets --enable-mbstring  --with-curl --with-pcre-regex  --with-bz2 --with-gd  --with-pdo-mysql=mysqlnd  --with-mysqli=mysqlnd   --enable-maintainer-zts</span></div><div class="line"></div><div class="line">~<span class="comment"># make &amp; make install</span></div></pre></td></tr></table></figure>
-<p>启动 php-fpm，使用默认的配置文件<br><figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">~<span class="comment"># cd /opt/php</span></div><div class="line">~<span class="comment"># mv etc/php-fpm.conf.default etc/php-fpm.conf</span></div><div class="line">~<span class="comment"># mv etc/php-fpm.d/www.conf.default etc/php-fpm.d/www.conf</span></div><div class="line">~<span class="comment"># sbin/php-fpm -y etc/php-fpm.conf</span></div></pre></td></tr></table></figure></p>
-<h2 id="安装-Mysql"><a href="#安装-Mysql" class="headerlink" title="安装 Mysql"></a>安装 Mysql</h2><figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">~<span class="comment"># wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.17.tar.gz</span></div><div class="line">~<span class="comment"># tar zxf mysql-5.7.17.tar.gz</span></div><div class="line">~<span class="comment"># cd mysql-5.7.17</span></div><div class="line"></div><div class="line">// cmake安装mysql，会自行下载并安装boost</div><div class="line"></div><div class="line">~<span class="comment"># yum install  cmake gcc gcc-c++ ncurses-devel cmake libaio  bison</span></div><div class="line"></div><div class="line">~<span class="comment"># cmake . -DCMAKE_INSTALL_PREFIX=/opt/mysql -DWITH_BOOST=/opt/boost/ -DMYSQL_DATADIR=/opt/mysql/data -DWITH_INNOBASE_STORAGE_ENGINE=1 -DMYSQL_UNIX_ADDR==/opt/mysql/mysql.sock -DMYSQL_USER=mysql -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci</span></div><div class="line"></div><div class="line">~<span class="comment"># make &amp; make install</span></div></pre></td></tr></table></figure>
-<p>创建 Mysql 账户<br><figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">~<span class="comment"># groupadd mysql</span></div><div class="line">~<span class="comment"># useradd -r -g mysql -s /bin/false mysql</span></div><div class="line">~<span class="comment"># chown -R mysql .</span></div><div class="line">~<span class="comment"># chgrp -R mysql .</span></div></pre></td></tr></table></figure></p>
-<p>启动 Mysql 服务</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">//生成初始化 Mysql 帐号root 密码</div><div class="line">[root@li1571-79 mysql]<span class="comment"># bin/mysqld --initialize --user=mysql</span></div><div class="line">2017-03-03T02:59:23.230496Z 0 [Warning] TIMESTAMP with implicit DEFAULT value is deprecated. Please use --explicit_defaults_for_timestamp server option (see documentation <span class="keyword">for</span> more details).</div><div class="line">2017-03-03T02:59:23.576085Z 0 [Warning] InnoDB: New <span class="built_in">log</span> files created, LSN=45790</div><div class="line">2017-03-03T02:59:23.628088Z 0 [Warning] InnoDB: Creating foreign key constraint system tables.</div><div class="line">2017-03-03T02:59:23.685971Z 0 [Warning] No existing UUID has been found, so we assume that this is the first time that this server has been started. Generating a new UUID: 67ce62cb-ffbd-11e6<span class="_">-a</span>9b9<span class="_">-f</span>23c91e57db2.</div><div class="line">2017-03-03T02:59:23.688763Z 0 [Warning] Gtid table is not ready to be used. Table <span class="string">'mysql.gtid_executed'</span> cannot be opened.</div><div class="line">2017-03-03T02:59:23.690301Z 1 [Note] A temporary password is generated <span class="keyword">for</span> root@localhost: &amp;H4FpSyD/b6&lt;</div></pre></td></tr></table></figure>
-<p>最后的 <code>&amp;H4FpSyD/b6&lt;</code> 即是生成的临时账户，启动 Mysql 服务<br><figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">~<span class="comment"># cp support-files/mysql.server /opt/mysql/bin</span></div><div class="line">~<span class="comment"># cd /opt/mysql</span></div><div class="line">~<span class="comment"># bin/mysql.server start</span></div></pre></td></tr></table></figure></p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">[root@li1571-79 mysql]<span class="comment"># bin/mysql -uroot -p -h127.0.0.1 -P3306</span></div><div class="line">Enter password:</div><div class="line">输入临时帐号密码，即可进入mysql 客户端。第一次登录，强制需要修改临时密码</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">mysql&gt; alter user &apos;root&apos;@&apos;localhost&apos; identified by &apos;123abc&apos;;</div><div class="line">Query OK, 0 rows affected (0.01 sec)</div><div class="line"></div><div class="line">mysql&gt; show databases;</div><div class="line">+--------------------+</div><div class="line">| Database           |</div><div class="line">+--------------------+</div><div class="line">| information_schema |</div><div class="line">| mysql              |</div><div class="line">| performance_schema |</div><div class="line">| sys                |</div><div class="line">+--------------------+</div><div class="line">4 rows in set (0.01 sec)</div></pre></td></tr></table></figure>
-<p>到这里，LNMP 到这里LNMP 初始默认环境搭建完成。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-    
   </section>
 
   
@@ -1260,7 +1293,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">166</span>
+              <span class="site-state-item-count">167</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1277,7 +1310,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">117</span>
+                <span class="site-state-item-count">118</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

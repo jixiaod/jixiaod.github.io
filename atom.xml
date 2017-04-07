@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.100dos.com/"/>
-  <updated>2017-04-07T03:42:10.642Z</updated>
+  <updated>2017-04-07T08:12:10.174Z</updated>
   <id>http://blog.100dos.com/</id>
   
   <author>
@@ -16,11 +16,87 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>PHP 的垃圾回收机制－理解PHP如何解决循环引用导致的内存泄漏问题</title>
+    <link href="http://blog.100dos.com/2017/04/07/php-garbage-collection-collect-cycles/"/>
+    <id>http://blog.100dos.com/2017/04/07/php-garbage-collection-collect-cycles/</id>
+    <published>2017-04-07T08:00:53.000Z</published>
+    <updated>2017-04-07T08:12:10.174Z</updated>
+    
+    <content type="html"><![CDATA[<h5 id="先来看一下什么是循环引用问题？"><a href="#先来看一下什么是循环引用问题？" class="headerlink" title="先来看一下什么是循环引用问题？"></a>先来看一下什么是循环引用问题？</h5><p>在 PHP 5.2 中使用的垃圾回收算法是 Reference Counting（引用计数）。非常简单，为每个 zval 分配一个计数器，当一个 zval 建立时计数器初始化为1，以后每有一个新变量引用此 zval，则计数器加1，而每当减少一个引用的变量则计数器减 1，当垃圾回收机制运作的时候，将所有计数器为0的zval销毁并回收其占用的内存。但是对于以下代码，把数组作为一个元素添加到自己，自身引用自身。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$a = <span class="keyword">array</span>( <span class="string">'one'</span> );</div><div class="line">$a[] =&amp; $a;</div><div class="line">xdebug_debug_zval( <span class="string">'a'</span> );</div><div class="line"><span class="meta">?&gt;</span></div><div class="line"></div><div class="line"><span class="comment">// output </span></div><div class="line">a: (refcount=<span class="number">2</span>, is_ref=<span class="number">1</span>)=<span class="keyword">array</span> (</div><div class="line">   <span class="number">0</span> =&gt; (refcount=<span class="number">1</span>, is_ref=<span class="number">0</span>)=<span class="string">'one'</span>,</div><div class="line">   <span class="number">1</span> =&gt; (refcount=<span class="number">2</span>, is_ref=<span class="number">1</span>)=...</div><div class="line">)</div></pre></td></tr></table></figure>
+<p><img src="/images/php/loop-array.png" alt=""><br>能看到数组变量 <code>a</code> 同时也是这个数组的第二个元素<code>1</code> 指向的变量容器中 <code>refcount</code> 为 2。上面的输出结果中的”…”说明发生了递归操作， 显然在这种情况下”…”表示指向原始数组。</p>
+<p>跟刚刚一样，对一个变量调用 unset，将从符号表中删除这个引用，且它指向的 zval 的引用次数也减 1。所以，如果我们在执行完上面的代码后，对变量 <code>$a</code> 调用 unset， 那么变量 <code>$a</code> 和数组元素 <code>1</code> 所指向的变量容器的引用次数减 1，变成 1。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="comment">// output</span></div><div class="line">(refcount=<span class="number">1</span>, is_ref=<span class="number">1</span>)=<span class="keyword">array</span> (</div><div class="line">   <span class="number">0</span> =&gt; (refcount=<span class="number">1</span>, is_ref=<span class="number">0</span>)=<span class="string">'one'</span>,</div><div class="line">   <span class="number">1</span> =&gt; (refcount=<span class="number">1</span>, is_ref=<span class="number">1</span>)=...</div><div class="line">)</div></pre></td></tr></table></figure>
+<p><img src="/images/php/leak-array.png" alt=""></p>
+<p>尽管不再有任何作用域中的<strong>任何</strong>符号表中的引用指向这个 zval，由于数组元素 <code>1</code> 仍然指向数组本身，所以这个 zval 不能被清除 。因为没有另外的符号指向它，所以没有办法清除这个结构，结果就会导致内存泄漏。</p>
+<p>这就是循环引用，虽然 PHP 将在脚本执行结束时会清除这个数据结构，但是在 PHP 清除之前，将耗费不少内存。这中问题如果出现很难被发现。仅仅一两次倒没什么，但是如果出现几千次，甚至几十万次的内存泄漏，这显然是个大问题。尤其是当PHP被作为守护进程，长时间运行时。</p>
+<h5 id="那么PHP是如何解决的呢？"><a href="#那么PHP是如何解决的呢？" class="headerlink" title="那么PHP是如何解决的呢？"></a>那么PHP是如何解决的呢？</h5><p>PHP 5.3 的垃圾回收算法仍然以引用计数为基础，但是不再使用简单计数，而是使用了同步回收算法，这个算法由IBM的工程师在论文 Concurrent Cycle Collection in Reference Counted Systems 中提出，包括Java的垃圾回收机制中也有在使用该算法。</p>
+<p>下面我们来看看PHP的实现。猜测对象回收时应该会有垃圾回收调用，所以找到Object对象释放的函数。 在 Zend/zend_objects_API.h <code>zend_object_release</code> 函数中</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="keyword">static</span> zend_always_inline void zend_object_release(zend_object *obj)</div><div class="line">&#123;</div><div class="line">    <span class="keyword">if</span> (--GC_REFCOUNT(obj) == <span class="number">0</span>) &#123;</div><div class="line">        zend_objects_store_del(obj);</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (UNEXPECTED(GC_MAY_LEAK((zend_refcounted*)obj))) &#123;</div><div class="line">        gc_possible_root((zend_refcounted*)obj);</div><div class="line">    &#125;   </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>当一个对象被释放时（调用 <code>zend_object_release</code> 函数），根据简单的引用计数原则，如果引用计数减少到 0，所在变量容器将被清除（free）。否则引用计数减少到非 0 值时，会产生垃圾周期（即调用 <code>gc_possible_root</code> 函数）。这个函数的名字有点奇怪，possible root 可能根？看一下 <code>gc_possible_root</code> 函数内容，在 Zend/zend_gc.c 中 <code>gc_possible_root</code>。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line">ZEND_API void ZEND_FASTCALL gc_possible_root(zend_refcounted *ref)</div><div class="line">&#123;</div><div class="line">    gc_root_buffer *newRoot;</div><div class="line">    newRoot = GC_G(unused);</div><div class="line"></div><div class="line">   <span class="comment">// ....... 省略部分代码</span></div><div class="line"></div><div class="line">    GC_TRACE_SET_COLOR(ref, GC_PURPLE);</div><div class="line">    GC_INFO(ref) = (newRoot - GC_G(buf)) | GC_PURPLE;</div><div class="line">    newRoot-&gt;ref = ref;</div><div class="line"></div><div class="line">    newRoot-&gt;next = GC_G(roots).next;</div><div class="line">    newRoot-&gt;prev = &amp;GC_G(roots);</div><div class="line">    GC_G(roots).next-&gt;prev = newRoot;</div><div class="line">    GC_G(roots).next = newRoot;</div><div class="line">    <span class="comment">// ....</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这个函数把可能根（possible roots）放在了 <code>GC_G(roots)</code> 中，这个 <code>GC_G(roots)</code> 是一个双向链表。结构如下：</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line">typedef struct _gc_root_buffer &#123;</div><div class="line">    zend_refcounted          *ref;</div><div class="line">    struct _gc_root_buffer   *next;     <span class="comment">/* double-linked list               */</span></div><div class="line">    struct _gc_root_buffer   *prev;</div><div class="line">    uint32_t                 refcount;</div><div class="line">&#125; gc_root_buffer;</div></pre></td></tr></table></figure>
+<p>并且这个链表的长度是定义是 <code>#define GC_ROOT_BUFFER_MAX_ENTRIES 10001</code>。猜测简单解决循环引用原理：因为已经没有任何符号指向循环引用指向的zval，于是用这个<em>可能根双向链表</em>来记录可能产生内存泄漏的结构体。</p>
+<p>接着往下看代码， <code>GC_TRACE_SET_COLOR(ref, GC_PURPLE);</code> 设置颜色为紫色，关于颜色的定义可以在代码注释中看到：</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line">* Colors and its meaning</div><div class="line">* ----------------------</div><div class="line">*</div><div class="line">* BLACK  (GC_BLACK)   - In use or free. </div><div class="line">* GREY   (GC_GREY)    - Possible member of cycle.</div><div class="line">* WHITE  (GC_WHITE)   - Member of garbage cycle.</div><div class="line">* PURPLE (GC_PURPLE)  - Possible root of cycle.</div><div class="line">*</div></pre></td></tr></table></figure>
+<p>紫色表示<em>疑似垃圾（Possible root of cycle）</em>。我们可以推测 PHP 把可能存在内存泄露的引用存放到 Possible roots 里，这样在清理垃圾时，就避免不得不检查所有引用计数。</p>
+<p>现在有了垃圾回收的<em>疑似垃圾</em>的一个链表。那么是在何时清除这些垃圾呢？</p>
+<p>回看 <code>gc_possible_root</code> 函数中，调用了 <code>gc_collect_cycles</code> ，这个函数其实就是 <code>zend_gc_collect_cycles</code>，在 Zend/zend.c 的 <code>zend_startup</code>中定义实现。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="comment">/* Set up the default garbage collection implementation. */</span></div><div class="line">gc_collect_cycles = zend_gc_collect_cycles;</div></pre></td></tr></table></figure>
+<p>在来看<code>gc_collect_cycles</code>的调用条件，在Zend/zend_gc.c 中 <code>gc_possible_root</code>中</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="comment">// 略...</span></div><div class="line">    newRoot = GC_G(unused);</div><div class="line">    <span class="keyword">if</span> (newRoot) &#123;</div><div class="line">        GC_G(unused) = newRoot-&gt;prev;</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (GC_G(first_unused) != GC_G(last_unused)) &#123;</div><div class="line">        newRoot = GC_G(first_unused);</div><div class="line">        GC_G(first_unused)++;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">if</span> (!GC_G(gc_enabled)) &#123;</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        &#125;    </div><div class="line">        GC_REFCOUNT(ref)++;</div><div class="line">        gc_collect_cycles();</div><div class="line">        GC_REFCOUNT(ref)--;</div><div class="line">        <span class="keyword">if</span> (UNEXPECTED(GC_REFCOUNT(ref)) == <span class="number">0</span>) &#123;</div><div class="line">            zval_dtor_func(ref);</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        &#125;    </div><div class="line">        <span class="keyword">if</span> (UNEXPECTED(GC_INFO(ref))) &#123;</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        &#125;    </div><div class="line">        newRoot = GC_G(unused);</div><div class="line">        <span class="keyword">if</span> (!newRoot) &#123;</div><div class="line"><span class="comment">#if ZEND_GC_DEBUG</span></div><div class="line">            <span class="keyword">if</span> (!GC_G(gc_full)) &#123;</div><div class="line">                fprintf(stderr, <span class="string">"GC: no space to record new root candidate\n"</span>);</div><div class="line">                GC_G(gc_full) = <span class="number">1</span>;</div><div class="line">            &#125;    </div><div class="line"><span class="comment">#endif</span></div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        &#125;    </div><div class="line">        GC_G(unused) = newRoot-&gt;prev;</div><div class="line">    &#125;</div><div class="line"><span class="comment">// 略...</span></div></pre></td></tr></table></figure>
+<p>看下上面的 if else 在什么条件下能被执行到。<code>unused</code>、<code>first_unused</code>、<code>last_unused</code>在<code>_zend_gc_globals</code>中。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line">typedef struct _zend_gc_globals &#123;</div><div class="line">  <span class="comment">// ...</span></div><div class="line">    gc_root_buffer   *buf;              <span class="comment">/* preallocated arrays of buffers   */</span></div><div class="line">    gc_root_buffer    roots;            <span class="comment">/* list of possible roots of cycles */</span></div><div class="line">    gc_root_buffer   *unused;           <span class="comment">/* list of unused buffers           */</span></div><div class="line">    gc_root_buffer   *first_unused;     <span class="comment">/* pointer to first unused buffer   */</span></div><div class="line">    gc_root_buffer   *last_unused;      <span class="comment">/* pointer to last unused buffer    */</span></div><div class="line"></div><div class="line">  <span class="comment">// ...</span></div><div class="line">&#125; zend_gc_globals;</div></pre></td></tr></table></figure>
+<p>于是可以得出结论，仅仅在根缓冲区满了时（也就是<code>GC_ROOT_BUFFER_MAX_ENTRIES</code> 不够时），才对缓冲区内部所有不同的变量容器执行垃圾回收操作。</p>
+<p>那么是如何进行垃圾回收的呢？看 <code>zend_gc_collect_cycles</code> 函数就好了。在注释中也有描述</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"></div><div class="line"> * Flow</div><div class="line">* =====</div><div class="line">*</div><div class="line">* The garbage collect cycle starts from <span class="string">'gc_mark_roots'</span>, which traverses the</div><div class="line">* possible roots, <span class="keyword">and</span> calls mark_grey <span class="keyword">for</span> roots are marked purple with</div><div class="line">* depth-first traverse.</div><div class="line">*</div><div class="line">* After all possible roots are traversed <span class="keyword">and</span> marked,</div><div class="line">* gc_scan_roots will be called, <span class="keyword">and</span> each root will be called with</div><div class="line">* gc_scan(root-&gt;ref)</div><div class="line">*</div><div class="line">* gc_scan checkes the colors of possible members.</div><div class="line">*</div><div class="line">* <span class="keyword">If</span> the node is marked <span class="keyword">as</span> grey <span class="keyword">and</span> the refcount &gt; <span class="number">0</span></div><div class="line">*    gc_scan_black will be called on that node to scan it<span class="string">'s subgraph.</span></div><div class="line">* otherwise (refcount == 0), it marks the node white.</div><div class="line">*</div><div class="line">* A node MAY be added to possbile roots when ZEND_UNSET_VAR happens or</div><div class="line">* zend_assign_to_variable is called only when possible garbage node is</div><div class="line">* produced.</div><div class="line">* gc_possible_root() will be called to add the nodes to possible roots.</div><div class="line">*</div><div class="line">*</div><div class="line">* For objects, we call their get_gc handler (by default 'zend_std_get_gc<span class="string">') to</span></div><div class="line">* get the object properties to scan.</div><div class="line">*</div></pre></td></tr></table></figure>
+<p>过程：</p>
+<ol>
+<li>垃圾回收周期从 <code>gc_mark_roots</code> 函数开始，深度优先遍历所有<em>可能根</em>，调用 <code>mark_grey</code> 把原标记为紫色（Possible root of cycle）的root标记为灰色（Possible member of cycle）。</li>
+<li>当所有的root都被遍历并且标记之后，调用 <code>gc_scan_roots</code> ，然后每个root 执行 <code>gc_scan(root-&gt;ref)</code>。</li>
+<li><code>gc_scan</code> 检查所有的疑似垃圾成员。</li>
+<li>如果节点被标记为灰色，并且 refcount &gt; 0，该节点执行 <code>gc_scan_black</code>扫描它的子图。否则（ refcount == 0），标记节点为白色（Member of garbage cycle 垃圾周期）。</li>
+<li>最后被标记为白色的节点会被真正的清除。代码就不贴了，都在<code>zend_gc_collect_cycles</code>函数中。可以说一下，对于 object 调用的是efree(p)。</li>
+</ol>
+<h5 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h5><ol>
+<li>PHP的垃圾回收使用的是同步回收算法（Concurrent Cycle Collection in Reference Counted Systems）。</li>
+<li>基本原来是通过一个双向链表来存储可能存在内存泄漏的zval引用，解决因为符号表中已经不存在指向zval的引用导致无法删除zval的问题。</li>
+<li>当可能存在内存泄漏的引用被释放时，比如 <code>unset</code> 一个 Object，就把该引用添加到可能根的链表中。</li>
+<li>同时判断可能根链表是否已满，如果已满（也就是<code>GC_ROOT_BUFFER_MAX_ENTRIES</code> 不够时），则开启垃圾回收周期。在<code>shutdown_executor</code>（脚本执行结束）时，也会开始垃圾回收周期。</li>
+<li><code>zend_gc_collect_cycles</code> 垃圾回收周期中，深度遍历所有可能根。用 BLACK、GREY、WHITE、PURPLE 来记录回收周期中变量的状态，最终清楚垃圾变量。</li>
+</ol>
+<h5 id="References："><a href="#References：" class="headerlink" title="References："></a>References：</h5><ul>
+<li>引用计数基本知识 <a href="http://php.net/manual/zh/features.gc.refcounting-basics.php" target="_blank" rel="external">http://php.net/manual/zh/features.gc.refcounting-basics.php</a></li>
+<li>回收周期(Collecting Cycles)  <a href="http://php.net/manual/zh/features.gc.collecting-cycles.php" target="_blank" rel="external">http://php.net/manual/zh/features.gc.collecting-cycles.php</a></li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h5 id=&quot;先来看一下什么是循环引用问题？&quot;&gt;&lt;a href=&quot;#先来看一下什么是循环引用问题？&quot; class=&quot;headerlink&quot; title=&quot;先来看一下什么是循环引用问题？&quot;&gt;&lt;/a&gt;先来看一下什么是循环引用问题？&lt;/h5&gt;&lt;p&gt;在 PHP 5.2 中使用的垃圾回收
+    
+    </summary>
+    
+      <category term="PHP" scheme="http://blog.100dos.com/categories/PHP/"/>
+    
+    
+      <category term="PHP" scheme="http://blog.100dos.com/tags/PHP/"/>
+    
+      <category term="源码阅读" scheme="http://blog.100dos.com/tags/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/"/>
+    
+      <category term="PHP7" scheme="http://blog.100dos.com/tags/PHP7/"/>
+    
+      <category term="GC" scheme="http://blog.100dos.com/tags/GC/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Travis CI 持续集成 Hexo 的 Github Pages的博客</title>
     <link href="http://blog.100dos.com/2017/03/24/publish-hexo-post-on-github-pages-by-travis-ci/"/>
     <id>http://blog.100dos.com/2017/03/24/publish-hexo-post-on-github-pages-by-travis-ci/</id>
     <published>2017-03-24T06:45:17.000Z</published>
-    <updated>2017-04-07T03:42:10.642Z</updated>
+    <updated>2017-04-07T08:12:10.174Z</updated>
     
     <content type="html"><![CDATA[<p>之前重新梳理了 <a href="http://blog.100dos.com/2017/03/14/how-to-use-hexo-post-articles-on-multiple-pcs/">Hexo 博客的发布流程</a>，可以还是觉得麻烦。毕竟操作太多，容易出错。于是想到了用 Travis CI 简化一下，效果不错，省去了不少步骤。现在只需要在 hexo 分支撰写 blog，然后push到github就可以了。Travis 会帮助完成剩下的merge hexo分支、生成静态文件、提交 master 这些工作。</p>
 <p>首先，用 Github 账号创建 <a href="https://travis-ci.org/" target="_blank" rel="external">Travis CI</a> 账号，直接用 Github 账号登录，并赋予权限即可。并在项目列表选择并创建 Travis CI 项目 <code>jixiaod / jixiaod.github.io</code>项目。</p>
@@ -66,7 +142,7 @@
     <link href="http://blog.100dos.com/2017/03/24/copy-and-chage-on-write-with-php/"/>
     <id>http://blog.100dos.com/2017/03/24/copy-and-chage-on-write-with-php/</id>
     <published>2017-03-24T03:45:33.000Z</published>
-    <updated>2017-04-07T03:42:10.642Z</updated>
+    <updated>2017-04-07T08:12:10.170Z</updated>
     
     <content type="html"><![CDATA[<p>对于这样一段代码：</p>
 <figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$a = <span class="number">1</span>;</div><div class="line">xdebug_debug_zval(<span class="string">'a'</span>);</div><div class="line">$b = $a;</div><div class="line">xdebug_debug_zval(<span class="string">'a'</span>);</div></pre></td></tr></table></figure>
@@ -111,7 +187,7 @@
     <link href="http://blog.100dos.com/2017/03/22/deeper-understanding-php7-reference/"/>
     <id>http://blog.100dos.com/2017/03/22/deeper-understanding-php7-reference/</id>
     <published>2017-03-22T07:53:49.000Z</published>
-    <updated>2017-04-07T03:42:10.642Z</updated>
+    <updated>2017-04-07T08:12:10.170Z</updated>
     
     <content type="html"><![CDATA[<p>转载：<a href="https://github.com/laruence/php7-internal/edit/master/reference.md" target="_blank" rel="external">https://github.com/laruence/php7-internal/edit/master/reference.md</a></p>
 <h4 id="REFERENCE"><a href="#REFERENCE" class="headerlink" title="REFERENCE"></a>REFERENCE</h4><p> 上一章说过引用(REFERENCE)在PHP5的时候是一个标志位, 而在PHP7以后我们把它变成了一种新的类型:<code>IS_REFERNCE</code>. 然而引用是一种很常见的应用, 所以这个变化带来了很多的变化, 也给我们在做PHP7开发的时候, 因为有的时候疏忽忘了处理这个类型, 而带来不少的bug.</p>
@@ -156,7 +232,7 @@
     <link href="http://blog.100dos.com/2017/03/22/deeper-understanding-php7-zval/"/>
     <id>http://blog.100dos.com/2017/03/22/deeper-understanding-php7-zval/</id>
     <published>2017-03-22T02:42:21.000Z</published>
-    <updated>2017-04-07T03:42:10.642Z</updated>
+    <updated>2017-04-07T08:12:10.170Z</updated>
     
     <content type="html"><![CDATA[<p>转载：<a href="https://github.com/laruence/php7-internal/blob/master/zval.md" target="_blank" rel="external">https://github.com/laruence/php7-internal/blob/master/zval.md</a></p>
 <p>PHP7已经发布, 如承诺, 我也要开始这个系列的文章的编写, 今天我想先和大家聊聊zval的变化. 在讲zval变化的之前我们先来看看zval在PHP5下面是什么样子</p>
@@ -258,7 +334,7 @@
     <link href="http://blog.100dos.com/2017/03/14/how-to-use-hexo-post-articles-on-multiple-pcs/"/>
     <id>http://blog.100dos.com/2017/03/14/how-to-use-hexo-post-articles-on-multiple-pcs/</id>
     <published>2017-03-14T04:11:57.000Z</published>
-    <updated>2017-04-07T03:42:10.642Z</updated>
+    <updated>2017-04-07T08:12:10.174Z</updated>
     
     <content type="html"><![CDATA[<p>最近公司和家里各有一台电脑，有需求在俩台电脑上都能发布 Hexo 文章。怎么办呢？</p>
 <p><a href="https://www.zhihu.com/question/21193762" target="_blank" rel="external">知乎上的回答提供了思路</a>，即创建俩个分支 master 和 hexo，下面的方案大体一样，具体操作流程详细描述一下。如何在PC1上<a href="http://blog.100dos.com/2016/05/15/build-blog-sys-by-hexo-on-github-pages/">创建 Hexo 项目</a>，可以参考之前的文章。如果像我一样已经有在线的 Github Pages，可以考虑重新创建 Project，这样可以保证 master 和 hexo 代码纯净。</p>
@@ -303,7 +379,7 @@
     <link href="http://blog.100dos.com/2017/03/14/understand-aclocal-autoconf-automake-autoheader-configure/"/>
     <id>http://blog.100dos.com/2017/03/14/understand-aclocal-autoconf-automake-autoheader-configure/</id>
     <published>2017-03-14T03:02:23.000Z</published>
-    <updated>2017-04-07T03:42:10.646Z</updated>
+    <updated>2017-04-07T08:12:10.178Z</updated>
     
     <content type="html"><![CDATA[<h3 id="autoscan-autoconf"><a href="#autoscan-autoconf" class="headerlink" title="autoscan (autoconf)"></a>autoscan (autoconf)</h3><p>扫描源代码以搜寻普通的可移植性问题，比如检查编译器、库、头文件等，生成文件configure.scan，它是configure.ac的一个雏形。</p>
 <h3 id="aclocal-automake"><a href="#aclocal-automake" class="headerlink" title="aclocal (automake)"></a>aclocal (automake)</h3><p>根据已经安装的宏，用户定义宏和 acinclude.m4 文件中的宏将 configure.ac 文件所需要的宏集中定义到文件 aclocal.m4 中。aclocal是一个 perl 脚本程序，它的定义是：</p>
@@ -341,7 +417,7 @@
     <link href="http://blog.100dos.com/2017/03/03/installing-gitlab-ce-on-centos7/"/>
     <id>http://blog.100dos.com/2017/03/03/installing-gitlab-ce-on-centos7/</id>
     <published>2017-03-03T03:30:02.000Z</published>
-    <updated>2017-04-07T03:42:10.642Z</updated>
+    <updated>2017-04-07T08:12:10.174Z</updated>
     
     <content type="html"><![CDATA[<ol>
 <li>安装配置依赖项<br>如想使用Postfix来发送邮件,在安装期间请选择’Internet Site’. 您也可以用sendmai或者 配置SMTP服务 并 使用SMTP发送邮件.<br>在 Centos 6 和 7 系统上, 下面的命令将在系统防火墙里面开放HTTP和SSH端口.</li>
@@ -386,7 +462,7 @@
     <link href="http://blog.100dos.com/2017/03/03/installing-centos7-nginx1-10-3-php7-mysql5-7/"/>
     <id>http://blog.100dos.com/2017/03/03/installing-centos7-nginx1-10-3-php7-mysql5-7/</id>
     <published>2017-03-03T02:10:36.000Z</published>
-    <updated>2017-04-07T03:42:10.642Z</updated>
+    <updated>2017-04-07T08:12:10.174Z</updated>
     
     <content type="html"><![CDATA[<p>最近买了 Linode VPS 服务。5刀每月，只有1G的内存，编译 Mysql 内存溢出，然后升级到2G内存的版本，每月10刀……以下纪录 LNMP 环境安装过程：</p>
 <h2 id="安装-Nginx"><a href="#安装-Nginx" class="headerlink" title="安装 Nginx"></a>安装 Nginx</h2><figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">~<span class="comment"># yum install wget</span></div><div class="line">~<span class="comment"># wget http://nginx.org/download/nginx-1.10.3.tar.gz</span></div><div class="line">~<span class="comment"># tar zxf nginx-1.10.3.tar.gz</span></div><div class="line">~<span class="comment"># cd nginx-1.10.3</span></div><div class="line"></div><div class="line">~<span class="comment"># yum install pcre-devel pcre openssl openssl-devel</span></div><div class="line">~<span class="comment"># yum install gcc</span></div><div class="line">~<span class="comment"># ./configure --prefix=/opt/nginx</span></div><div class="line">~<span class="comment"># make &amp; make install</span></div></pre></td></tr></table></figure>
@@ -430,7 +506,7 @@
     <link href="http://blog.100dos.com/2017/02/27/processes-and-threads/"/>
     <id>http://blog.100dos.com/2017/02/27/processes-and-threads/</id>
     <published>2017-02-27T03:11:14.000Z</published>
-    <updated>2017-04-07T03:42:10.642Z</updated>
+    <updated>2017-04-07T08:12:10.174Z</updated>
     
     <content type="html"><![CDATA[<p><a href="https://zh.wikipedia.org/wiki/行程" target="_blank" rel="external">进程</a>（process）是计算机中已运行程序的实体。关于进程需要知道的几点：</p>
 <ul>
@@ -537,7 +613,7 @@
     <link href="http://blog.100dos.com/2017/02/09/nearby-jobs/"/>
     <id>http://blog.100dos.com/2017/02/09/nearby-jobs/</id>
     <published>2017-02-09T06:25:08.000Z</published>
-    <updated>2017-04-07T03:42:10.642Z</updated>
+    <updated>2017-04-07T08:12:10.174Z</updated>
     
     <content type="html"><![CDATA[<p>从<a href="https://www.lagou.com/" target="_blank" rel="external">拉勾网</a>抓取的 86341 条招聘企业数据，企业地址匹配 LBS 经纬度取自<a href="http://lbs.amap.com/console/show/picker" target="_blank" rel="external">高德开放平台API</a>，成功匹配到 83090 条经纬度数据。没有做详细做企业主正在招聘岗位的数据，所以很大可能情况会遇到附近的公司没有招聘信息的情况，但是某些方面还是能大概了解自己附近有什么值得考虑的公司，有一定参考价值。</p>
 <h2 id="查询附近的工作"><a href="#查询附近的工作" class="headerlink" title="查询附近的工作"></a>查询附近的工作</h2><p>Github地址: <a href="https://github.com/jixiaod/NearbyJobs" target="_blank" rel="external">https://github.com/jixiaod/NearbyJobs</a></p>
@@ -568,7 +644,7 @@
     <link href="http://blog.100dos.com/2017/01/19/minesweeper-on-wechat-app/"/>
     <id>http://blog.100dos.com/2017/01/19/minesweeper-on-wechat-app/</id>
     <published>2017-01-19T02:55:08.000Z</published>
-    <updated>2017-04-07T03:42:10.642Z</updated>
+    <updated>2017-04-07T08:12:10.174Z</updated>
     
     <content type="html"><![CDATA[<p>微信小程序这几天很火，9号正式发布，今天19号过了10天，到现在略有降温的趋势。个大厂商对微信小程序的态度很不看好，最激进的要数[罗辑思维]，直接下架了自己的[得到APP]。滴滴、京东等APP也只保留了最精简的功能，某些担心过于完善的功能会抢夺APP本身的用户。不过这也印证了小程序的初衷，小而精、用完即走。（并不否认腾讯微信平台确实流氓的事实）</p>
 <blockquote>
@@ -622,7 +698,7 @@
     <link href="http://blog.100dos.com/2016/12/27/reading-note-the-trime-minister-of-qing-dynasty/"/>
     <id>http://blog.100dos.com/2016/12/27/reading-note-the-trime-minister-of-qing-dynasty/</id>
     <published>2016-12-27T11:18:35.000Z</published>
-    <updated>2017-04-07T03:42:10.646Z</updated>
+    <updated>2017-04-07T08:12:10.174Z</updated>
     
     <content type="html"><![CDATA[<p><strong>很多事情不像表面上那么简单，尤其是在官场，要考虑点更多。</strong>发生的时间、涉及的官员、所涉及到官员之间的关系、地位、各自的立场。</p>
 <p>皇上：要顾全皇族的利益，凡事涉及皇族，一定是要偏袒皇族，照顾其颜面。朝中大臣以和为贵，可以接受做官贪赃枉法，但是对上对皇上要有敬畏之心，对下对百姓不能做太过分出格。</p>
@@ -659,7 +735,7 @@
     <link href="http://blog.100dos.com/2016/12/14/cancer-is-not-far-from-us/"/>
     <id>http://blog.100dos.com/2016/12/14/cancer-is-not-far-from-us/</id>
     <published>2016-12-14T10:10:51.000Z</published>
-    <updated>2017-04-07T03:42:10.642Z</updated>
+    <updated>2017-04-07T08:12:10.170Z</updated>
     
     <content type="html"><![CDATA[<p>前几天知道了妈得了癌症的消息，原来新闻里、电视里不相干的陌生人得的病，也来到了我的身边。原来癌症离我也并不远……</p>
 <p>刚知道的时候心情不免低落，一个是为老妈难过，刚到60便染此恶疾，虽有希望治愈，治疗过程不免受苦；在一个也为自己难过，刚刚步入正轨的生活，又被被打乱了。本来还打算着让老妈过来帮带带孩子呢，结果计划全变了……孩子还未满月，老婆尚未做完月子。家里出了这么大的事情，也不敢告诉她。怕月子里身子虚，心情压抑，对恢复有影响。</p>
@@ -695,7 +771,7 @@
     <link href="http://blog.100dos.com/2016/12/13/say-goodbye-to-stevengerrard/"/>
     <id>http://blog.100dos.com/2016/12/13/say-goodbye-to-stevengerrard/</id>
     <published>2016-12-13T09:47:55.000Z</published>
-    <updated>2017-04-07T03:42:10.646Z</updated>
+    <updated>2017-04-07T08:12:10.174Z</updated>
     
     <content type="html"><![CDATA[<p>杰拉德退役的消息出来好几天了，想想还是写一篇吧。以纪念我浦最伟大的队长……</p>
 <blockquote>
@@ -748,7 +824,7 @@
     <link href="http://blog.100dos.com/2016/12/05/how-to-c-in-2016/"/>
     <id>http://blog.100dos.com/2016/12/05/how-to-c-in-2016/</id>
     <published>2016-12-05T03:23:52.000Z</published>
-    <updated>2017-04-07T03:42:10.642Z</updated>
+    <updated>2017-04-07T08:12:10.174Z</updated>
     
     <content type="html"><![CDATA[<p>英文原文：<a href="https://matt.sh/howto-c" target="_blank" rel="external">https://matt.sh/howto-c</a></p>
 <p>这原本是一篇我写在 2015 年没有发布出来的草稿。为了让大家也能受益，我决定把它从我的草稿文件夹里拿出来。并且基本是原文，未做过多修改。大概只是把年份改了一下，2015 改成了 2016。</p>
@@ -1049,7 +1125,7 @@
     <link href="http://blog.100dos.com/2016/10/27/seckill-on-e-shop/"/>
     <id>http://blog.100dos.com/2016/10/27/seckill-on-e-shop/</id>
     <published>2016-10-27T10:37:48.000Z</published>
-    <updated>2017-04-07T03:42:10.646Z</updated>
+    <updated>2017-04-07T08:12:10.174Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <p>抢购是指在某一个时间段内商家低价甚至免费销售商品，消费者突发性的集中投入购买力，大批量的、超常规的购买某种或某类商品的现象。</p>
@@ -1095,7 +1171,7 @@
     <link href="http://blog.100dos.com/2016/10/14/centsos6.6-mysql5.7-install/"/>
     <id>http://blog.100dos.com/2016/10/14/centsos6.6-mysql5.7-install/</id>
     <published>2016-10-14T04:05:45.000Z</published>
-    <updated>2017-04-07T03:42:10.642Z</updated>
+    <updated>2017-04-07T08:12:10.170Z</updated>
     
     <content type="html"><![CDATA[<p>在 CentOS 的 yum 默认安装的是 mysql 5.5 版本，由于开发需要 5.6 以上版本，索性就装个 5.7。</p>
 <p>到官网下载对应的 rpm buddle 包，CentOS 6 选择选择如下对应的版本</p>
@@ -1144,7 +1220,7 @@
     <link href="http://blog.100dos.com/2016/09/30/Lambdas-and-Closures-in-PHP/"/>
     <id>http://blog.100dos.com/2016/09/30/Lambdas-and-Closures-in-PHP/</id>
     <published>2016-09-30T07:14:55.000Z</published>
-    <updated>2017-04-07T03:42:10.638Z</updated>
+    <updated>2017-04-07T08:12:10.170Z</updated>
     
     <content type="html"><![CDATA[<p>PHP 5.3 开始，添加了 Lambdas（匿名函数）和 CLosures（闭包）这俩个新的特性。函数式编程也越来越能够得到程序员的追捧。其他语言，比如 Javascript 或 Ruby 中也经常能看到匿名函数的实现。</p>
 <p>那么什，么是 Lambda 函数？</p>
@@ -1205,7 +1281,7 @@
     <link href="http://blog.100dos.com/2016/09/25/understanding-select-poll-epoll-io-mutiplexing/"/>
     <id>http://blog.100dos.com/2016/09/25/understanding-select-poll-epoll-io-mutiplexing/</id>
     <published>2016-09-25T07:26:48.000Z</published>
-    <updated>2017-04-07T03:42:10.646Z</updated>
+    <updated>2017-04-07T08:12:10.178Z</updated>
     
     <content type="html"><![CDATA[<p>select、poll 和 epoll 都是 Linux API 提供的 IO 复用方式。<em>IO多路复用是指内核一旦发现进程指定的一个或者多个IO条件准备读取，它就通知该进程。</em><a href="http://www.zhihu.com/question/32163005/answer/55772739" target="_blank" rel="external">知乎上的回答</a> 非常好的解释了什么事IO多路复用，用机场航班调度问题的解释的非常清晰，看完之后豁然开朗。</p>
 <p>select、poll 和 epoll 都是阻塞的，用 select 来举例，写法大概是这样：</p>
@@ -1250,85 +1326,6 @@
       <category term="poll" scheme="http://blog.100dos.com/tags/poll/"/>
     
       <category term="epoll" scheme="http://blog.100dos.com/tags/epoll/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>事务的四个隔离级别</title>
-    <link href="http://blog.100dos.com/2016/09/19/the-four-levels-of-database-isolation-for-transactions/"/>
-    <id>http://blog.100dos.com/2016/09/19/the-four-levels-of-database-isolation-for-transactions/</id>
-    <published>2016-09-19T03:09:40.000Z</published>
-    <updated>2017-04-07T03:42:10.646Z</updated>
-    
-    <content type="html"><![CDATA[<p>Mysql/InnoDB 支持四个事务隔离级别，默认是可重复读（REPEATABLE-READ）。四个事务级别逐渐增强，保证数据有更高的一致性。但级别越高，性能越差。</p>
-<table>
-<thead>
-<tr>
-<th>隔离级别</th>
-<th>脏读</th>
-<th>不可重复读</th>
-<th>幻读</th>
-<th>锁</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>未提交读(Read uncommitted)</td>
-<td>可能</td>
-<td>可能</td>
-<td>可能</td>
-<td>不锁表，隔离级别最低，并发性能高</td>
-</tr>
-<tr>
-<td>提交读(Read commited)</td>
-<td>不可能</td>
-<td>可能</td>
-<td>可能</td>
-<td>锁定正在读取的行</td>
-</tr>
-<tr>
-<td>可重复读(Repeatable read)</td>
-<td>不可能</td>
-<td>不可能</td>
-<td>可能</td>
-<td>锁定所读取的所有行</td>
-</tr>
-<tr>
-<td>串行读(Serializable)</td>
-<td>不可能</td>
-<td>不可能</td>
-<td>不可能</td>
-<td>锁表</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li>未提交读：允许脏读，也就是可能读取到其他会话中未提交的事务修改的数据。</li>
-<li>提交读：只能读到已经提交的数据。（不重复读）</li>
-<li>可重复读：在同一个事务内的查询都是事务开始时刻是一致的，InnoDB的默认级别。在SQL标准中，该隔离级别消除了不可重复读，但是还是存在幻读。</li>
-<li>串行读：完全串行化的读，每次读都需要获得表级共享锁，读写相互都会阻塞。</li>
-</ul>
-<p>脏读(dirty read)：指当一个事务正在访问数据，并且对数据进行了修改，而该次修改还没有提交到数据库中。这时，另一个事务也访问这个数据，然后使用了这个数据。</p>
-<p>不可重复读(nonrepeatable read)：指在一个事务内，多次读同一数据。在这个事务还没有结束时，另一个事务也访问该同一数据。那么，在第一个事务中的俩次读数据之间，由于第二个事务的修改，和第一个事务读取到的数据可能是不一样的。这样就发生了在一个事务内俩次读到的数据是不一样的，因此称为不可重复读。（不可重复读在于修改同样条件的数据）</p>
-<p>幻读(phantom read)：第一个事务对一个表中的数据做了修改，这个修改涉及到表中的全部数据行。同时，第二个事务也修改这个表中的数据，插入一行新的数据。那么，以后就会发生操作第一个事务的用户发现表中还有没有修改的数据行，就好象发生了幻觉一样。（幻读是在于新增或删除表中数据）</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;Mysql/InnoDB 支持四个事务隔离级别，默认是可重复读（REPEATABLE-READ）。四个事务级别逐渐增强，保证数据有更高的一致性。但级别越高，性能越差。&lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;隔离级别&lt;/th&gt;
-&lt;th&gt;脏读&lt;/th&gt;
-&lt;t
-    
-    </summary>
-    
-      <category term="数据库" scheme="http://blog.100dos.com/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
-    
-    
-      <category term="事务" scheme="http://blog.100dos.com/tags/%E4%BA%8B%E5%8A%A1/"/>
     
   </entry>
   

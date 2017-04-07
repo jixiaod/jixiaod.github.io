@@ -228,6 +228,153 @@
             
               
                 
+                <a class="post-title-link" href="/2013/08/06/git-commands/" itemprop="url">
+                  git 命令使用
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2013-08-06T14:42:14+08:00" content="2013-08-06">
+              2013-08-06
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/流程-工具/" itemprop="url" rel="index">
+                    <span itemprop="name">流程&工具</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>前些天在服务器上搭建好了gitlab，想在团队推行git，逐步替换svn的使用。这样大家再也不需要linux系统管理员来帮忙创建项目和开通权限，都能够自己搞定，而且gitlab强大功能也能让代码review更加能够实行（虽然已经搭建了websvn，但是功能带单一）。</p>
+<p>对于大多新的团队成员，如何能像svn一样检出代码可能是开始使用git的第一步：</p>
+<p>首先，让gitlab的管理员，帮你创建一个账号，你登陆到gitlab，一般都使用ssh public keys来push和pull代码。使用ssh-keygen 生成ssh密钥。</p>
+<p>~# ssh-keygen</p>
+<p>~# cat ~/.ssh/id_rsa.pub</p>
+<p>拷贝自己的ssh密钥，添加到gitlab的public key。</p>
+<p>然后，新建本地git目录检出目录。</p>
+<p>~# mkdir project</p>
+<p>~# cd project</p>
+<p>~# git init   // 初始化本地环境</p>
+<p>~# git remote add origin git@githost:username/project.git   // 添加远程git地址，其中origin是给远程版本库起的别名，随便起。</p>
+<p>~# git pull origin master  // 检出master分支代码到本地</p>
+<p>这样本地开发环境的代码就检出到本地了。</p>
+<p>==============================================================================</p>
+<p>另git remote命令还有</p>
+<p>~# git remote -v   // 查看当前使用的git 版本库地址</p>
+<p>~# git remote add [name] [url]  // 添加远程版本库</p>
+<p>~# git remote rm [name]  // 删除远程版本库</p>
+<p>~# git remote set-url [name] [url]  //修改远程版本库</p>
+<p>~# git pull [remoteName] [localBranchName]    // 拉去远程版本库代码</p>
+<p>~# git push [remoteName] [localBranchName]   // 提交本地分支代码</p>
+<p>==============================================================================</p>
+<p>由于git的灵活性，本地的分支名可以与远程版本库不同。但为了团队协作不出问题，必须规定本地分支名与版本库分支名相同。还有远程版本库统一命名origin，分支目录结构</p>
+<p>origin/release-[version]   // 正式发布版本</p>
+<p>origin/master     // 开发主干（用于测试环境）</p>
+<p>origin/bough-[son-project]  // 系统子项目主分支（用于多人多子项目测试环境）</p>
+<p>origin/branch-[develper]-[version]   // 项目团队个人开发分支</p>
+<p>==============================================================================</p>
+<p>在添加远程版本库的前提下，如果想在本地添加远程版本库的其他分支，只需：</p>
+<p>~# git pull origin branch-1.1    // 拉取版本库项目分支</p>
+<p>~# git branch branch-1.1  // 创建本地分支</p>
+<p>~# git checkout branch-1.1   // 本地切换分支开发环境</p>
+<p>==============================================================================</p>
+<p>分支合并，思想上和操作上跟svn的合并操作类似，但是确实比svn要简单的多！！</p>
+<p>～# git branch   // 查看你当前所在分支，比如在master分支下，要合并branch-1.1到master</p>
+<p>~# git merge branch-1.1  // 直接在master分支下执行，当然这只是在你的本地执行操作，没有影响到git远程版本库上的分支,如果出现冲突，解决方式跟svn merge类似。建议多人协作开发merge操作都在本地执行，然后再push到远程版本库。</p>
+<p>另外：</p>
+<p>～# git branch -r // 查看远程版本库的所有分支</p>
+<p>~# git branch -d [branchName]   // 删除本地分支</p>
+<p>~# git branch –help  //查看分支的用法</p>
+<p>==============================================================================</p>
+<p>git也有tag标签功能，有需求可以通过~# git tag –help 查看使用。</p>
+<p>git的submodule功能对于团队以后的开发一定有很大帮助。<span style="font-size: medium;"><span style="line-height: 27px;"><strong>
+</strong></span></span></p>
+<p>~# git submodule add git@git-host/username/submodule.git include/core/**</p>
+<p>&nbsp;</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2013/07/11/scaling-pinterest-from-0-to-10s-of-billions-of-page-views-a-month-in-two-years/" itemprop="url">
                   Scaling Pinterest - From 0 To 10s Of Billions Of Page Views A Month In Two Years
                 </a>
@@ -1323,124 +1470,6 @@
   </article>
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2012/07/17/conscious-change/" itemprop="url">
-                  有意识的转变 - 改变
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2012-07-17T23:05:51+08:00" content="2012-07-17">
-              2012-07-17
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/工作-职场/" itemprop="url" rel="index">
-                    <span itemprop="name">工作&职场</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>转载from：<a href="http://www.36kr.com/p/132579.html" target="_blank" rel="external">http://www.36kr.com/p/132579.html</a></p>
-<p>VC们都说投资“投的是人”，又有谚语“宁投二流行业的一流团队，不投一流行业的二流团队”，中国也有古话“天时不如地利，地利不如人和”，可见团队的重要性——因为团队的高度决定了公司的高度。</p>
-<p>不过不管什么样的创业公司，早期团队的成员都能一起走到最后的却少之又少，到最后基本没有公司能做到“核心团队=早期团队”。那么这中间不断会发生的早期成员离开都会对公司造成或多或少的感情、资产上的伤害。当然，相信每个创业团队的创始人都不会喜欢看到自己早期的兄弟们离开，那么有时候为什么还是要下定决心让一些早期成员离开呢？原因很简单：早期成员跟不上公司的发展要求了。</p>
-<p>如果说创始人决定了公司的基因的话，最初的几个核心团队人员往往就决定了公司的起点高度和天花板。公司成立之初，一般每个人都会有自己的明确定位，相对能做一些实事。但是早期成员和创始人一样，都会面临自我角色的转换。比如你的团队早期只有一位做开发的，那么你的开发工作肯定会越来越多，对其要求也会越来越高，这时候需要增加更多的开发人员加入团队。这个时候，你的那位核心做技术的成员能否及时转换自己的角色为技术管理人员就很关键，管理上他要能有一定的团队管理经验，开发上也要有一定的经验让技术架构等能支撑公司产品不断壮大。如果说这位开发的早期成员没有能力及时转换自己的角色，但是公司是等不了个人成长的，这个时候创始人只能去找一个符合已经发展了的公司需求的人才，而这个人才的出现通常会让早期成员中对应职能的人离开——因为一般来说大部分的早期成员不会有很好的心态接受“外来人”的带领的。</p>
-<p>除非你是一个“完美”的创业者，在创业之初就能想好5～10年后你的公司有哪些部门、需要什么样的高级人才，从最开始自己做执行到最后自己做管理都可以，并且执行下去，公司战略一直稳定进展没有变化；而且，最关键的是，你能找到这些合适的人才，并且说服他们加入，还要能管理住他们……你已经知道这事有多不靠谱了，因为上面几句话包含的难度有：想的不一定能做到、人才不一定能找到、找到也不一定能说服加入、加入也不一定能管住……基本上，这种“完美”创业者是不存在的，创业永远是在时间和效果中选择一个“平衡”，不可能真正让每个创业者能“如意”的。</p>
-<p>如果哪个早期成员的成长跟不上公司的发展，相信每个创始人在换这些人的时候都不会舒服。不过也不能怪创始人无情，从公司的角度出发，很多事情是逼不得已，不得不做，否则公司就会出现发展问题。创始人也不会说就爱开除早期成员的，这个时候只能怪某些早期成员自我主动性不强，“不争气”了；当然也可能是创始人没有告知早期成员要有这个自我成长的意识——（<em>编者注：读到此处的创业者可以将本文分享给团队成员，告知他们要有自我成长的意识</em>）。</p>
-<p>光就团队而言，我经常碰到的早期公司团队有3类：</p>
-<ol>
-<li>团队建设比较随意，没有充分考虑核心成员的能力、潜力和对公司和团队成员的认同感，认同感往往更重要，早期公司。比较糟糕的例子是，把加入较早的成员自然而然地定义为核心员工，甚至激励机制和股份上过早地固化下来，给公司治理和后续人才的加入带来很难逾越的障碍。这样的错误是年轻的创业者容易犯的，有经验、有阅历的创业者会谨慎得多。</li>
-<li>走向另一个极端，比如民营企业中较多见的创业者一人独大，优点是创业者“主人”意识强，决策快，效率高。缺点也是显而易见，缺乏制度，缺乏得力帮手，企业做大难。</li>
-<li><p>公司有意建设人才平台，既要内部培养，又能外部引进，关键岗位“宁缺勿滥”。创始人求贤若渴，初期往往又很累，因为缺人要“身兼数职”。<br>公司成立之初就有多位“牛人”担纲当然求之不得，但是理想很丰满，现实很骨感，无论在哪里这都是不现实的。反过来，公司发展起来了，又会发现原来的一些“核心员工”落伍了。如何尽量减少早期过度成员离开时的伤害，有2点很关键：</p>
-</li>
-<li><p>提拔团队成员到核心位置要有过程，所谓“提拔干部不能太快”的确是经验，规矩早订好</p>
-</li>
-<li>给有功劳/苦劳的团队成员一顶“金色降落伞”，一来合情合理，二来避免造成团队交替的摩擦<br>长远来看，公司领导团队更新换代，更是百年大计的学问了，不过那时的公司也不是“小公司”了。</li>
-</ol>
-<p>不管怎么说，创业团队的早期成员也要有意识在公司成长中不断要求自己进步、及时转换角色，千万不要让自己跟不上公司的成长需求而“落伍”，到最后导致公司不得不换人。否则，凭借自己加入的早，就想没有进步便在公司有持续的“元老地位”那是非常不成熟的想法。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-    
   </section>
 
   
@@ -1482,7 +1511,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">166</span>
+              <span class="site-state-item-count">167</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1499,7 +1528,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">117</span>
+                <span class="site-state-item-count">118</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

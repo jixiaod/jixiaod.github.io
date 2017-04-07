@@ -228,6 +228,115 @@
             
               
                 
+                <a class="post-title-link" href="/2009/12/06/qq-code-athentication/" itemprop="url">
+                  随便玩玩 QQ 验证码
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2009-12-06T23:53:10+08:00" content="2009-12-06">
+              2009-12-06
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>前几天，有个家伙跟我说让我做个QQ验证码识别。我没答应，因为知道自己能力有限。。。</p>
+<p>今天有空研究了一下，没啥成果。。QQ的验证码真是太不规则了。。让我折服崇拜的五体投地。</p>
+<p><img src="/images/others/62d98a55g7a116b058722.jpeg" alt=""></p>
+<p>上面这张还算是比较好的。。能看得比较清楚。。有的干脆人眼都不好区分。。</p>
+<p>还好我还是有成果的，我把图片读到了一个数组里。。很简单<br>下面要做的工作就比较复杂了。。俺真的不会了。。。。有高手路过的话，教教我“匹配”的算法。。。我不打算继续研究了。。太费脑细胞。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">testMain.java</div><div class="line"></div><div class="line">import java.io.IOException;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">public class testMain &#123;</div><div class="line">   </div><div class="line">    public static void main(String[] args) throws IOException &#123;</div><div class="line"></div><div class="line">        new ScanPixel(&quot;image/1.bmp&quot;);</div><div class="line">   </div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">ScanPixel.java</div><div class="line"></div><div class="line">import java.awt.image.BufferedImage;</div><div class="line">import java.io.File;</div><div class="line">import java.io.IOException;</div><div class="line"></div><div class="line"></div><div class="line">import javax.imageio.ImageIO;</div><div class="line"></div><div class="line"></div><div class="line">public class ScanPixel &#123;</div><div class="line"></div><div class="line">    private static final int IMAGE_HEIGHT=53;</div><div class="line">    private static final int IMAGE_WIDTH=130;</div><div class="line">    private static final int COLOR_CHANGE=2359286;//2的倍数</div><div class="line">    private static int bgcolor;</div><div class="line"></div><div class="line">    String fname;</div><div class="line">   </div><div class="line">    private int [][] imageModel = new  int[IMAGE_WIDTH][IMAGE_HEIGHT];</div><div class="line">    private int [][] Model = new  int[IMAGE_HEIGHT][IMAGE_WIDTH];</div><div class="line"></div><div class="line">    public ScanPixel(String fn) throws IOException&#123;</div><div class="line">        fname=fn;</div><div class="line">        getImagebyPixel(fname);</div><div class="line">        new drawPoint(Model);</div><div class="line">       </div><div class="line">    &#125;</div><div class="line">   </div><div class="line">    public void getImagebyPixel(String fn) throws IOException&#123;     </div><div class="line">      File f=new File(fname);</div><div class="line">      BufferedImage bi=ImageIO.read(f);</div><div class="line">     </div><div class="line">      bgcolor=bi.getRGB(0, 0);</div><div class="line">   </div><div class="line">      for(int i=0 ;i&lt;IMAGE_WIDTH;i++ )&#123;</div><div class="line">             for(int j=0;j&lt;IMAGE_HEIGHT;j++)&#123;</div><div class="line">                 if(bi.getRGB(i,j) &gt;= bgcolor -COLOR_CHANGE)&#123;</div><div class="line">                    this.imageModel[i][j] = 1;</div><div class="line">         </div><div class="line">                 &#125;</div><div class="line">             &#125;</div><div class="line">         &#125;</div><div class="line">     </div><div class="line"></div><div class="line">         for(int i=0 ;i&lt;IMAGE_WIDTH;i++ )&#123;</div><div class="line">             for(int j=0;j&lt;IMAGE_HEIGHT;j++)&#123;           </div><div class="line">             Model[j][i]=imageModel[i][j];                          </div><div class="line">             &#125;</div><div class="line">         &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">drawPoint.java</div><div class="line"></div><div class="line"></div><div class="line">public class drawPoint &#123;</div><div class="line">   </div><div class="line">    private static final int WIDTH = 130;</div><div class="line">    private static final int HEIGHT = 53;</div><div class="line">    public drawPoint(int [][] point)&#123;</div><div class="line"></div><div class="line">        doDraw(point);</div><div class="line">    &#125;</div><div class="line">   </div><div class="line"></div><div class="line">   </div><div class="line">    public void doDraw(int [][] point)&#123;</div><div class="line">           </div><div class="line">       </div><div class="line">       </div><div class="line">            for(int j=0;j&lt;HEIGHT;j++)&#123;</div><div class="line">                for(int i=0;i&lt;WIDTH;i++)&#123;</div><div class="line">                if(point[j][i]!=1)&#123;</div><div class="line">                System.out.print(&quot;+&quot;);</div><div class="line">                System.out.print(&quot; &quot;);</div><div class="line">                &#125;</div><div class="line">                else &#123;</div><div class="line">                System.out.print(&quot; &quot;);</div><div class="line">                System.out.print(&quot; &quot;);</div><div class="line">                &#125;</div><div class="line">            &#125;System.out.println();</div><div class="line">        &#125;</div><div class="line">         </div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>验证码打印可以看到如下解果，还算清楚。。</p>
+<p><img src="/images/others/62d98a55g7a1188d29599.jpeg" alt=""></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2009/12/02/ubuntu-shutdown-commands/" itemprop="url">
                   ubuntu 关机命令
                 </a>
@@ -947,113 +1056,6 @@
   </article>
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2009/10/01/my-paradise/" itemprop="url">
-                  我的理想国度
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2009-10-02T04:15:06+08:00" content="2009-10-02">
-              2009-10-02
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/杂/" itemprop="url" rel="index">
-                    <span itemprop="name">杂</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>工作嘛<br>很轻闲，上班时候可以玩玩开心农场<br>上司很和气，照顾下属<br>同事关系融洽，又说又笑<br>下班回到家，不只是我孤单一个人<br>家里有老婆孩子<br>晚上想什么时候睡都好，早晨想几点起就几点起</p>
-<p>放假了<br>跟心爱的人一起旅行<br>去丽江古城，去玉龙雪山<br>陪孩子玩游戏，教他玩实况足球<br>和几个要好的朋友一起打兰球<br>回家看看父母<br>配爸爸聊聊天，看着妈妈做饭</p>
-<p>天气不要太冷，冬天不需要穿厚厚的衣服，二三十度的样子<br>在院子里种一棵树<br>在树荫下，听着喜欢的音乐，看喜欢的书<br>看累了，就躺在椅子上睡一觉</p>
-<p>养一条小狗，种些花草<br>喂喂狗，浇浇花<br>溜溜狗，除除杂草</p>
-<p>有一套不算大的房子<br>老婆和我一间，孩子一间<br>在客厅摆上电视，晚上看球，可不敢吵到老婆孩子<br>父母过来，我们就和孩子挤挤<br>可以用的厨房，给娘俩做饭吃<br>浴室里要有一个大大的浴缸，够我们一家三口一起泡澡<br>很大的落地窗户，阳光能够晒到屋里－－暖暖的</p>
-<p>真好！你也觉得挺好的是吧？！<br>那就不要向现在这样子了,把废弃物抛在脑后吧!</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-    
   </section>
 
   
@@ -1095,7 +1097,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">166</span>
+              <span class="site-state-item-count">167</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1112,7 +1114,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">117</span>
+                <span class="site-state-item-count">118</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
