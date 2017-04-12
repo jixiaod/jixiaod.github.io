@@ -50,7 +50,7 @@
 <meta property="og:description" content="先来看一下什么是循环引用问题？在 PHP 5.2 中使用的垃圾回收算法是 Reference Counting（引用计数）。非常简单，为每个 zval 分配一个计数器，当一个 zval 建立时计数器初始化为1，以后每有一个新变量引用此 zval，则计数器加1，而每当减少一个引用的变量则计数器减 1，当垃圾回收机制运作的时候，将所有计数器为0的zval销毁并回收其占用的内存。但是对于以下代码，把数组">
 <meta property="og:image" content="http://blog.100dos.com/images/php/loop-array.png">
 <meta property="og:image" content="http://blog.100dos.com/images/php/leak-array.png">
-<meta property="og:updated_time" content="2017-04-12T02:51:04.880Z">
+<meta property="og:updated_time" content="2017-04-12T02:53:08.903Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PHP 的垃圾回收机制－理解PHP如何解决循环引用导致的内存泄漏问题">
 <meta name="twitter:description" content="先来看一下什么是循环引用问题？在 PHP 5.2 中使用的垃圾回收算法是 Reference Counting（引用计数）。非常简单，为每个 zval 分配一个计数器，当一个 zval 建立时计数器初始化为1，以后每有一个新变量引用此 zval，则计数器加1，而每当减少一个引用的变量则计数器减 1，当垃圾回收机制运作的时候，将所有计数器为0的zval销毁并回收其占用的内存。但是对于以下代码，把数组">

@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.100dos.com/"/>
-  <updated>2017-04-12T02:51:04.880Z</updated>
+  <updated>2017-04-12T02:53:08.903Z</updated>
   <id>http://blog.100dos.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://blog.100dos.com/2017/04/07/php-garbage-collection-collect-cycles/"/>
     <id>http://blog.100dos.com/2017/04/07/php-garbage-collection-collect-cycles/</id>
     <published>2017-04-07T08:00:53.000Z</published>
-    <updated>2017-04-12T02:51:04.880Z</updated>
+    <updated>2017-04-12T02:53:08.903Z</updated>
     
     <content type="html"><![CDATA[<h5 id="先来看一下什么是循环引用问题？"><a href="#先来看一下什么是循环引用问题？" class="headerlink" title="先来看一下什么是循环引用问题？"></a>先来看一下什么是循环引用问题？</h5><p>在 PHP 5.2 中使用的垃圾回收算法是 Reference Counting（引用计数）。非常简单，为每个 zval 分配一个计数器，当一个 zval 建立时计数器初始化为1，以后每有一个新变量引用此 zval，则计数器加1，而每当减少一个引用的变量则计数器减 1，当垃圾回收机制运作的时候，将所有计数器为0的zval销毁并回收其占用的内存。但是对于以下代码，把数组作为一个元素添加到自己，自身引用自身。</p>
 <figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$a = <span class="keyword">array</span>( <span class="string">'one'</span> );</div><div class="line">$a[] =&amp; $a;</div><div class="line">xdebug_debug_zval( <span class="string">'a'</span> );</div><div class="line"><span class="meta">?&gt;</span></div><div class="line"></div><div class="line"><span class="comment">// output </span></div><div class="line">a: (refcount=<span class="number">2</span>, is_ref=<span class="number">1</span>)=<span class="keyword">array</span> (</div><div class="line">   <span class="number">0</span> =&gt; (refcount=<span class="number">1</span>, is_ref=<span class="number">0</span>)=<span class="string">'one'</span>,</div><div class="line">   <span class="number">1</span> =&gt; (refcount=<span class="number">2</span>, is_ref=<span class="number">1</span>)=...</div><div class="line">)</div></pre></td></tr></table></figure>
@@ -96,7 +96,7 @@
     <link href="http://blog.100dos.com/2017/03/24/publish-hexo-post-on-github-pages-by-travis-ci/"/>
     <id>http://blog.100dos.com/2017/03/24/publish-hexo-post-on-github-pages-by-travis-ci/</id>
     <published>2017-03-24T06:45:17.000Z</published>
-    <updated>2017-04-12T02:51:04.880Z</updated>
+    <updated>2017-04-12T02:53:08.903Z</updated>
     
     <content type="html"><![CDATA[<p>之前重新梳理了 <a href="http://blog.100dos.com/2017/03/14/how-to-use-hexo-post-articles-on-multiple-pcs/">Hexo 博客的发布流程</a>，可以还是觉得麻烦。毕竟操作太多，容易出错。于是想到了用 Travis CI 简化一下，效果不错，省去了不少步骤。现在只需要在 hexo 分支撰写 blog，然后push到github就可以了。Travis 会帮助完成剩下的merge hexo分支、生成静态文件、提交 master 这些工作。</p>
 <p>首先，用 Github 账号创建 <a href="https://travis-ci.org/" target="_blank" rel="external">Travis CI</a> 账号，直接用 Github 账号登录，并赋予权限即可。并在项目列表选择并创建 Travis CI 项目 <code>jixiaod / jixiaod.github.io</code>项目。</p>
@@ -142,7 +142,7 @@
     <link href="http://blog.100dos.com/2017/03/24/copy-and-chage-on-write-with-php/"/>
     <id>http://blog.100dos.com/2017/03/24/copy-and-chage-on-write-with-php/</id>
     <published>2017-03-24T03:45:33.000Z</published>
-    <updated>2017-04-12T02:51:04.876Z</updated>
+    <updated>2017-04-12T02:53:08.899Z</updated>
     
     <content type="html"><![CDATA[<p>对于这样一段代码：</p>
 <figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$a = <span class="number">1</span>;</div><div class="line">xdebug_debug_zval(<span class="string">'a'</span>);</div><div class="line">$b = $a;</div><div class="line">xdebug_debug_zval(<span class="string">'a'</span>);</div></pre></td></tr></table></figure>
@@ -187,7 +187,7 @@
     <link href="http://blog.100dos.com/2017/03/22/deeper-understanding-php7-reference/"/>
     <id>http://blog.100dos.com/2017/03/22/deeper-understanding-php7-reference/</id>
     <published>2017-03-22T07:53:49.000Z</published>
-    <updated>2017-04-12T02:51:04.876Z</updated>
+    <updated>2017-04-12T02:53:08.899Z</updated>
     
     <content type="html"><![CDATA[<p>转载：<a href="https://github.com/laruence/php7-internal/edit/master/reference.md" target="_blank" rel="external">https://github.com/laruence/php7-internal/edit/master/reference.md</a></p>
 <h4 id="REFERENCE"><a href="#REFERENCE" class="headerlink" title="REFERENCE"></a>REFERENCE</h4><p> 上一章说过引用(REFERENCE)在PHP5的时候是一个标志位, 而在PHP7以后我们把它变成了一种新的类型:<code>IS_REFERNCE</code>. 然而引用是一种很常见的应用, 所以这个变化带来了很多的变化, 也给我们在做PHP7开发的时候, 因为有的时候疏忽忘了处理这个类型, 而带来不少的bug.</p>
@@ -232,7 +232,7 @@
     <link href="http://blog.100dos.com/2017/03/22/deeper-understanding-php7-zval/"/>
     <id>http://blog.100dos.com/2017/03/22/deeper-understanding-php7-zval/</id>
     <published>2017-03-22T02:42:21.000Z</published>
-    <updated>2017-04-12T02:51:04.876Z</updated>
+    <updated>2017-04-12T02:53:08.899Z</updated>
     
     <content type="html"><![CDATA[<p>转载：<a href="https://github.com/laruence/php7-internal/blob/master/zval.md" target="_blank" rel="external">https://github.com/laruence/php7-internal/blob/master/zval.md</a></p>
 <p>PHP7已经发布, 如承诺, 我也要开始这个系列的文章的编写, 今天我想先和大家聊聊zval的变化. 在讲zval变化的之前我们先来看看zval在PHP5下面是什么样子</p>
@@ -334,7 +334,7 @@
     <link href="http://blog.100dos.com/2017/03/14/how-to-use-hexo-post-articles-on-multiple-pcs/"/>
     <id>http://blog.100dos.com/2017/03/14/how-to-use-hexo-post-articles-on-multiple-pcs/</id>
     <published>2017-03-14T04:11:57.000Z</published>
-    <updated>2017-04-12T02:51:04.876Z</updated>
+    <updated>2017-04-12T02:53:08.899Z</updated>
     
     <content type="html"><![CDATA[<p>最近公司和家里各有一台电脑，有需求在俩台电脑上都能发布 Hexo 文章。怎么办呢？</p>
 <p><a href="https://www.zhihu.com/question/21193762" target="_blank" rel="external">知乎上的回答提供了思路</a>，即创建俩个分支 master 和 hexo，下面的方案大体一样，具体操作流程详细描述一下。如何在PC1上<a href="http://blog.100dos.com/2016/05/15/build-blog-sys-by-hexo-on-github-pages/">创建 Hexo 项目</a>，可以参考之前的文章。如果像我一样已经有在线的 Github Pages，可以考虑重新创建 Project，这样可以保证 master 和 hexo 代码纯净。</p>
@@ -379,7 +379,7 @@
     <link href="http://blog.100dos.com/2017/03/14/understand-aclocal-autoconf-automake-autoheader-configure/"/>
     <id>http://blog.100dos.com/2017/03/14/understand-aclocal-autoconf-automake-autoheader-configure/</id>
     <published>2017-03-14T03:02:23.000Z</published>
-    <updated>2017-04-12T02:51:04.880Z</updated>
+    <updated>2017-04-12T02:53:08.907Z</updated>
     
     <content type="html"><![CDATA[<h3 id="autoscan-autoconf"><a href="#autoscan-autoconf" class="headerlink" title="autoscan (autoconf)"></a>autoscan (autoconf)</h3><p>扫描源代码以搜寻普通的可移植性问题，比如检查编译器、库、头文件等，生成文件configure.scan，它是configure.ac的一个雏形。</p>
 <h3 id="aclocal-automake"><a href="#aclocal-automake" class="headerlink" title="aclocal (automake)"></a>aclocal (automake)</h3><p>根据已经安装的宏，用户定义宏和 acinclude.m4 文件中的宏将 configure.ac 文件所需要的宏集中定义到文件 aclocal.m4 中。aclocal是一个 perl 脚本程序，它的定义是：</p>
@@ -417,7 +417,7 @@
     <link href="http://blog.100dos.com/2017/03/03/installing-gitlab-ce-on-centos7/"/>
     <id>http://blog.100dos.com/2017/03/03/installing-gitlab-ce-on-centos7/</id>
     <published>2017-03-03T03:30:02.000Z</published>
-    <updated>2017-04-12T02:51:04.876Z</updated>
+    <updated>2017-04-12T02:53:08.899Z</updated>
     
     <content type="html"><![CDATA[<ol>
 <li>安装配置依赖项<br>如想使用Postfix来发送邮件,在安装期间请选择’Internet Site’. 您也可以用sendmai或者 配置SMTP服务 并 使用SMTP发送邮件.<br>在 Centos 6 和 7 系统上, 下面的命令将在系统防火墙里面开放HTTP和SSH端口.</li>
@@ -462,7 +462,7 @@
     <link href="http://blog.100dos.com/2017/03/03/installing-centos7-nginx1-10-3-php7-mysql5-7/"/>
     <id>http://blog.100dos.com/2017/03/03/installing-centos7-nginx1-10-3-php7-mysql5-7/</id>
     <published>2017-03-03T02:10:36.000Z</published>
-    <updated>2017-04-12T02:51:04.876Z</updated>
+    <updated>2017-04-12T02:53:08.899Z</updated>
     
     <content type="html"><![CDATA[<p>最近买了 Linode VPS 服务。5刀每月，只有1G的内存，编译 Mysql 内存溢出，然后升级到2G内存的版本，每月10刀……以下纪录 LNMP 环境安装过程：</p>
 <h2 id="安装-Nginx"><a href="#安装-Nginx" class="headerlink" title="安装 Nginx"></a>安装 Nginx</h2><figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">~<span class="comment"># yum install wget</span></div><div class="line">~<span class="comment"># wget http://nginx.org/download/nginx-1.10.3.tar.gz</span></div><div class="line">~<span class="comment"># tar zxf nginx-1.10.3.tar.gz</span></div><div class="line">~<span class="comment"># cd nginx-1.10.3</span></div><div class="line"></div><div class="line">~<span class="comment"># yum install pcre-devel pcre openssl openssl-devel</span></div><div class="line">~<span class="comment"># yum install gcc</span></div><div class="line">~<span class="comment"># ./configure --prefix=/opt/nginx</span></div><div class="line">~<span class="comment"># make &amp; make install</span></div></pre></td></tr></table></figure>
@@ -506,7 +506,7 @@
     <link href="http://blog.100dos.com/2017/02/27/processes-and-threads/"/>
     <id>http://blog.100dos.com/2017/02/27/processes-and-threads/</id>
     <published>2017-02-27T03:11:14.000Z</published>
-    <updated>2017-04-12T02:51:04.880Z</updated>
+    <updated>2017-04-12T02:53:08.903Z</updated>
     
     <content type="html"><![CDATA[<p><a href="https://zh.wikipedia.org/wiki/行程" target="_blank" rel="external">进程</a>（process）是计算机中已运行程序的实体。关于进程需要知道的几点：</p>
 <ul>
@@ -613,7 +613,7 @@
     <link href="http://blog.100dos.com/2017/02/09/nearby-jobs/"/>
     <id>http://blog.100dos.com/2017/02/09/nearby-jobs/</id>
     <published>2017-02-09T06:25:08.000Z</published>
-    <updated>2017-04-12T02:51:04.880Z</updated>
+    <updated>2017-04-12T02:53:08.903Z</updated>
     
     <content type="html"><![CDATA[<p>从<a href="https://www.lagou.com/" target="_blank" rel="external">拉勾网</a>抓取的 86341 条招聘企业数据，企业地址匹配 LBS 经纬度取自<a href="http://lbs.amap.com/console/show/picker" target="_blank" rel="external">高德开放平台API</a>，成功匹配到 83090 条经纬度数据。没有做详细做企业主正在招聘岗位的数据，所以很大可能情况会遇到附近的公司没有招聘信息的情况，但是某些方面还是能大概了解自己附近有什么值得考虑的公司，有一定参考价值。</p>
 <h2 id="查询附近的工作"><a href="#查询附近的工作" class="headerlink" title="查询附近的工作"></a>查询附近的工作</h2><p>Github地址: <a href="https://github.com/jixiaod/NearbyJobs" target="_blank" rel="external">https://github.com/jixiaod/NearbyJobs</a></p>
@@ -644,7 +644,7 @@
     <link href="http://blog.100dos.com/2017/01/19/minesweeper-on-wechat-app/"/>
     <id>http://blog.100dos.com/2017/01/19/minesweeper-on-wechat-app/</id>
     <published>2017-01-19T02:55:08.000Z</published>
-    <updated>2017-04-12T02:51:04.880Z</updated>
+    <updated>2017-04-12T02:53:08.903Z</updated>
     
     <content type="html"><![CDATA[<p>微信小程序这几天很火，9号正式发布，今天19号过了10天，到现在略有降温的趋势。个大厂商对微信小程序的态度很不看好，最激进的要数[罗辑思维]，直接下架了自己的[得到APP]。滴滴、京东等APP也只保留了最精简的功能，某些担心过于完善的功能会抢夺APP本身的用户。不过这也印证了小程序的初衷，小而精、用完即走。（并不否认腾讯微信平台确实流氓的事实）</p>
 <blockquote>
@@ -698,7 +698,7 @@
     <link href="http://blog.100dos.com/2016/12/27/reading-note-the-trime-minister-of-qing-dynasty/"/>
     <id>http://blog.100dos.com/2016/12/27/reading-note-the-trime-minister-of-qing-dynasty/</id>
     <published>2016-12-27T11:18:35.000Z</published>
-    <updated>2017-04-12T02:51:04.880Z</updated>
+    <updated>2017-04-12T02:53:08.903Z</updated>
     
     <content type="html"><![CDATA[<p><strong>很多事情不像表面上那么简单，尤其是在官场，要考虑点更多。</strong>发生的时间、涉及的官员、所涉及到官员之间的关系、地位、各自的立场。</p>
 <p>皇上：要顾全皇族的利益，凡事涉及皇族，一定是要偏袒皇族，照顾其颜面。朝中大臣以和为贵，可以接受做官贪赃枉法，但是对上对皇上要有敬畏之心，对下对百姓不能做太过分出格。</p>
@@ -735,7 +735,7 @@
     <link href="http://blog.100dos.com/2016/12/14/cancer-is-not-far-from-us/"/>
     <id>http://blog.100dos.com/2016/12/14/cancer-is-not-far-from-us/</id>
     <published>2016-12-14T10:10:51.000Z</published>
-    <updated>2017-04-12T02:51:04.876Z</updated>
+    <updated>2017-04-12T02:53:08.899Z</updated>
     
     <content type="html"><![CDATA[<p>前几天知道了妈得了癌症的消息，原来新闻里、电视里不相干的陌生人得的病，也来到了我的身边。原来癌症离我也并不远……</p>
 <p>刚知道的时候心情不免低落，一个是为老妈难过，刚到60便染此恶疾，虽有希望治愈，治疗过程不免受苦；在一个也为自己难过，刚刚步入正轨的生活，又被被打乱了。本来还打算着让老妈过来帮带带孩子呢，结果计划全变了……孩子还未满月，老婆尚未做完月子。家里出了这么大的事情，也不敢告诉她。怕月子里身子虚，心情压抑，对恢复有影响。</p>
@@ -771,7 +771,7 @@
     <link href="http://blog.100dos.com/2016/12/13/say-goodbye-to-stevengerrard/"/>
     <id>http://blog.100dos.com/2016/12/13/say-goodbye-to-stevengerrard/</id>
     <published>2016-12-13T09:47:55.000Z</published>
-    <updated>2017-04-12T02:51:04.880Z</updated>
+    <updated>2017-04-12T02:53:08.903Z</updated>
     
     <content type="html"><![CDATA[<p>杰拉德退役的消息出来好几天了，想想还是写一篇吧。以纪念我浦最伟大的队长……</p>
 <blockquote>
@@ -824,7 +824,7 @@
     <link href="http://blog.100dos.com/2016/12/05/how-to-c-in-2016/"/>
     <id>http://blog.100dos.com/2016/12/05/how-to-c-in-2016/</id>
     <published>2016-12-05T03:23:52.000Z</published>
-    <updated>2017-04-12T02:51:04.876Z</updated>
+    <updated>2017-04-12T02:53:08.899Z</updated>
     
     <content type="html"><![CDATA[<p>英文原文：<a href="https://matt.sh/howto-c" target="_blank" rel="external">https://matt.sh/howto-c</a></p>
 <p>这原本是一篇我写在 2015 年没有发布出来的草稿。为了让大家也能受益，我决定把它从我的草稿文件夹里拿出来。并且基本是原文，未做过多修改。大概只是把年份改了一下，2015 改成了 2016。</p>
@@ -1125,7 +1125,7 @@
     <link href="http://blog.100dos.com/2016/10/27/seckill-on-e-shop/"/>
     <id>http://blog.100dos.com/2016/10/27/seckill-on-e-shop/</id>
     <published>2016-10-27T10:37:48.000Z</published>
-    <updated>2017-04-12T02:51:04.880Z</updated>
+    <updated>2017-04-12T02:53:08.903Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <p>抢购是指在某一个时间段内商家低价甚至免费销售商品，消费者突发性的集中投入购买力，大批量的、超常规的购买某种或某类商品的现象。</p>
@@ -1171,7 +1171,7 @@
     <link href="http://blog.100dos.com/2016/10/14/centsos6.6-mysql5.7-install/"/>
     <id>http://blog.100dos.com/2016/10/14/centsos6.6-mysql5.7-install/</id>
     <published>2016-10-14T04:05:45.000Z</published>
-    <updated>2017-04-12T02:51:04.876Z</updated>
+    <updated>2017-04-12T02:53:08.899Z</updated>
     
     <content type="html"><![CDATA[<p>在 CentOS 的 yum 默认安装的是 mysql 5.5 版本，由于开发需要 5.6 以上版本，索性就装个 5.7。</p>
 <p>到官网下载对应的 rpm buddle 包，CentOS 6 选择选择如下对应的版本</p>
@@ -1220,7 +1220,7 @@
     <link href="http://blog.100dos.com/2016/09/30/Lambdas-and-Closures-in-PHP/"/>
     <id>http://blog.100dos.com/2016/09/30/Lambdas-and-Closures-in-PHP/</id>
     <published>2016-09-30T07:14:55.000Z</published>
-    <updated>2017-04-12T02:51:04.876Z</updated>
+    <updated>2017-04-12T02:53:08.899Z</updated>
     
     <content type="html"><![CDATA[<p>PHP 5.3 开始，添加了 Lambdas（匿名函数）和 CLosures（闭包）这俩个新的特性。函数式编程也越来越能够得到程序员的追捧。其他语言，比如 Javascript 或 Ruby 中也经常能看到匿名函数的实现。</p>
 <p>那么什，么是 Lambda 函数？</p>
@@ -1281,7 +1281,7 @@
     <link href="http://blog.100dos.com/2016/09/25/understanding-select-poll-epoll-io-mutiplexing/"/>
     <id>http://blog.100dos.com/2016/09/25/understanding-select-poll-epoll-io-mutiplexing/</id>
     <published>2016-09-25T07:26:48.000Z</published>
-    <updated>2017-04-12T02:51:04.880Z</updated>
+    <updated>2017-04-12T02:53:08.907Z</updated>
     
     <content type="html"><![CDATA[<p>select、poll 和 epoll 都是 Linux API 提供的 IO 复用方式。<em>IO多路复用是指内核一旦发现进程指定的一个或者多个IO条件准备读取，它就通知该进程。</em><a href="http://www.zhihu.com/question/32163005/answer/55772739" target="_blank" rel="external">知乎上的回答</a> 非常好的解释了什么事IO多路复用，用机场航班调度问题的解释的非常清晰，看完之后豁然开朗。</p>
 <p>select、poll 和 epoll 都是阻塞的，用 select 来举例，写法大概是这样：</p>

@@ -1567,7 +1567,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #26127e;
+  background: #9352ff;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -2151,11 +2151,13 @@ hr {
 }
 .others-bottom #wechat_subscriber {
   width: 20%;
+  vertical-align: top;
   position: relative;
   display: inline-block;
 }
 .others-bottom .related-posts {
   width: 70%;
+  vertical-align: top;
   position: relative;
   display: inline-block;
 }
