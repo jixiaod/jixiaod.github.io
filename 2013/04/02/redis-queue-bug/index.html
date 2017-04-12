@@ -52,7 +52,7 @@
 <meta property="og:description" content="最近用redis的队列对接公司短信平台服务。对于redis如何实现队列服务，无非是rpop、lpush。网上资料很多，就不废话了，我要说说开发时遇到的问题。
 代码上线后发现一个问题，redis队列长时间没有写入（时间不确定）。读取队列时，会出现redis队列确实rpop弹出内容，但是内容为空。查询redis的队列，发现已经空队列，确实弹出了message。
 怀疑队列疆死所致，于是设置了一个激活时间">
-<meta property="og:updated_time" content="2017-04-10T06:51:28.949Z">
+<meta property="og:updated_time" content="2017-04-12T02:51:04.880Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="关于redis实现队列问题">
 <meta name="twitter:description" content="最近用redis的队列对接公司短信平台服务。对于redis如何实现队列服务，无非是rpop、lpush。网上资料很多，就不废话了，我要说说开发时遇到的问题。
@@ -297,18 +297,7 @@
       
     </div>
 
-    <div>
-      
-        
-<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
-    <img id="wechat_subscriber_qcode" src="/images/qrcode_for_gh_b81f9d06ec2e_258.jpg" alt="小弟 wechat" style="width: 200px; max-width: 100%;"/>
-    <div>扫一下呗，反正我也不怎么发～</div>
-</div>
-
-
-      
-    </div>
-
+   
     <div>
       
         
@@ -350,17 +339,31 @@
       
 
       
-      
-        <h3 class="article-title" style="font-size: 20px;">相关文章</h3>
-        <ul class="related-posts">
+        <div class="others-bottom">
+        <div class="related-posts">
         
-            <li class="related-posts-item"><a href="/2015/06/02/10-quick-tips-about-redis/">Redis使用的10个小贴士</a></li>
         
-            <li class="related-posts-item"><a href="/2012/05/10/auto-complete-with-redis/">redis 实现自动匹配搜索 Auto Complete with Redis</a></li>
+            <h3 class="article-title" style="font-size: 20px;">相关文章</h3>
+            <ul>
+            
+                <li><a href="/2015/06/02/10-quick-tips-about-redis/">Redis使用的10个小贴士</a></li>
+            
+                <li><a href="/2012/05/10/auto-complete-with-redis/">redis 实现自动匹配搜索 Auto Complete with Redis</a></li>
+            
+            </ul>
         
-        </ul>
-      
+        </div>
 
+        
+<div id="wechat_subscriber">
+    <img id="wechat_subscriber_qcode" src="/images/qrcode_for_gh_b81f9d06ec2e_258.jpg" alt="小弟 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>扫一下呗，反正我也不怎么发～</div>
+</div>
+
+
+        </div>
+      
+     
     </footer>
   </article>
 

@@ -48,7 +48,7 @@
 <meta property="og:url" content="http://blog.100dos.com/2014/10/16/http-server-how-nginx-php-work/index.html">
 <meta property="og:site_name" content="百作坊">
 <meta property="og:description" content="Nginx (“engine x”) 是一个高性能的 HTTP 和 反向代理 服务器，也是一个 IMAP/POP3/SMTP 代理服务器。 Nginx 是由 Igor Sysoev 为俄罗斯访问量第二的 Rambler.ru 站点开发的，第一个公开版本0.1.0发布于2004年10月4日。其将源代码以类BSD许可证的形式发布，因它的稳定性、丰富的功能集、示例配置文件和低系统资源的消耗而闻名。— 百">
-<meta property="og:updated_time" content="2017-04-10T06:51:28.949Z">
+<meta property="og:updated_time" content="2017-04-12T02:51:04.876Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="http server原理，nginx与php之间是如何工作的">
 <meta name="twitter:description" content="Nginx (“engine x”) 是一个高性能的 HTTP 和 反向代理 服务器，也是一个 IMAP/POP3/SMTP 代理服务器。 Nginx 是由 Igor Sysoev 为俄罗斯访问量第二的 Rambler.ru 站点开发的，第一个公开版本0.1.0发布于2004年10月4日。其将源代码以类BSD许可证的形式发布，因它的稳定性、丰富的功能集、示例配置文件和低系统资源的消耗而闻名。— 百">
@@ -288,18 +288,7 @@
       
     </div>
 
-    <div>
-      
-        
-<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
-    <img id="wechat_subscriber_qcode" src="/images/qrcode_for_gh_b81f9d06ec2e_258.jpg" alt="小弟 wechat" style="width: 200px; max-width: 100%;"/>
-    <div>扫一下呗，反正我也不怎么发～</div>
-</div>
-
-
-      
-    </div>
-
+   
     <div>
       
         
@@ -345,37 +334,51 @@
       
 
       
-      
-        <h3 class="article-title" style="font-size: 20px;">相关文章</h3>
-        <ul class="related-posts">
+        <div class="others-bottom">
+        <div class="related-posts">
         
-            <li class="related-posts-item"><a href="/2017/03/03/installing-centos7-nginx1-10-3-php7-mysql5-7/">CentOS 7 从零开始搭建 LNMP 环境（nginx/1.10.3 PHP/7.1.2 Mysql/5.7.17）</a></li>
         
-            <li class="related-posts-item"><a href="/2015/04/13/misunderstand-of-php-fpm-max-chindren/">php-fpm的max_chindren的一些误区</a></li>
+            <h3 class="article-title" style="font-size: 20px;">相关文章</h3>
+            <ul>
+            
+                <li><a href="/2017/03/03/installing-centos7-nginx1-10-3-php7-mysql5-7/">CentOS 7 从零开始搭建 LNMP 环境（nginx/1.10.3 PHP/7.1.2 Mysql/5.7.17）</a></li>
+            
+                <li><a href="/2015/04/13/misunderstand-of-php-fpm-max-chindren/">php-fpm的max_chindren的一些误区</a></li>
+            
+                <li><a href="/2015/11/12/how-php-grab-screenshot-from-video/">PHP 获取视频的预览截图</a></li>
+            
+                <li><a href="/2017/03/22/deeper-understanding-php7-zval/">深入理解 PHP7 之 zval</a></li>
+            
+                <li><a href="/2017/04/07/php-garbage-collection-collect-cycles/">PHP 的垃圾回收机制－理解PHP如何解决循环引用导致的内存泄漏问题</a></li>
+            
+                <li><a href="/2016/08/29/debug-in-php/">如何调试 PHP 程序</a></li>
+            
+                <li><a href="/2017/03/24/copy-and-chage-on-write-with-php/">理解 PHP 的写时复制和写时改变</a></li>
+            
+                <li><a href="/2017/03/22/deeper-understanding-php7-reference/">深入理解 PHP7 之 REFERENCE</a></li>
+            
+                <li><a href="/2015/04/10/relearning-php-1-why-we-always-ignor-trailer-php-tags/">Relearning PHP (1) - 为什么php文件尾不闭合标记 ?></a></li>
+            
+                <li><a href="/2014/05/30/blalba-about-redirect/">关于重定向的事儿</a></li>
+            
+                <li><a href="/2010/10/20/Remove-duplicate-element-in-array/">去除数组中的重复元素</a></li>
+            
+                <li><a href="/2010/07/18/php-session/">PHP SESSION</a></li>
+            
+            </ul>
         
-            <li class="related-posts-item"><a href="/2015/11/12/how-php-grab-screenshot-from-video/">PHP 获取视频的预览截图</a></li>
-        
-            <li class="related-posts-item"><a href="/2017/03/22/deeper-understanding-php7-zval/">深入理解 PHP7 之 zval</a></li>
-        
-            <li class="related-posts-item"><a href="/2017/04/07/php-garbage-collection-collect-cycles/">PHP 的垃圾回收机制－理解PHP如何解决循环引用导致的内存泄漏问题</a></li>
-        
-            <li class="related-posts-item"><a href="/2016/08/29/debug-in-php/">如何调试 PHP 程序</a></li>
-        
-            <li class="related-posts-item"><a href="/2017/03/24/copy-and-chage-on-write-with-php/">理解 PHP 的写时复制和写时改变</a></li>
-        
-            <li class="related-posts-item"><a href="/2017/03/22/deeper-understanding-php7-reference/">深入理解 PHP7 之 REFERENCE</a></li>
-        
-            <li class="related-posts-item"><a href="/2015/04/10/relearning-php-1-why-we-always-ignor-trailer-php-tags/">Relearning PHP (1) - 为什么php文件尾不闭合标记 ?></a></li>
-        
-            <li class="related-posts-item"><a href="/2014/05/30/blalba-about-redirect/">关于重定向的事儿</a></li>
-        
-            <li class="related-posts-item"><a href="/2010/10/20/Remove-duplicate-element-in-array/">去除数组中的重复元素</a></li>
-        
-            <li class="related-posts-item"><a href="/2010/07/18/php-session/">PHP SESSION</a></li>
-        
-        </ul>
-      
+        </div>
 
+        
+<div id="wechat_subscriber">
+    <img id="wechat_subscriber_qcode" src="/images/qrcode_for_gh_b81f9d06ec2e_258.jpg" alt="小弟 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>扫一下呗，反正我也不怎么发～</div>
+</div>
+
+
+        </div>
+      
+     
     </footer>
   </article>
 

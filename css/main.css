@@ -1567,7 +1567,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #ff810d;
+  background: #26127e;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -2145,6 +2145,19 @@ hr {
 }
 .post-more-link a:hover {
   border-bottom-color: #222;
+}
+.others-bottom {
+  display: block;
+}
+.others-bottom #wechat_subscriber {
+  width: 20%;
+  position: relative;
+  display: inline-block;
+}
+.others-bottom .related-posts {
+  width: 70%;
+  position: relative;
+  display: inline-block;
 }
 .links-of-blogroll-inline .links-of-blogroll-item {
   display: inline-block;
