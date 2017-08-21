@@ -37,6 +37,6 @@ categories:
 * 需要注意的是，由于没有鼠标右键标记Flag，简单做了 Flag 切换，开启后，方可标记Flag
 * 最初的想法是通过 tap 和 longtap 来区分扫雷和Flag，但是开发工具不能区分这俩个事件，只能作罢
 
-![](/images/wechat-minesweeper.png)
+![](/images/wechat-minesweeper.jpeg)
 
 
