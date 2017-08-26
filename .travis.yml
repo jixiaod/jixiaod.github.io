@@ -20,6 +20,8 @@ after_success:
   - git config user.email "ji.xiaod@gmail.com"
   - git add --all .
   - git commit -m "travis ci build"
+  - git remote rm origin
+  - git remote add origin https://$Personal_access_tokens@github.com/jixiaod/jixiaod.github.io.git
   - git push https://$Personal_access_tokens@github.com/jixiaod/jixiaod.github.io.git master
 
 branches:
