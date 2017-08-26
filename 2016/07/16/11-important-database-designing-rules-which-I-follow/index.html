@@ -42,14 +42,14 @@
 
 
 
-<meta name="description" content="简介在你阅读这篇文章之前，需要先提醒你，我并不是数据库设计方面的专家。以下的11个原则，都是我从具体的项目中总结而来，都是以往项目开发经验和书中的所看所学。在做数据库设计时，觉得对我个人来说还是有很大帮助的。同时也非常欢迎指出文章中有问题的地方。
-原则一：要知道你设计的应用程序的本质要实现的功能是什么？（OLTP 或 OLAP）当你开始做数据库设计时，第一件事应该是分析你将要开发的应用程序的本质是">
+<meta name="description" content="简介在你阅读这篇文章之前，需要先提醒你，我并不是数据库设计方面的专家。以下的11个原则，都是我从具体的项目中总结而来，都是以往项目开发经验和书中的所看所学。在做数据库设计时，觉得对我个人来说还是有很大帮助的。同时也非常欢迎指出文章中有问题的地方。 原则一：要知道你设计的应用程序的本质要实现的功能是什么？（OLTP 或 OLAP）当你开始做数据库设计时，第一件事应该是分析你将要开发的应用程序的本质是">
+<meta name="keywords" content="数据库设计,mysql">
 <meta property="og:type" content="article">
 <meta property="og:title" content="11 个我遵循的重要数据库设计原则">
 <meta property="og:url" content="http://blog.100dos.com/2016/07/16/11-important-database-designing-rules-which-I-follow/index.html">
 <meta property="og:site_name" content="百作坊">
-<meta property="og:description" content="简介在你阅读这篇文章之前，需要先提醒你，我并不是数据库设计方面的专家。以下的11个原则，都是我从具体的项目中总结而来，都是以往项目开发经验和书中的所看所学。在做数据库设计时，觉得对我个人来说还是有很大帮助的。同时也非常欢迎指出文章中有问题的地方。
-原则一：要知道你设计的应用程序的本质要实现的功能是什么？（OLTP 或 OLAP）当你开始做数据库设计时，第一件事应该是分析你将要开发的应用程序的本质是">
+<meta property="og:description" content="简介在你阅读这篇文章之前，需要先提醒你，我并不是数据库设计方面的专家。以下的11个原则，都是我从具体的项目中总结而来，都是以往项目开发经验和书中的所看所学。在做数据库设计时，觉得对我个人来说还是有很大帮助的。同时也非常欢迎指出文章中有问题的地方。 原则一：要知道你设计的应用程序的本质要实现的功能是什么？（OLTP 或 OLAP）当你开始做数据库设计时，第一件事应该是分析你将要开发的应用程序的本质是">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://blog.100dos.com/images/11-important-database-designing-rules-which-I-follow/a2.jpg">
 <meta property="og:image" content="http://blog.100dos.com/images/11-important-database-designing-rules-which-I-follow/a3.jpg">
 <meta property="og:image" content="http://blog.100dos.com/images/11-important-database-designing-rules-which-I-follow/a4.jpg">
@@ -66,11 +66,10 @@
 <meta property="og:image" content="http://blog.100dos.com/images/11-important-database-designing-rules-which-I-follow/a16.jpg">
 <meta property="og:image" content="http://blog.100dos.com/images/11-important-database-designing-rules-which-I-follow/a17.jpg">
 <meta property="og:image" content="http://blog.100dos.com/images/11-important-database-designing-rules-which-I-follow/a18.jpg">
-<meta property="og:updated_time" content="2017-04-12T02:53:08.899Z">
+<meta property="og:updated_time" content="2017-08-26T14:29:13.741Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="11 个我遵循的重要数据库设计原则">
-<meta name="twitter:description" content="简介在你阅读这篇文章之前，需要先提醒你，我并不是数据库设计方面的专家。以下的11个原则，都是我从具体的项目中总结而来，都是以往项目开发经验和书中的所看所学。在做数据库设计时，觉得对我个人来说还是有很大帮助的。同时也非常欢迎指出文章中有问题的地方。
-原则一：要知道你设计的应用程序的本质要实现的功能是什么？（OLTP 或 OLAP）当你开始做数据库设计时，第一件事应该是分析你将要开发的应用程序的本质是">
+<meta name="twitter:description" content="简介在你阅读这篇文章之前，需要先提醒你，我并不是数据库设计方面的专家。以下的11个原则，都是我从具体的项目中总结而来，都是以往项目开发经验和书中的所看所学。在做数据库设计时，觉得对我个人来说还是有很大帮助的。同时也非常欢迎指出文章中有问题的地方。 原则一：要知道你设计的应用程序的本质要实现的功能是什么？（OLTP 或 OLAP）当你开始做数据库设计时，第一件事应该是分析你将要开发的应用程序的本质是">
 <meta name="twitter:image" content="http://blog.100dos.com/images/11-important-database-designing-rules-which-I-follow/a2.jpg">
 
 
@@ -461,7 +460,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">167</span>
+              <span class="site-state-item-count">168</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

@@ -43,12 +43,14 @@
 
 
 <meta name="description" content="Nginx (“engine x”) 是一个高性能的 HTTP 和 反向代理 服务器，也是一个 IMAP/POP3/SMTP 代理服务器。 Nginx 是由 Igor Sysoev 为俄罗斯访问量第二的 Rambler.ru 站点开发的，第一个公开版本0.1.0发布于2004年10月4日。其将源代码以类BSD许可证的形式发布，因它的稳定性、丰富的功能集、示例配置文件和低系统资源的消耗而闻名。— 百">
+<meta name="keywords" content="PHP,nginx,php-fpm">
 <meta property="og:type" content="article">
 <meta property="og:title" content="http server原理，nginx与php之间是如何工作的">
 <meta property="og:url" content="http://blog.100dos.com/2014/10/16/http-server-how-nginx-php-work/index.html">
 <meta property="og:site_name" content="百作坊">
 <meta property="og:description" content="Nginx (“engine x”) 是一个高性能的 HTTP 和 反向代理 服务器，也是一个 IMAP/POP3/SMTP 代理服务器。 Nginx 是由 Igor Sysoev 为俄罗斯访问量第二的 Rambler.ru 站点开发的，第一个公开版本0.1.0发布于2004年10月4日。其将源代码以类BSD许可证的形式发布，因它的稳定性、丰富的功能集、示例配置文件和低系统资源的消耗而闻名。— 百">
-<meta property="og:updated_time" content="2017-04-12T02:53:08.899Z">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-08-26T14:29:13.745Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="http server原理，nginx与php之间是如何工作的">
 <meta name="twitter:description" content="Nginx (“engine x”) 是一个高性能的 HTTP 和 反向代理 服务器，也是一个 IMAP/POP3/SMTP 代理服务器。 Nginx 是由 Igor Sysoev 为俄罗斯访问量第二的 Rambler.ru 站点开发的，第一个公开版本0.1.0发布于2004年10月4日。其将源代码以类BSD许可证的形式发布，因它的稳定性、丰富的功能集、示例配置文件和低系统资源的消耗而闻名。— 百">
@@ -345,17 +347,19 @@
             
                 <li><a href="/2015/04/13/misunderstand-of-php-fpm-max-chindren/">php-fpm的max_chindren的一些误区</a></li>
             
-                <li><a href="/2015/11/12/how-php-grab-screenshot-from-video/">PHP 获取视频的预览截图</a></li>
+                <li><a href="/2016/08/29/debug-in-php/">如何调试 PHP 程序</a></li>
+            
+                <li><a href="/2017/03/22/deeper-understanding-php7-reference/">深入理解 PHP7 之 REFERENCE</a></li>
             
                 <li><a href="/2017/03/22/deeper-understanding-php7-zval/">深入理解 PHP7 之 zval</a></li>
             
+                <li><a href="/2017/08/21/deep-understandint-php-ini-config/">深入理解PHP的ini配置</a></li>
+            
                 <li><a href="/2017/04/07/php-garbage-collection-collect-cycles/">PHP 的垃圾回收机制－理解PHP如何解决循环引用导致的内存泄漏问题</a></li>
             
-                <li><a href="/2016/08/29/debug-in-php/">如何调试 PHP 程序</a></li>
+                <li><a href="/2015/11/12/how-php-grab-screenshot-from-video/">PHP 获取视频的预览截图</a></li>
             
                 <li><a href="/2017/03/24/copy-and-chage-on-write-with-php/">理解 PHP 的写时复制和写时改变</a></li>
-            
-                <li><a href="/2017/03/22/deeper-understanding-php7-reference/">深入理解 PHP7 之 REFERENCE</a></li>
             
                 <li><a href="/2015/04/10/relearning-php-1-why-we-always-ignor-trailer-php-tags/">Relearning PHP (1) - 为什么php文件尾不闭合标记 ?></a></li>
             
@@ -417,7 +421,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">167</span>
+              <span class="site-state-item-count">168</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

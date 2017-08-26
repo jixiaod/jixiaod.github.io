@@ -42,28 +42,18 @@
 
 
 
-<meta name="description" content="初学php的时候踩过这个坑，确实对初学者是个很难debug的问题。经大神指点说：“只要删除文件结尾的 ?&amp;gt;，然后文件尾加几个空行就好！！”。试了下，果然解决问题。
-但是为什么呢？
-比如代码是这样一个php文件 a.php。在文件的最后的php结束标记 ?&amp;gt; 后有空格和空行。
-&amp;lt;?php
-class FooClass{public function foo(){echo “func">
+<meta name="description" content="初学php的时候踩过这个坑，确实对初学者是个很难debug的问题。经大神指点说：“只要删除文件结尾的 ?&amp;gt;，然后文件尾加几个空行就好！！”。试了下，果然解决问题。 但是为什么呢？ 比如代码是这样一个php文件 a.php。在文件的最后的php结束标记 ?&amp;gt; 后有空格和空行。 &amp;lt;?php class FooClass{public function foo(){echo “func">
+<meta name="keywords" content="PHP">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Relearning PHP (1) - 为什么php文件尾不闭合标记 ?>">
+<meta property="og:title" content="Relearning PHP (1) - 为什么php文件尾不闭合标记 ?&gt;">
 <meta property="og:url" content="http://blog.100dos.com/2015/04/10/relearning-php-1-why-we-always-ignor-trailer-php-tags/index.html">
 <meta property="og:site_name" content="百作坊">
-<meta property="og:description" content="初学php的时候踩过这个坑，确实对初学者是个很难debug的问题。经大神指点说：“只要删除文件结尾的 ?&amp;gt;，然后文件尾加几个空行就好！！”。试了下，果然解决问题。
-但是为什么呢？
-比如代码是这样一个php文件 a.php。在文件的最后的php结束标记 ?&amp;gt; 后有空格和空行。
-&amp;lt;?php
-class FooClass{public function foo(){echo “func">
-<meta property="og:updated_time" content="2017-04-12T02:53:08.903Z">
+<meta property="og:description" content="初学php的时候踩过这个坑，确实对初学者是个很难debug的问题。经大神指点说：“只要删除文件结尾的 ?&amp;gt;，然后文件尾加几个空行就好！！”。试了下，果然解决问题。 但是为什么呢？ 比如代码是这样一个php文件 a.php。在文件的最后的php结束标记 ?&amp;gt; 后有空格和空行。 &amp;lt;?php class FooClass{public function foo(){echo “func">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-08-26T14:29:13.745Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Relearning PHP (1) - 为什么php文件尾不闭合标记 ?>">
-<meta name="twitter:description" content="初学php的时候踩过这个坑，确实对初学者是个很难debug的问题。经大神指点说：“只要删除文件结尾的 ?&amp;gt;，然后文件尾加几个空行就好！！”。试了下，果然解决问题。
-但是为什么呢？
-比如代码是这样一个php文件 a.php。在文件的最后的php结束标记 ?&amp;gt; 后有空格和空行。
-&amp;lt;?php
-class FooClass{public function foo(){echo “func">
+<meta name="twitter:title" content="Relearning PHP (1) - 为什么php文件尾不闭合标记 ?&gt;">
+<meta name="twitter:description" content="初学php的时候踩过这个坑，确实对初学者是个很难debug的问题。经大神指点说：“只要删除文件结尾的 ?&amp;gt;，然后文件尾加几个空行就好！！”。试了下，果然解决问题。 但是为什么呢？ 比如代码是这样一个php文件 a.php。在文件的最后的php结束标记 ?&amp;gt; 后有空格和空行。 &amp;lt;?php class FooClass{public function foo(){echo “func">
 
 
 
@@ -358,7 +348,9 @@ class FooClass{public function foo(){echo “func">
             
                 <li><a href="/2016/08/29/debug-in-php/">如何调试 PHP 程序</a></li>
             
-                <li><a href="/2017/04/07/php-garbage-collection-collect-cycles/">PHP 的垃圾回收机制－理解PHP如何解决循环引用导致的内存泄漏问题</a></li>
+                <li><a href="/2017/08/21/deep-understandint-php-ini-config/">深入理解PHP的ini配置</a></li>
+            
+                <li><a href="/2017/03/24/copy-and-chage-on-write-with-php/">理解 PHP 的写时复制和写时改变</a></li>
             
                 <li><a href="/2017/03/22/deeper-understanding-php7-reference/">深入理解 PHP7 之 REFERENCE</a></li>
             
@@ -366,7 +358,7 @@ class FooClass{public function foo(){echo “func">
             
                 <li><a href="/2017/03/03/installing-centos7-nginx1-10-3-php7-mysql5-7/">CentOS 7 从零开始搭建 LNMP 环境（nginx/1.10.3 PHP/7.1.2 Mysql/5.7.17）</a></li>
             
-                <li><a href="/2017/03/24/copy-and-chage-on-write-with-php/">理解 PHP 的写时复制和写时改变</a></li>
+                <li><a href="/2017/04/07/php-garbage-collection-collect-cycles/">PHP 的垃圾回收机制－理解PHP如何解决循环引用导致的内存泄漏问题</a></li>
             
                 <li><a href="/2015/11/12/how-php-grab-screenshot-from-video/">PHP 获取视频的预览截图</a></li>
             
@@ -430,7 +422,7 @@ class FooClass{public function foo(){echo “func">
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">167</span>
+              <span class="site-state-item-count">168</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

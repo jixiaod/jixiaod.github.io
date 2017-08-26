@@ -48,6 +48,7 @@
 <meta property="og:url" content="http://blog.100dos.com/page/18/index.html">
 <meta property="og:site_name" content="百作坊">
 <meta property="og:description" content="纪录工作和生活">
+<meta property="og:locale" content="zh-Hans">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="百作坊">
 <meta name="twitter:description" content="纪录工作和生活">
@@ -206,6 +207,113 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2009/05/18/eclipse-tomcat5.5-apache-ant-1.7.1/" itemprop="url">
+                  Eclipse + Tomcat5.5 + Apache-ant-1.7.1 （J2EE）环境配置
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2009-05-18T22:37:23+08:00" content="2009-05-18">
+              2009-05-18
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="1-环境变量设置："><a href="#1-环境变量设置：" class="headerlink" title="1.环境变量设置："></a>1.环境变量设置：</h2><p>安装eclipse ,tomcat,和ant,然后设置环境变量：<br>我的电脑-&gt;高级-&gt;环境变量-&gt;用户变量</p>
+<p>ANT_HOME     C:\apache\apache-ant-1.7.1<br>CATALINA_HOME    C:\apache\Tomcat-5.5.27<br>ECLIPSE_HOME    C:\eclipse<br>JAVA_HOME    C:\java\jdk1.6.0_11<br>PATH         %JAVA_HOME%\bin;<br>                  %ANT_HOME%\bin;</p>
+<h2 id="2-启动eclipse"><a href="#2-启动eclipse" class="headerlink" title="2.启动eclipse"></a>2.启动eclipse</h2><p>windows -&gt;preferences -&gt;server-&gt;Runtime Environments<br>选择Tomcat v5.5 Server</p>
+<p>ant -&gt;runtime<br>选择自己安装的apache-ant-1.7.1</p>
+<h2 id="3-创建自己的项目"><a href="#3-创建自己的项目" class="headerlink" title="3.创建自己的项目"></a>3.创建自己的项目</h2><p>运行eclipse   新建 java application  导入sample文件为项目的源文件<br>根据自己情况修改build.xml修改<br>然后ant 运行 ，开启tomcat服务。打开浏览器（IE），<a href="http://localhost:8080/sample/" target="_blank" rel="external">http://localhost:8080/sample/</a>  就可以自己的页面</p>
+
+          
+        
+      
+    </div>
+
+   
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+
+      
+     
+    </footer>
+  </article>
+
     
       
 
@@ -985,109 +1093,6 @@ boot
   </article>
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2009/02/28/have-nothing-to-say/" itemprop="url">
-                  无话可说
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2009-03-01T07:18:33+08:00" content="2009-03-01">
-              2009-03-01
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/杂/" itemprop="url" rel="index">
-                    <span itemprop="name">杂</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>倒不是和所有的人都没有话题，而是几个人。我真的不知道和这些人说点什么东西—没有可能的共同语言可能是个main problem。<br>该不该试着没话找话啊？这个好像又有点招人烦—-就好象××同学。好像挺招人烦的。怎么办呢?</p>
-
-          
-        
-      
-    </div>
-
-   
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-
-      
-     
-    </footer>
-  </article>
-
-    
   </section>
 
   
@@ -1129,7 +1134,7 @@ boot
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">167</span>
+              <span class="site-state-item-count">168</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

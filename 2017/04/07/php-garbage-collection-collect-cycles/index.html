@@ -43,14 +43,16 @@
 
 
 <meta name="description" content="先来看一下什么是循环引用问题？在 PHP 5.2 中使用的垃圾回收算法是 Reference Counting（引用计数）。非常简单，为每个 zval 分配一个计数器，当一个 zval 建立时计数器初始化为1，以后每有一个新变量引用此 zval，则计数器加1，而每当减少一个引用的变量则计数器减 1，当垃圾回收机制运作的时候，将所有计数器为0的zval销毁并回收其占用的内存。但是对于以下代码，把数组">
+<meta name="keywords" content="PHP,源码阅读,PHP7,GC">
 <meta property="og:type" content="article">
 <meta property="og:title" content="PHP 的垃圾回收机制－理解PHP如何解决循环引用导致的内存泄漏问题">
 <meta property="og:url" content="http://blog.100dos.com/2017/04/07/php-garbage-collection-collect-cycles/index.html">
 <meta property="og:site_name" content="百作坊">
 <meta property="og:description" content="先来看一下什么是循环引用问题？在 PHP 5.2 中使用的垃圾回收算法是 Reference Counting（引用计数）。非常简单，为每个 zval 分配一个计数器，当一个 zval 建立时计数器初始化为1，以后每有一个新变量引用此 zval，则计数器加1，而每当减少一个引用的变量则计数器减 1，当垃圾回收机制运作的时候，将所有计数器为0的zval销毁并回收其占用的内存。但是对于以下代码，把数组">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://blog.100dos.com/images/php/loop-array.png">
 <meta property="og:image" content="http://blog.100dos.com/images/php/leak-array.png">
-<meta property="og:updated_time" content="2017-04-12T02:53:08.903Z">
+<meta property="og:updated_time" content="2017-08-26T14:29:13.745Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PHP 的垃圾回收机制－理解PHP如何解决循环引用导致的内存泄漏问题">
 <meta name="twitter:description" content="先来看一下什么是循环引用问题？在 PHP 5.2 中使用的垃圾回收算法是 Reference Counting（引用计数）。非常简单，为每个 zval 分配一个计数器，当一个 zval 建立时计数器初始化为1，以后每有一个新变量引用此 zval，则计数器加1，而每当减少一个引用的变量则计数器减 1，当垃圾回收机制运作的时候，将所有计数器为0的zval销毁并回收其占用的内存。但是对于以下代码，把数组">
@@ -295,7 +297,7 @@
 <figure class="highlight php"><table><tr><td class="code"><pre><div class="line">typedef struct _gc_root_buffer &#123;</div><div class="line">    zend_refcounted          *ref;</div><div class="line">    struct _gc_root_buffer   *next;     <span class="comment">/* double-linked list               */</span></div><div class="line">    struct _gc_root_buffer   *prev;</div><div class="line">    uint32_t                 refcount;</div><div class="line">&#125; gc_root_buffer;</div></pre></td></tr></table></figure>
 <p>并且这个链表的长度是定义是 <code>#define GC_ROOT_BUFFER_MAX_ENTRIES 10001</code>。猜测简单解决循环引用原理：因为已经没有任何符号指向循环引用指向的zval，于是用这个<em>可能根双向链表</em>来记录可能产生内存泄漏的结构体。</p>
 <p>接着往下看代码， <code>GC_TRACE_SET_COLOR(ref, GC_PURPLE);</code> 设置颜色为紫色，关于颜色的定义可以在代码注释中看到：</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line">* Colors and its meaning</div><div class="line">* ----------------------</div><div class="line">*</div><div class="line">* BLACK  (GC_BLACK)   - In use or free. </div><div class="line">* GREY   (GC_GREY)    - Possible member of cycle.</div><div class="line">* WHITE  (GC_WHITE)   - Member of garbage cycle.</div><div class="line">* PURPLE (GC_PURPLE)  - Possible root of cycle.</div><div class="line">*</div></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment">* Colors and its meaning</span></div><div class="line"><span class="comment">* ----------------------</span></div><div class="line"><span class="comment">*</span></div><div class="line"><span class="comment">* BLACK  (GC_BLACK)   - In use or free. </span></div><div class="line"><span class="comment">* GREY   (GC_GREY)    - Possible member of cycle.</span></div><div class="line"><span class="comment">* WHITE  (GC_WHITE)   - Member of garbage cycle.</span></div><div class="line"><span class="comment">* PURPLE (GC_PURPLE)  - Possible root of cycle.</span></div><div class="line"><span class="comment">*</span></div></pre></td></tr></table></figure>
 <p>紫色表示<em>疑似垃圾（Possible root of cycle）</em>。我们可以推测 PHP 把可能存在内存泄露的引用存放到 Possible roots 里，这样在清理垃圾时，就避免不得不检查所有引用计数。</p>
 <p>现在有了垃圾回收的<em>疑似垃圾</em>的一个链表。那么是在何时清除这些垃圾呢？</p>
 <p>回看 <code>gc_possible_root</code> 函数中，调用了 <code>gc_collect_cycles</code> ，这个函数其实就是 <code>zend_gc_collect_cycles</code>，在 Zend/zend.c 的 <code>zend_startup</code>中定义实现。</p>
@@ -306,7 +308,7 @@
 <figure class="highlight php"><table><tr><td class="code"><pre><div class="line">typedef struct _zend_gc_globals &#123;</div><div class="line">  <span class="comment">// ...</span></div><div class="line">    gc_root_buffer   *buf;              <span class="comment">/* preallocated arrays of buffers   */</span></div><div class="line">    gc_root_buffer    roots;            <span class="comment">/* list of possible roots of cycles */</span></div><div class="line">    gc_root_buffer   *unused;           <span class="comment">/* list of unused buffers           */</span></div><div class="line">    gc_root_buffer   *first_unused;     <span class="comment">/* pointer to first unused buffer   */</span></div><div class="line">    gc_root_buffer   *last_unused;      <span class="comment">/* pointer to last unused buffer    */</span></div><div class="line"></div><div class="line">  <span class="comment">// ...</span></div><div class="line">&#125; zend_gc_globals;</div></pre></td></tr></table></figure>
 <p>于是可以得出结论，仅仅在根缓冲区满了时（也就是<code>GC_ROOT_BUFFER_MAX_ENTRIES</code> 不够时），才对缓冲区内部所有不同的变量容器执行垃圾回收操作。</p>
 <p>那么是如何进行垃圾回收的呢？看 <code>zend_gc_collect_cycles</code> 函数就好了。在注释中也有描述</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"></div><div class="line"> * Flow</div><div class="line">* =====</div><div class="line">*</div><div class="line">* The garbage collect cycle starts from <span class="string">'gc_mark_roots'</span>, which traverses the</div><div class="line">* possible roots, <span class="keyword">and</span> calls mark_grey <span class="keyword">for</span> roots are marked purple with</div><div class="line">* depth-first traverse.</div><div class="line">*</div><div class="line">* After all possible roots are traversed <span class="keyword">and</span> marked,</div><div class="line">* gc_scan_roots will be called, <span class="keyword">and</span> each root will be called with</div><div class="line">* gc_scan(root-&gt;ref)</div><div class="line">*</div><div class="line">* gc_scan checkes the colors of possible members.</div><div class="line">*</div><div class="line">* <span class="keyword">If</span> the node is marked <span class="keyword">as</span> grey <span class="keyword">and</span> the refcount &gt; <span class="number">0</span></div><div class="line">*    gc_scan_black will be called on that node to scan it<span class="string">'s subgraph.</span></div><div class="line">* otherwise (refcount == 0), it marks the node white.</div><div class="line">*</div><div class="line">* A node MAY be added to possbile roots when ZEND_UNSET_VAR happens or</div><div class="line">* zend_assign_to_variable is called only when possible garbage node is</div><div class="line">* produced.</div><div class="line">* gc_possible_root() will be called to add the nodes to possible roots.</div><div class="line">*</div><div class="line">*</div><div class="line">* For objects, we call their get_gc handler (by default 'zend_std_get_gc<span class="string">') to</span></div><div class="line">* get the object properties to scan.</div><div class="line">*</div></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"></div><div class="line"> * Flow</div><div class="line">* =====</div><div class="line">*</div><div class="line">* The garbage collect cycle starts from <span class="string">'gc_mark_roots'</span>, which traverses the</div><div class="line">* possible roots, <span class="keyword">and</span> calls mark_grey <span class="keyword">for</span> roots are marked purple with</div><div class="line">* depth-first traverse.</div><div class="line">*</div><div class="line">* After all possible roots are traversed <span class="keyword">and</span> marked,</div><div class="line">* gc_scan_roots will be called, <span class="keyword">and</span> each root will be called with</div><div class="line">* gc_scan(root-&gt;ref)</div><div class="line">*</div><div class="line">* gc_scan checkes the colors of possible members.</div><div class="line">*</div><div class="line">* <span class="keyword">If</span> the node is marked <span class="keyword">as</span> grey <span class="keyword">and</span> the refcount &gt; <span class="number">0</span></div><div class="line">*    gc_scan_black will be called on that node to scan it<span class="string">'s subgraph.</span></div><div class="line"><span class="string">* otherwise (refcount == 0), it marks the node white.</span></div><div class="line"><span class="string">*</span></div><div class="line"><span class="string">* A node MAY be added to possbile roots when ZEND_UNSET_VAR happens or</span></div><div class="line"><span class="string">* zend_assign_to_variable is called only when possible garbage node is</span></div><div class="line"><span class="string">* produced.</span></div><div class="line"><span class="string">* gc_possible_root() will be called to add the nodes to possible roots.</span></div><div class="line"><span class="string">*</span></div><div class="line"><span class="string">*</span></div><div class="line"><span class="string">* For objects, we call their get_gc handler (by default '</span>zend_std_get_gc<span class="string">') to</span></div><div class="line"><span class="string">* get the object properties to scan.</span></div><div class="line"><span class="string">*</span></div></pre></td></tr></table></figure>
 <p>过程：</p>
 <ol>
 <li>垃圾回收周期从 <code>gc_mark_roots</code> 函数开始，深度优先遍历所有<em>可能根</em>，调用 <code>mark_grey</code> 把原标记为紫色（Possible root of cycle）的root标记为灰色（Possible member of cycle）。</li>
@@ -366,6 +368,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2017/08/21/deep-understandint-php-ini-config/" rel="prev" title="深入理解PHP的ini配置">
+                深入理解PHP的ini配置 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -381,19 +387,21 @@
             <h3 class="article-title" style="font-size: 20px;">相关文章</h3>
             <ul>
             
-                <li><a href="/2017/03/22/deeper-understanding-php7-zval/">深入理解 PHP7 之 zval</a></li>
-            
                 <li><a href="/2017/03/22/deeper-understanding-php7-reference/">深入理解 PHP7 之 REFERENCE</a></li>
             
-                <li><a href="/2015/10/12/code-read-of-react-native/">React Native 源码阅读</a></li>
+                <li><a href="/2017/03/22/deeper-understanding-php7-zval/">深入理解 PHP7 之 zval</a></li>
+            
+                <li><a href="/2015/11/12/how-php-grab-screenshot-from-video/">PHP 获取视频的预览截图</a></li>
+            
+                <li><a href="/2017/08/21/deep-understandint-php-ini-config/">深入理解PHP的ini配置</a></li>
             
                 <li><a href="/2017/03/03/installing-centos7-nginx1-10-3-php7-mysql5-7/">CentOS 7 从零开始搭建 LNMP 环境（nginx/1.10.3 PHP/7.1.2 Mysql/5.7.17）</a></li>
             
                 <li><a href="/2016/08/29/debug-in-php/">如何调试 PHP 程序</a></li>
             
-                <li><a href="/2015/11/12/how-php-grab-screenshot-from-video/">PHP 获取视频的预览截图</a></li>
-            
                 <li><a href="/2017/03/24/copy-and-chage-on-write-with-php/">理解 PHP 的写时复制和写时改变</a></li>
+            
+                <li><a href="/2015/10/12/code-read-of-react-native/">React Native 源码阅读</a></li>
             
                 <li><a href="/2015/04/13/misunderstand-of-php-fpm-max-chindren/">php-fpm的max_chindren的一些误区</a></li>
             
@@ -457,7 +465,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">167</span>
+              <span class="site-state-item-count">168</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

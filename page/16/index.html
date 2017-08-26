@@ -48,6 +48,7 @@
 <meta property="og:url" content="http://blog.100dos.com/page/16/index.html">
 <meta property="og:site_name" content="百作坊">
 <meta property="og:description" content="纪录工作和生活">
+<meta property="og:locale" content="zh-Hans">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="百作坊">
 <meta name="twitter:description" content="纪录工作和生活">
@@ -206,6 +207,110 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2009/12/06/stay-up-late-again/" itemprop="url">
+                  又熬夜了哈哈～
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2009-12-07T00:16:17+08:00" content="2009-12-07">
+              2009-12-07
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/杂/" itemprop="url" rel="index">
+                    <span itemprop="name">杂</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>啊今天原本不想熬夜的。。这又00：16</p>
+<p>麻留脱衣服睡了。。祝自己好梦。。</p>
+
+          
+        
+      
+    </div>
+
+   
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+
+      
+     
+    </footer>
+  </article>
+
     
       
 
@@ -953,117 +1058,6 @@
   </article>
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2009/10/19/ubuntu-grub-hdx-setup/" itemprop="url">
-                  Ubuntu 引导盘设置
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2009-10-19T19:59:17+08:00" content="2009-10-19">
-              2009-10-19
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/linux/" itemprop="url" rel="index">
-                    <span itemprop="name">linux</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>最近手痒，在尝试移动硬盘启动计算机，由于它使用的也是GRUB启动的方式，导致我本机的GRUB产生了error 17 错误！</p>
-<p>解决方法：</p>
-<p>看了网上高手对这个问题的解释，基本是出在MBR上，决定重装GRUB到硬盘第一个分区的MBR</p>
-<p>使用Ubuntu Live CD启动后，打开终端命令行</p>
-<p>sudo grub</p>
-<p>find   /boot/grub/stage1 #find命令会返回一个值，比如我这是(hd0,5)</p>
-<p>root  (hdx,x) #如果find命令返回的(hd0,5)，这里你就root  (hd0,5)</p>
-<p>setup  (hdx) #如果find命令返回的是(hd0,num)，你就 setup  (hd0)</p>
-<p>如果提示ok、成功后，重启系统，看到久违的GRUB启动界面。</p>
-
-          
-        
-      
-    </div>
-
-   
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-
-      
-     
-    </footer>
-  </article>
-
-    
   </section>
 
   
@@ -1105,7 +1099,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">167</span>
+              <span class="site-state-item-count">168</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

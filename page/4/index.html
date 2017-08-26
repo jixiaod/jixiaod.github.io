@@ -48,6 +48,7 @@
 <meta property="og:url" content="http://blog.100dos.com/page/4/index.html">
 <meta property="og:site_name" content="百作坊">
 <meta property="og:description" content="纪录工作和生活">
+<meta property="og:locale" content="zh-Hans">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="百作坊">
 <meta name="twitter:description" content="纪录工作和生活">
@@ -206,6 +207,287 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/08/23/deep-understanding-of-float-type-in-PHP/" itemprop="url">
+                  深入理解 PHP 中的浮点型
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-23T16:23:59+08:00" content="2016-08-23">
+              2016-08-23
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/PHP/" itemprop="url" rel="index">
+                    <span itemprop="name">PHP</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>我们都知道 PHP 是一个弱类型的动态脚本语言，所谓弱类型是指不仅在声明变量时不需要指定它的类型，且运算时也不做类型验证。比如可以将一个整型和浮点数类型做加法操作。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$x = <span class="number">1</span>; <span class="comment">// $x 是整型</span></div><div class="line">$y = <span class="number">1.1</span>; <span class="comment">// $y 浮点数</span></div><div class="line">var_dump($x);</div><div class="line">var_dump($y);</div><div class="line"></div><div class="line">$z = $x + $y; <span class="comment">// $z 是浮点数</span></div><div class="line">var_dump($z);</div><div class="line"></div><div class="line"><span class="comment">// output</span></div><div class="line">int(<span class="number">1</span>)</div><div class="line">float(<span class="number">1.1</span>)</div><div class="line">float(<span class="number">2.1</span>)</div></pre></td></tr></table></figure>
+<p>并且上面的代码也可以注意到，在变量声明时也无需指定变量的类型，说明赋值是最简单的隐式的类型转换。然后把整型和浮点数相加得到了另一个浮点数。</p>
+<p>在 PHP 中，对于浮点数 <code>float</code> 同样也代表  <code>double</code> 双精度和 <code>real</code> 实数类型，在 php.net 上有如下关于浮点数精度的说明。</p>
+<h3 id="浮点数的精度问题"><a href="#浮点数的精度问题" class="headerlink" title="浮点数的精度问题"></a>浮点数的精度问题</h3><blockquote>
+<p>浮点数的精度有限。尽管取决于系统，PHP 通常使用 IEEE 754 双精度格式，则由于取整而导致的最大相对误差为 1.11e-16。非基本数学运算可能会给出更大误差，并且要考虑到进行复合运算时的误差传递。<br>此外，以十进制能够精确表示的有理数如 0.1 或 0.7，无论有多少尾数都不能被内部所使用的二进制精确表示，因此不能在不丢失一点点精度的情况下转换为二进制的格式。这就会造成混乱的结果：例如，floor((0.1+0.7)*10) 通常会返回 7 而不是预期中的 8，因为该结果内部的表示其实是类似 7.9999999999999991118…。</p>
+</blockquote>
+<p>那么 0.1 和 0.7 为什么转换为二进制时会产生误差呢？我们先只看 0.1 转换成二进制就好。十进制数值转换为二进制数值可以通过下面的方法：</p>
+<ul>
+<li>整数部分：连续用该整数除以2，取余数，然后商再除以2，直到商等于0为止。然后把得到的各个余数按相反的顺序排列 － 简称”除2取余法”。</li>
+<li>小数部分：十进制小数转换为二进制小数，采用”乘2取整，顺序排列”法。用2乘以十进制小数，将得到的整数部分取出，再用2乘余下的小数部分，然后再将积的整数部分取出，如此进行，直到积中的小数部分为 0 或者达到所要求的精度为止。然后把取出的整数部分按顺序排列起来，即先取出的整数部分作为二进制小数的高位，后取出的整数部分作为低位有效位 － 简称”乘2取整法”。</li>
+<li>含有小数的十进制数转换成二进制，整数、小数部分分别进行转换，然后相加。</li>
+</ul>
+<p>0.1 没有整数部分，所以只需要对小数部分做乘2取整。</p>
+<table>
+<thead>
+<tr>
+<th>运算</th>
+<th>乘积</th>
+<th>是否有整数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.1 * 2</td>
+<td>0.2</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0.2 * 2</td>
+<td>0.4</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0.4 * 2</td>
+<td>0.8</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0.8 * 2</td>
+<td>1.6</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0.6 * 2</td>
+<td>1.2</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0.2 * 2</td>
+<td>0.4</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0.4 * 2</td>
+<td>0.8</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0.8 * 2</td>
+<td>1.6</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0.6 * 2</td>
+<td>1.2</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0.2 * 2</td>
+<td>0.4</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0.4 * 2</td>
+<td>0.8</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0.8 * 2</td>
+<td>1.6</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0.6 * 2</td>
+<td>1.2</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0.2 * 2</td>
+<td>0.4</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0.4 * 2</td>
+<td>0.8</td>
+<td>0</td>
+</tr>
+<tr>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+</tbody>
+</table>
+<p>我们能看到最后永远重复 0011 的循环……</p>
+<h3 id="IEEE-754"><a href="#IEEE-754" class="headerlink" title="IEEE 754"></a>IEEE 754</h3><p>PHP 浮点数使用 IEEE 754 二进制浮点数算术标准来存储。</p>
+<p>sign：符号位（sign bit）；<br>exponent：“指数部分”，即次高有效的e个比特，存储指数部分；<br>fraction：最后剩下的f个低有效位的比特，存储“有效数”（significand）的小数部分。</p>
+<h4 id="32位单精度"><a href="#32位单精度" class="headerlink" title="32位单精度"></a>32位单精度</h4><p>单精度二进制小数，使用32个比特存储。</p>
+<table>
+<thead>
+<tr>
+<th>1</th>
+<th>8</th>
+<th>23</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S</td>
+<td>Exp</td>
+<td>Fraction</td>
+</tr>
+<tr>
+<td>31</td>
+<td>30至23 偏正值（实际的指数大小+127）</td>
+<td>22至0位编号（从右边开始为0）</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>S为符号位，Exp为指数字，Fraction为有效数字。 指数部分即使用所谓的偏正值形式表示，偏正值为实际的指数大小与一个固定值（32位的情况是127）的和。采用这种方式表示的目的是简化比较。因为，指数的值可能为正也可能为负，如果采用补码表示的话，全体符号位S和Exp自身的符号位将导致不能简单的进行大小比较。正因为如此，指数部分通常采用一个无符号的正数值存储。单精度的指数部分是−126～+127加上偏移值127，指数值的大小从1～254（0和255是特殊值）。浮点小数计算时，指数值减去偏正值将是实际的指数大小。</p>
+</blockquote>
+<h4 id="64位双精度"><a href="#64位双精度" class="headerlink" title="64位双精度"></a>64位双精度</h4><p>双精度二进制小数，使用64个比特存储。</p>
+<table>
+<thead>
+<tr>
+<th>1</th>
+<th>8</th>
+<th>23</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S</td>
+<td>Exp</td>
+<td>Fraction</td>
+</tr>
+<tr>
+<td>63</td>
+<td>62至52偏正值（实际的指数大小+1023）</td>
+<td>51至0位编号（从右边开始为0）</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>S为符号位，Exp为指数字，Fraction为有效数字。指数部分即使用所谓的偏正值形式表示，偏正值为实际的指数大小与一个固定值（64位的情况是1023）的和。采用这种方式表示的目的是简化比较。因为，指数的值可能为正也可能为负，如果采用补码表示的话，全体符号位S和Exp自身的符号位将导致不能简单的进行大小比较。正因为如此，指数部分通常采用一个无符号的正数值存储。双精度的指数部分是−1022～+1023加上1023，指数值的大小从1～2046（0（2进位全为0）和2047（2进位全为1）是特殊值）。浮点小数计算时，指数值减去偏正值将是实际的指数大小。</p>
+</blockquote>
+<p>参考IEEE 754 知道，对于单精度存储小数位至多保留23位。即 0.1 转换为二进制之后 0011 的无限循环只能保留23位，即使是双精度也只能保留52位，其余均要舍去。所以浮点数会出现精度的问题，转换结果可以根据浮点数转换工具查看。</p>
+<p>十进制 =&gt; 二进制 =&gt; 十六进制 =&gt; 转换后浮点数<br>0.1 =&gt; 00111101110011001100110011001101 =&gt; 0x3dcccccd =&gt; 0.10000000149011612<br>0.7 =&gt; 00111111001100110011001100110011 =&gt; 0x3f333333 =&gt; 0.699999988079071</p>
+<h3 id="浮点数的范围和精度"><a href="#浮点数的范围和精度" class="headerlink" title="浮点数的范围和精度"></a>浮点数的范围和精度</h3><p>浮点数计算公式如下：</p>
+<p>sign * 2<sup>exponent</sup> * fraction</p>
+<p>能看出浮点数的范围是由指数的位数来决定的。单精度的浮点数指数有8位，双精度有11位。于是，单精度的指数范围为-127~+128，而双精度的指数范围为-1023~+1024，并且指数位是按补码的形式来划分的。其中负指数决定了浮点数所能表达的绝对值最小的非零数；而正指数决定了浮点数所能表达的绝对值最大的数，也即决定了浮点数的取值范围。单精度的范围为-2<sup>128</sup> ~ +2<sup>128</sup>，也即-3.40E+38 ~ +3.40E+38；双精度的范围为-2<sup>1024</sup> ~ +2<sup>1024</sup>，也即-1.79E+308 ~ +1.79E+308。</p>
+<p>浮点数的精度是由尾数的位数来决定的，且尾数是按科学计数法来存储的，如 9.2233720368548E+18。</p>
+<ul>
+<li>单精度：2<sup>23</sup> = 8388608，一共7位，这意味着最多能有7位有效数字，但绝对能保证的为6位，也即 float 的精度为6~7位有效数字；</li>
+<li>双精度：2<sup>52</sup> = 4503599627370496，一共16位，所以精度为15~16位。</li>
+</ul>
+<h3 id="整型溢出"><a href="#整型溢出" class="headerlink" title="整型溢出"></a>整型溢出</h3><p>如果给定的一个数超出了 integer 的范围，将会被解释为 float。同样如果执行的运算结果超出了 integer 范围，也会返回 float。</p>
+<p>64 位系统下的整数溢出:</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$large_number = <span class="number">9223372036854775807</span>;</div><div class="line">var_dump($large_number);                     <span class="comment">// int(9223372036854775807)</span></div><div class="line"></div><div class="line">$large_number = <span class="number">9223372036854775808</span>;</div><div class="line">var_dump($large_number);                     <span class="comment">// float(9.2233720368548E+18)</span></div><div class="line"></div><div class="line">$million = <span class="number">1000000</span>;</div><div class="line">$large_number =  <span class="number">50000000000000</span> * $million;</div><div class="line">var_dump($large_number);                     <span class="comment">// float(5.0E+19)</span></div></pre></td></tr></table></figure>
+<h3 id="整型转换为浮点数"><a href="#整型转换为浮点数" class="headerlink" title="整型转换为浮点数"></a>整型转换为浮点数</h3><p>如果整型数字的精度可以保留，则结果值是最接近原值的一个近似值，否则这个值不确定。下面代码即是精度不能保留的例子，能够看到最后的结果值是用科学计数法表示，且保留的精度是14位。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="comment">// 64位系统，PHP 5.6 / PHP 7</span></div><div class="line">$int = <span class="number">9223372036854775807</span>;</div><div class="line">$float = (float)$int;</div><div class="line">var_dump($int);</div><div class="line">var_dump($float);</div><div class="line"></div><div class="line">output:</div><div class="line">int(<span class="number">9223372036854775807</span>)</div><div class="line">float(<span class="number">9.2233720368548E+18</span>)  <span class="comment">// 能够注意到保留的精度是 14 位</span></div></pre></td></tr></table></figure>
+<h3 id="浮点数转换为整型"><a href="#浮点数转换为整型" class="headerlink" title="浮点数转换为整型"></a>浮点数转换为整型</h3><p>从浮点数转换成整数时，将向下取整。</p>
+<blockquote>
+<p>向上取整：不管四舍五入的规则 只要后面有小数前面的整数就加1<br>向下取整：不管四舍五入的规则 只要后面有小数忽略小数</p>
+</blockquote>
+<p>如果浮点数超出了整数范围（32 位平台下通常为 +/- 2.15e+9 = 2<sup>31</sup>，64 位平台下通常为 +/- 9.22e+18 = 2<sup>63</sup>），则结果为未定义，因为没有足够的精度给出一个确切的整数结果。在此情况下没有警告，甚至没有任何通知！</p>
+<p>Warning : 决不要将未知的分数强制转换为 integer，这样有时会导致不可预料的结果。<br><figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"><span class="keyword">echo</span> (int) ( (<span class="number">0.1</span>+<span class="number">0.7</span>) * <span class="number">10</span> ); <span class="comment">// 显示 7!</span></div></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+   
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+
+      
+     
+    </footer>
+  </article>
+
     
       
 
@@ -428,7 +710,7 @@
 <li>现居住地 : 北京市</li>
 <li>婚姻状况 : 已婚</li>
 <li>联系电话 : 188<em>**</em>6729</li>
-<li>邮箱 : <a href="&#x6d;&#97;&#x69;&#x6c;&#116;&#x6f;&#58;&#x6a;&#105;&#x2e;&#x78;&#105;&#x61;&#111;&#100;&#64;&#x67;&#x6d;&#97;&#105;&#108;&#46;&#99;&#x6f;&#109;">&#x6a;&#105;&#x2e;&#x78;&#105;&#x61;&#111;&#100;&#64;&#x67;&#x6d;&#97;&#105;&#108;&#46;&#99;&#x6f;&#109;</a></li>
+<li>邮箱 : <a href="&#x6d;&#x61;&#x69;&#x6c;&#x74;&#111;&#58;&#106;&#105;&#46;&#120;&#x69;&#x61;&#x6f;&#x64;&#x40;&#103;&#109;&#x61;&#x69;&#x6c;&#x2e;&#99;&#x6f;&#x6d;">&#106;&#105;&#46;&#120;&#x69;&#x61;&#x6f;&#x64;&#x40;&#103;&#109;&#x61;&#x69;&#x6c;&#x2e;&#99;&#x6f;&#x6d;</a></li>
 <li>出生年月 : 1986年10月</li>
 <li>博客 : <a href="http://blog.100dos.com">http://blog.100dos.com</a></li>
 <li>Github : <a href="https://github.com/jixiaod" target="_blank" rel="external">https://github.com/jixiaod</a></li>
@@ -1332,159 +1614,6 @@
   </article>
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/16/11-important-database-designing-rules-which-I-follow/" itemprop="url">
-                  11 个我遵循的重要数据库设计原则
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-16T16:15:01+08:00" content="2016-07-16">
-              2016-07-16
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/数据库/" itemprop="url" rel="index">
-                    <span itemprop="name">数据库</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>在你阅读这篇文章之前，需要先提醒你，我并不是数据库设计方面的专家。以下的11个原则，都是我从具体的项目中总结而来，都是以往项目开发经验和书中的所看所学。在做数据库设计时，觉得对我个人来说还是有很大帮助的。同时也非常欢迎指出文章中有问题的地方。</p>
-<h2 id="原则一：要知道你设计的应用程序的本质要实现的功能是什么？（OLTP-或-OLAP）"><a href="#原则一：要知道你设计的应用程序的本质要实现的功能是什么？（OLTP-或-OLAP）" class="headerlink" title="原则一：要知道你设计的应用程序的本质要实现的功能是什么？（OLTP 或 OLAP）"></a>原则一：要知道你设计的应用程序的本质要实现的功能是什么？（OLTP 或 OLAP）</h2><p>当你开始做数据库设计时，第一件事应该是分析你将要开发的应用程序的本质是要实现什么样的功能，是事物性的，还是分析性的。很多开发者都会忽略应用程序的本质，默认就去用数据库设计的范式来开始设计，紧接着性能问题和特殊定制问题随之而来。如上所述，应用程序可以大致分为俩类：事物性质和分析性质。可以按照下面的方式理解：</p>
-<ul>
-<li>事物性质：在这类程序中，你的终端用户更多操作的是CURD。比如：创建、读取、更新和删除表中的记录。这种数据库的比较官方说法是 OLTP。</li>
-<li>分析性质：在这类程序中，你的终端用户更多操作的是分析、报告、预报等。这类数据库的插入和查询操作很少。更快的查询和分析数据是首要考虑的问题。这种数据库的比较官方说法是 OLAP。</li>
-</ul>
-<p><img src="/images/11-important-database-designing-rules-which-I-follow/a2.jpg" alt=""></p>
-<p>换句话来说，在数据库设计中，如果你认为插入、更新和删除更加显著，就选择标准化（根据数据库设计范式）的表设计。反之，就选择非标准化的数据库结构。</p>
-<p>下面的简单图标显示了如何把左侧的标准化的表（包括用户名和地址），变成右侧非标准化结构的扁平的数据表结构。</p>
-<p><img src="/images/11-important-database-designing-rules-which-I-follow/a3.jpg" alt=""></p>
-<h2 id="原则二：把数据拆分到多个逻辑碎片，变得更简单"><a href="#原则二：把数据拆分到多个逻辑碎片，变得更简单" class="headerlink" title="原则二：把数据拆分到多个逻辑碎片，变得更简单"></a>原则二：把数据拆分到多个逻辑碎片，变得更简单</h2><p>该原则实际上就是1NF范式的第一条原则。违反这个原则的标志是当你的查询使用了很多字符串格式化的函数，像 substring、charindex等，这时就要考虑使用这个原则了。</p>
-<p>例如，能看到下面表的有学生的名字。如果你想查询学生的名字中有“Koirala”并且没有“Harisingh”，你可以想像最后写出来的查询会是什么样子。</p>
-<p>所以，最好的方案是把这个学生姓名字段拆分到几个字段，这样的话写入表哥也会更清晰，查询也会更佳理想。</p>
-<p><img src="/images/11-important-database-designing-rules-which-I-follow/a4.jpg" alt=""></p>
-<h2 id="原则三：对于原则二的不能使用过度"><a href="#原则三：对于原则二的不能使用过度" class="headerlink" title="原则三：对于原则二的不能使用过度"></a>原则三：对于原则二的不能使用过度</h2><p>程序员都是非常可爱的动物。如果你告诉他们这样一个方法，他们就会按照这个方法不管不顾的一直认真的执行下去。然而，他们过分的如是操作，必定会得到不被希望的后果。这个规律同样适用以上提到的原则二。当你想到分解拆分时，先停下来，问一下自己是否真的需要这样做？就像上文提到的，分析是需要符合业务逻辑的。</p>
-<p>例如，你能看到电话号码字段。很少会有需求把电话号码拆分开来使用，除非你的程序有特殊需求。否则拆分出来会导致更复杂的问题，那还是放着不动比较好。</p>
-<p><img src="/images/11-important-database-designing-rules-which-I-follow/a5.jpg" alt=""></p>
-<h2 id="原则四：把重复、不统一的数据当作你最大的敌人"><a href="#原则四：把重复、不统一的数据当作你最大的敌人" class="headerlink" title="原则四：把重复、不统一的数据当作你最大的敌人"></a>原则四：把重复、不统一的数据当作你最大的敌人</h2><p>关注并且重构冗余的数据。我个人担心冗余数据并不是因为它会占用磁盘空间，而是它带来的困惑。</p>
-<p>例如，在下表中，你可以看到“5th Standard” 和“Fifth standard”表达的是同一个意思。由于垃圾数据或者输入验证没有做好，这些数据才会进入到数据表中来。如果用这个数据导出报表给用户看，相信用户一定会晕掉。</p>
-<p><img src="/images/11-important-database-designing-rules-which-I-follow/a6.jpg" alt=""></p>
-<p>有一个办法是，就是把这些数据放到另外一张表，然后用外键做关联。看下面图表的演示，创建另外一张表叫做年级表（Standards Table），然后用简单的外键关联起来。</p>
-<p><img src="/images/11-important-database-designing-rules-which-I-follow/a7.jpg" alt=""></p>
-<h2 id="原则五：小心那些用分隔符分割的数据"><a href="#原则五：小心那些用分隔符分割的数据" class="headerlink" title="原则五：小心那些用分隔符分割的数据"></a>原则五：小心那些用分隔符分割的数据</h2><p>第1NF范式的第二条原则说要避免重复组（原子性）。下面的图表既是重复组的一个小例子。仔细观察“Syllabus”（教学大纲）字段，这个字段被塞入了很多的课程名称，这种类似的字段就可以被叫称为“重复组”。一旦我们要操作这个字段，查询会变的非常复杂，效率一定不高。</p>
-<p><img src="/images/11-important-database-designing-rules-which-I-follow/a8.jpg" alt=""></p>
-<p>这种被塞满用分隔符分开的数据字段必须要引起重视。一个好的办法是把这些内容拆开，放到不同的表中，并用外键关联。</p>
-<p><img src="/images/11-important-database-designing-rules-which-I-follow/a9.jpg" alt=""></p>
-<p>现在就能套用1NF方式的第二原则：所有的属性均有原子性，既所有的属性均不可被再分割。正如上面的图表中所示，我创建了一个单独的表“Syllabus”（教学大纲）。并于“Subject”（课程）表建立了多对多的关系。</p>
-<p>这样在原来表中的教学大纲字段就不会再重复，当然也就不必再用分隔符来分开数据了。</p>
-<h2 id="原则六：小心部分关联"><a href="#原则六：小心部分关联" class="headerlink" title="原则六：小心部分关联"></a>原则六：小心部分关联</h2><p><img src="/images/11-important-database-designing-rules-which-I-follow/a10.jpg" alt=""></p>
-<p>小心那些只是部分关联主键的字段。例如上图，能看到主键被创建在“Roll No”和年级（Standard）字段上。现在仔细观察教学大纲字段（Syllabus）。教学大纲字段和年级是有关联的，但是跟学生没有关联。</p>
-<p>教学大纲跟学生正在上课和学习的年级有关，但是跟学生没有直接的关系。所以如果是按照上表的设计结构，如果我们明天要更新教学大纲，我们就必须要更新每个学生的信息。这显然很麻烦，而且不合逻辑。更加明智的做法是把教学大纲字段拿出去放倒另外的表中，然后让这张表跟年级相关联。</p>
-<p>上图能看到我们的操作，把教学大纲字段提出来，附属于年级表。</p>
-<p>这个原则正式 第2NF范式：如果依赖于主键，则需要依赖于所有主键，不能存在依赖部分主键的情况。</p>
-<h2 id="原则七：谨慎的选择创建派生字段"><a href="#原则七：谨慎的选择创建派生字段" class="headerlink" title="原则七：谨慎的选择创建派生字段"></a>原则七：谨慎的选择创建派生字段</h2><p><img src="/images/11-important-database-designing-rules-which-I-follow/a11.jpg" alt=""></p>
-<p>如果正在开发的是 OLTP 的应用程序，应该避免创建派生字段，除非真的有极特殊因为性能的原因。在OLAP程序中，我们会做许多的求和、计算，这些派生的字段会大大提升性能。</p>
-<p>在上图表中，平均值字段的值是通过总分除以科目数量得出来的。这也是冗余中的一种。所以对于这些根据其他字段派生出来的字段，一定要考虑清楚是否真的需要？</p>
-<p>这个原则也就是低3NF范式：一个数据库表中不包含已在其它表中已包含的非主关键字信息（不得存在传递式依赖）。按照我个人的理解，不要盲目的遵从这个原则，要看具体场景，并不是所有的冗余数据都是不好的。如果冗余数据是计算得出的，要看具体场景，然后决定是否要遵从第3NF范式。</p>
-<h2 id="原则八：如果性能是关键的话，就不用太关注去避免冗余"><a href="#原则八：如果性能是关键的话，就不用太关注去避免冗余" class="headerlink" title="原则八：如果性能是关键的话，就不用太关注去避免冗余"></a>原则八：如果性能是关键的话，就不用太关注去避免冗余</h2><p><img src="/images/11-important-database-designing-rules-which-I-follow/a12.jpg" alt=""></p>
-<p>不需要过于严格的去遵守避免冗余数据的原则。如果非常迫切的需要性能，就考虑下非原则性的东西吧。在考虑原则的时候，查询可能需要联合查询好多张表。但是如果不考虑原则，联合查询减少了，这样性能和效率也就能够得到提升。</p>
-<h2 id="原则九：多维数据非常可怕"><a href="#原则九：多维数据非常可怕" class="headerlink" title="原则九：多维数据非常可怕"></a>原则九：多维数据非常可怕</h2><p>OLAP 的程序通常有要处理多维数据的问题。例如看下图表，现在想要得到每个国家、用户、日期的销售额。简单来说，就是这三个交叉维度的销售额。</p>
-<p><img src="/images/11-important-database-designing-rules-which-I-follow/a13.jpg" alt=""></p>
-<p>这种情况下一个“维度＋事实”的设计是一个不错的方法。简单来说，创建一个以销售数据为中心的表，然后让该表用外键关联所有的维度。</p>
-<p><img src="/images/11-important-database-designing-rules-which-I-follow/a14.jpg" alt=""></p>
-<h2 id="原则十：以键值为中心的表结构设计"><a href="#原则十：以键值为中心的表结构设计" class="headerlink" title="原则十：以键值为中心的表结构设计"></a>原则十：以键值为中心的表结构设计</h2><p>很多时候，我们会遇到名称和值的表。名称和值表示它有键和并且有一些数据关联这个键。例如下图表，有一张现金表（Currency）和国家表。如果仔细观察我们它们实际上只有一个键和一个值。</p>
-<p><img src="/images/11-important-database-designing-rules-which-I-follow/a16.jpg" alt=""></p>
-<p>对于这样的一些表，创建一个中心化的表，然后用一个类型（type）字段来区分不同类型的数据更合理一些。</p>
-<h2 id="原则十一：使用自引用-PK-和-FK-实现无穷尽的父子结构"><a href="#原则十一：使用自引用-PK-和-FK-实现无穷尽的父子结构" class="headerlink" title="原则十一：使用自引用 PK 和 FK 实现无穷尽的父子结构"></a>原则十一：使用自引用 PK 和 FK 实现无穷尽的父子结构</h2><p>很多时候，我们会遇到无穷父子结构的数据。例如，考虑一下传销模型，一个传销下面还可以有多个传销，然后这多个传销的每个人下面还有多个传销。这个场景下，使用一个自引用的主键和外键就能够帮助我们实现这个功能。</p>
-<p><img src="/images/11-important-database-designing-rules-which-I-follow/a17.jpg" alt=""></p>
-<p>最后，这篇文章并不是要告诉大家不要遵从数据库设计范式，而是说不要“盲目”的去遵从数据库的设计范式。在数据库设计之前，首先多看看你的应用程序本质上要实现的功能，和你要处理的数据类型。</p>
-<p><img src="/images/11-important-database-designing-rules-which-I-follow/a18.jpg" alt=""></p>
-<p>原文链接：<a href="http://www.codeproject.com/Articles/359654/11-important-database-designing-rules-which-I-follow" target="_blank" rel="external">11 important database designing rules which I follow</a></p>
-
-          
-        
-      
-    </div>
-
-   
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-
-      
-     
-    </footer>
-  </article>
-
-    
   </section>
 
   
@@ -1526,7 +1655,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">167</span>
+              <span class="site-state-item-count">168</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

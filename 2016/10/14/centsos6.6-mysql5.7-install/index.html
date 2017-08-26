@@ -42,25 +42,18 @@
 
 
 
-<meta name="description" content="在 CentOS 的 yum 默认安装的是 mysql 5.5 版本，由于开发需要 5.6 以上版本，索性就装个 5.7。
-到官网下载对应的 rpm buddle 包，CentOS 6 选择选择如下对应的版本
-
-Red Hat Enterprise Linux 6 / Oracle Linux 6 (x86, 64-bit), RPM Bundle    5.7.15    440.2M(mysq">
+<meta name="description" content="在 CentOS 的 yum 默认安装的是 mysql 5.5 版本，由于开发需要 5.6 以上版本，索性就装个 5.7。 到官网下载对应的 rpm buddle 包，CentOS 6 选择选择如下对应的版本  Red Hat Enterprise Linux 6 / Oracle Linux 6 (x86, 64-bit), RPM Bundle    5.7.15    440.2M(mysq">
+<meta name="keywords" content="mysql,centos">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CentOS 6.6 安装 mysql 5.7">
 <meta property="og:url" content="http://blog.100dos.com/2016/10/14/centsos6.6-mysql5.7-install/index.html">
 <meta property="og:site_name" content="百作坊">
-<meta property="og:description" content="在 CentOS 的 yum 默认安装的是 mysql 5.5 版本，由于开发需要 5.6 以上版本，索性就装个 5.7。
-到官网下载对应的 rpm buddle 包，CentOS 6 选择选择如下对应的版本
-
-Red Hat Enterprise Linux 6 / Oracle Linux 6 (x86, 64-bit), RPM Bundle    5.7.15    440.2M(mysq">
-<meta property="og:updated_time" content="2017-04-12T02:53:08.899Z">
+<meta property="og:description" content="在 CentOS 的 yum 默认安装的是 mysql 5.5 版本，由于开发需要 5.6 以上版本，索性就装个 5.7。 到官网下载对应的 rpm buddle 包，CentOS 6 选择选择如下对应的版本  Red Hat Enterprise Linux 6 / Oracle Linux 6 (x86, 64-bit), RPM Bundle    5.7.15    440.2M(mysq">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-08-26T14:29:13.741Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CentOS 6.6 安装 mysql 5.7">
-<meta name="twitter:description" content="在 CentOS 的 yum 默认安装的是 mysql 5.5 版本，由于开发需要 5.6 以上版本，索性就装个 5.7。
-到官网下载对应的 rpm buddle 包，CentOS 6 选择选择如下对应的版本
-
-Red Hat Enterprise Linux 6 / Oracle Linux 6 (x86, 64-bit), RPM Bundle    5.7.15    440.2M(mysq">
+<meta name="twitter:description" content="在 CentOS 的 yum 默认安装的是 mysql 5.5 版本，由于开发需要 5.6 以上版本，索性就装个 5.7。 到官网下载对应的 rpm buddle 包，CentOS 6 选择选择如下对应的版本  Red Hat Enterprise Linux 6 / Oracle Linux 6 (x86, 64-bit), RPM Bundle    5.7.15    440.2M(mysq">
 
 
 
@@ -290,7 +283,7 @@ Red Hat Enterprise Linux 6 / Oracle Linux 6 (x86, 64-bit), RPM Bundle    5.7.15 
 <p><em>Red Hat Enterprise Linux 6 / Oracle Linux 6 (x86, 64-bit), RPM Bundle    5.7.15    440.2M</em><br><em>(mysql-5.7.15-1.el6.x86_64.rpm-bundle.tar)</em></p>
 </blockquote>
 <p>安装前，如果已经安装了 Mysql 5.5， 需要卸载旧版的 Mysql。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@v194 ~]# rpm -qa |grep mysql</div><div class="line">mysql-libs-5.1.73-7.el6.x86_64</div><div class="line">mysql-community-libs-5.6.33-2.el6.x86_64</div><div class="line">mysql-5.1.73-7.el6.x86_64</div><div class="line">mysql-community-server-5.6.28-2.el6.x86_64</div><div class="line"></div><div class="line">[root@v194 ~]# rpm -e --nodeps mysql-libs-5.1.73-7.el6.x86_64</div><div class="line">[root@v194 ~]# rpm -e --nodeps mysql-community-libs-5.6.33-2.el6.x86_64 mysql-5.1.73-7.el6.x86_64 mysql-community-server-5.6.28-2.el6.x86_64</div></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line">[root@v194 ~]# rpm -qa |grep mysql</div><div class="line">mysql-libs-5.1.73-7.el6.x86_64</div><div class="line">mysql-community-libs-5.6.33-2.el6.x86_64</div><div class="line">mysql-5.1.73-7.el6.x86_64</div><div class="line">mysql-community-server-5.6.28-2.el6.x86_64</div><div class="line"></div><div class="line">[root@v194 ~]# rpm -e --nodeps mysql-libs-5.1.73-7.el6.x86_64</div><div class="line">[root@v194 ~]# rpm -e --nodeps mysql-community-libs-5.6.33-2.el6.x86_64 mysql-5.1.73-7.el6.x86_64 mysql-community-server-5.6.28-2.el6.x86_64</div></pre></td></tr></table></figure>
 <p>删除旧的Mysql目录，不删会有问题。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@v194 ~]# ls  -l  /var/lib|grep mysql</div><div class="line">drwxr-xr-x  5 mysql    mysql    4096 11月 17 2015 mysql</div><div class="line">[root@v194 ~]# rm -rf /var/lib/mysql</div></pre></td></tr></table></figure>
 <p>解压安装下载的 bundle 包。</p>
@@ -423,7 +416,7 @@ Red Hat Enterprise Linux 6 / Oracle Linux 6 (x86, 64-bit), RPM Bundle    5.7.15 
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">167</span>
+              <span class="site-state-item-count">168</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

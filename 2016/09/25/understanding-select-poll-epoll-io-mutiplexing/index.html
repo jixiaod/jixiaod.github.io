@@ -42,22 +42,18 @@
 
 
 
-<meta name="description" content="select、poll 和 epoll 都是 Linux API 提供的 IO 复用方式。IO多路复用是指内核一旦发现进程指定的一个或者多个IO条件准备读取，它就通知该进程。知乎上的回答 非常好的解释了什么事IO多路复用，用机场航班调度问题的解释的非常清晰，看完之后豁然开朗。
-select、poll 和 epoll 都是阻塞的，用 select 来举例，写法大概是这样：
-while true &amp;#">
+<meta name="description" content="select、poll 和 epoll 都是 Linux API 提供的 IO 复用方式。IO多路复用是指内核一旦发现进程指定的一个或者多个IO条件准备读取，它就通知该进程。知乎上的回答 非常好的解释了什么事IO多路复用，用机场航班调度问题的解释的非常清晰，看完之后豁然开朗。 select、poll 和 epoll 都是阻塞的，用 select 来举例，写法大概是这样： while true &amp;#">
+<meta name="keywords" content="select,poll,epoll">
 <meta property="og:type" content="article">
 <meta property="og:title" content="理解 select、poll 和 epoll">
 <meta property="og:url" content="http://blog.100dos.com/2016/09/25/understanding-select-poll-epoll-io-mutiplexing/index.html">
 <meta property="og:site_name" content="百作坊">
-<meta property="og:description" content="select、poll 和 epoll 都是 Linux API 提供的 IO 复用方式。IO多路复用是指内核一旦发现进程指定的一个或者多个IO条件准备读取，它就通知该进程。知乎上的回答 非常好的解释了什么事IO多路复用，用机场航班调度问题的解释的非常清晰，看完之后豁然开朗。
-select、poll 和 epoll 都是阻塞的，用 select 来举例，写法大概是这样：
-while true &amp;#">
-<meta property="og:updated_time" content="2017-04-12T02:53:08.907Z">
+<meta property="og:description" content="select、poll 和 epoll 都是 Linux API 提供的 IO 复用方式。IO多路复用是指内核一旦发现进程指定的一个或者多个IO条件准备读取，它就通知该进程。知乎上的回答 非常好的解释了什么事IO多路复用，用机场航班调度问题的解释的非常清晰，看完之后豁然开朗。 select、poll 和 epoll 都是阻塞的，用 select 来举例，写法大概是这样： while true &amp;#">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-08-26T14:29:13.749Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="理解 select、poll 和 epoll">
-<meta name="twitter:description" content="select、poll 和 epoll 都是 Linux API 提供的 IO 复用方式。IO多路复用是指内核一旦发现进程指定的一个或者多个IO条件准备读取，它就通知该进程。知乎上的回答 非常好的解释了什么事IO多路复用，用机场航班调度问题的解释的非常清晰，看完之后豁然开朗。
-select、poll 和 epoll 都是阻塞的，用 select 来举例，写法大概是这样：
-while true &amp;#">
+<meta name="twitter:description" content="select、poll 和 epoll 都是 Linux API 提供的 IO 复用方式。IO多路复用是指内核一旦发现进程指定的一个或者多个IO条件准备读取，它就通知该进程。知乎上的回答 非常好的解释了什么事IO多路复用，用机场航班调度问题的解释的非常清晰，看完之后豁然开朗。 select、poll 和 epoll 都是阻塞的，用 select 来举例，写法大概是这样： while true &amp;#">
 
 
 
@@ -290,7 +286,7 @@ while true &amp;#">
 <p>传统的 select/poll 另一个致命弱点就是当你拥有一个很大的 socket 集合，不过由于网络延时，任一时间只有部分的 socket 是“活跃”的，但是 select/poll 每次调用都会线性扫描全部的集合，导致效率呈现线性下降。但是epoll不存在这个问题，它只会对“活跃”的 socket 进行操作 — 这是因为在内核实现中 epoll 是根据每个 fd 上面的 callback 函数实现的。那么，只有“活跃”的 socket 才会主动的去调用 callback 函数，其他 idle 状态 socket 则不会，在这点上，epoll 实现了一个“伪”AIO，因为这时候推动力在 OS 内核。</p>
 </blockquote>
 <p>epoll 可以理解为 event poll，基于事件驱动。<code>epoll_ctl</code>注册事件并注册 <code>callback</code> 回调函数，<code>epoll_wait</code>只返回发生的事件。不同于 select 和 poll，把哪个描述符发生了怎样的 IO 事件返回，这样就避免了像 select/poll 对所有的事件的轮询操作。复杂度降低到了O(1)。epoll 的伪代码如下：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">while</span> <span class="literal">true</span> &#123;</div><div class="line">    ready_events[] = epoll_wait(epollfd)</div><div class="line">    <span class="keyword">for</span> i in ready_events[] &#123;</div><div class="line">        read or write till</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">while</span> <span class="literal">true</span> &#123;</div><div class="line">    ready_events[] = epoll_wait(epollfd)</div><div class="line">    <span class="keyword">for</span> i in ready_events[] &#123;</div><div class="line">        read <span class="keyword">or</span> write till</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <blockquote>
 <p>epoll是Linux内核为处理大批量文件描述符而作了改进的poll，是Linux下多路复用IO接口select/poll的增强版本，它能显著提高程序在大量并发连接中只有少量活跃的情况下的系统CPU利用率。另一点原因就是获取事件的时候，它无须遍历整个被侦听的描述符集，只要遍历那些被内核IO事件异步唤醒而加入Ready队列的描述符集合就行了。epoll除了提供select/poll那种IO事件的水平触发（Level Triggered）外，还提供了边缘触发（Edge Triggered），这就使得用户空间程序有可能缓存IO状态，减少epoll_wait/epoll_pwait的调用，提高应用程序效率。</p>
 </blockquote>
@@ -412,7 +408,7 @@ while true &amp;#">
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">167</span>
+              <span class="site-state-item-count">168</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

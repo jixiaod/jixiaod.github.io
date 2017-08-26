@@ -48,6 +48,7 @@
 <meta property="og:url" content="http://blog.100dos.com/index.html">
 <meta property="og:site_name" content="百作坊">
 <meta property="og:description" content="纪录工作和生活">
+<meta property="og:locale" content="zh-Hans">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="百作坊">
 <meta name="twitter:description" content="纪录工作和生活">
@@ -228,6 +229,200 @@
             
               
                 
+                <a class="post-title-link" href="/2017/08/21/deep-understandint-php-ini-config/" itemprop="url">
+                  深入理解PHP的ini配置
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-08-21T22:50:02+08:00" content="2017-08-21">
+              2017-08-21
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/PHP/" itemprop="url" rel="index">
+                    <span itemprop="name">PHP</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>好久没更了，今天读到一篇介绍非常详细的文章，转载一下，凑个数。</p>
+<p>转自：<a href="http://www.cnblogs.com/driftcloudy/p/4011954.html" target="_blank" rel="external">http://www.cnblogs.com/driftcloudy/p/4011954.html</a></p>
+<p>这篇文章不会详细叙述某个ini配置项的用途，这些在手册上已经讲解的面面俱到。我只是想从某个特定的角度去挖掘php的实现机制，会涉及到一些php内核方面的知识:-)</p>
+<p>使用php的同学都知道 <code>php.ini</code> 配置的生效会贯穿整个SAPI的生命周期。在一段php脚本的执行过程中，如果手动修改ini配置，是不会启作用的。此时如果无法重启apache或者nginx等，那么就只能显式的在php代码中调用ini_set接口。<br>ini_set是php向我们提供的一个动态修改配置的函数，需要注意的是，利用ini_set所设置的配置与ini文件中设置的配置，其生效的时间范围并不相同。在php脚本执行结束之后，｀ini_set｀的设置便会随即失效。</p>
+<p>因此本文打算分两篇，第一篇阐述php.ini配置原理，第二篇讲动态修改php配置。</p>
+<p><code>php.ini</code> 的配置大致会涉及到三块数据，<code>configuration_hash</code>，<code>EG(ini_directives)</code>以及<code>PG</code>、<code>BG</code>、<code>PCRE_G</code>、<code>JSON_G</code>、<code>XXX_G</code>等。如果不清楚这三种数据的含义也没有关系，下文会详细解释。</p>
+<h3 id="解析INI配置文件"><a href="#解析INI配置文件" class="headerlink" title="解析INI配置文件"></a>解析INI配置文件</h3><p>由于php.ini需要在SAPI过程中一直生效，那么解析ini文件并据此来构建php配置的工作，必定是发生SAPI的一开始。换句话说，也就是必定发生在php的启动过程中。php需要任意一个实际的请求到达之前，其内部已经生成好这些配置。</p>
+<p>反映到php的内核，即为<code>php_module_startup</code>函数。</p>
+<p><code>php_module_startup</code> 主要负责对php进行启动，通常它会在SAPI开始的时候被调用。btw，还有一个常见的函数是 <code>php_request_startup</code>，它负责将在每个请求到来的时刻进行初始化，<code>php_module_startup</code> 与<code>php_request_startup</code>是两个标识性的动作，<br>不过对他们进行分析并不在本文的探讨范围内。</p>
+<p>举个例子，当php挂接在apache下面做一个module，那么apache启动的时候，便会激活所有这些module，其中包括php module。在激活php module时，便会调用到<code>php_module_startup</code>。<code>php_module_startup</code>函数完成了茫茫多的工作，<br>一旦<code>php_module_startup</code>调用结束就意味着，OK，php已经启动，现在可以接受请求并作出响应了。</p>
+<p>在php_module_startup函数中，与解析ini文件相关的实现是：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">/* this will read in php.ini, set up the configuration parameters,</span></div><div class="line"><span class="comment">load zend extensions and register php function extensions</span></div><div class="line"><span class="comment">to be loaded later */</span></div><div class="line"><span class="keyword">if</span> (php_init_config(TSRMLS_C) == FAILURE) &#123;</div><div class="line">    <span class="keyword">return</span> FAILURE;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>可以看到，其实就是调用了php_init_config函数，去完成对ini文件的parse。parse工作主要进行lex&amp;grammar分析，并将ini文件中的key、value键值对提取出来并保存。php.ini的格式很简单，等号左侧为key，右侧为value。每当一对kv被提取出来之后，php将它们存储到哪儿呢？答案就是之前提到的<code>configuration_hash</code>。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">static HashTable configuration_hash;</div></pre></td></tr></table></figure>
+<p><code>configuration_hash</code>声明在php_ini.c中，它是一个HashTable类型的数据结构。顾名思义，其实就是张hash表。题外话，在php5.3之前的版本是没法获取<code>configuration_hash</code>的，因为它是php_ini.c文件的一个static的变量。后来php5.3添加了<code>php_ini_get_configuration_hash</code>接口，该接口直接返回<code>&amp;configuration_hash</code>，使 得php各个扩展可以方便的一窥<code>configuration_hash</code>全貌…真是普大喜奔…</p>
+<p>注意四点：</p>
+<p>第一，<code>php_init_config</code> 不会做除了词法语法以外的任何校验。也就是说，假如我们在ini文件中添加一行 <code>hello=world</code>，只要这是一个格式正确的配置项，那么最终 <code>configuration_hash</code> 中就会包含一个键为hello、值为world的元素，<code>configuration_hash</code> 最大限度的反映出ini文件。</p>
+<p>第二，ini文件允许我们以数组的形式进行配置。例如ini文件中写入以下三行：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">drift.arr[]=1</div><div class="line">drift.arr[]=2</div><div class="line">drift.arr[]=3</div></pre></td></tr></table></figure>
+<p>那么最终生成的 <code>configuration_hash</code> 表中，就会存在一个key为 <code>drift.arr</code> 的元素，其value为一个包含的1,2,3三个数字的数组。这是一种极为罕见的配置方法。</p>
+<p>第三，php还允许我们除了默认的php.ini文件（准确说是php-%s.ini）之外，另外构建一些ini文件。这些ini文件会被放入一个额外的目录。该目录由环境变量PHP_INI_SCAN_DIR来指定，当php_init_config解析完了php.ini之后，会再次扫描此目录，然后找出目录中所有.ini文件来分析。这些额外的ini文件中产生的kv键值对，也会被加入到configuration_hash中去。</p>
+<p>这是一个偶尔有用的特性，假设我们自己开发php的扩展，却又不想将配置混入php.ini，便可以另外写一份ini，并通过PHP_INI_SCAN_DIR告诉php该去哪儿找到它。当然，其缺点也显而易见，其需要设置额外的环境变量来支持。更好的解决办法是，开发者在扩展中自己调用php_parse_user_ini_file或zend_parse_ini_file去解析对应的ini文件。</p>
+<p>第四，在configuration_hash中，key是字符串，那么值的类型是什么？答案也是字符串（除了上述很特殊的数组）。具体来说，比如下面的配置：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">display_errors = On</div><div class="line">log_errors = Off</div><div class="line">log_errors_max_len = 1024</div></pre></td></tr></table></figure>
+<p>那么最后configuration_hash中实际存放的键值对为：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">key: &quot;display_errors&quot;</div><div class="line">val : &quot;1&quot;</div><div class="line"></div><div class="line">key: &quot;log_errors&quot;</div><div class="line">val : &quot;&quot;</div><div class="line"></div><div class="line">key: &quot;log_errors_max_len&quot;</div><div class="line">val : &quot;1024&quot;</div></pre></td></tr></table></figure>
+<p>注意log_errors，其存放的值连”0”都不是，就是一个实实在在地空字符串。另外，log_errors_max_len也并非数字，而是字符串1024。</p>
+<p>分析至此，基本上解析ini文件相关的内容都说清楚了。简单总结一下：</p>
+<p>1，解析ini发生在 <code>php_module_startup</code> 阶段<br>2，解析结果存放在 <code>configuration_hash</code> 里。</p>
+<h3 id="配置作用到模块"><a href="#配置作用到模块" class="headerlink" title="配置作用到模块"></a>配置作用到模块</h3><p>php的大致结构可以看成是最下层有一个zend引擎，它负责与OS进行交互、编译php代码、提供内存托管等等，在zend引擎的上层，排列着很多很多的模块。其中最核心的就一个Core模块，其他还有比如Standard，PCRE，Date，Session等等…这些模块还有另一个名字叫php扩展。我们可以简单理解为，每个模块都会提供一组功能接口给开发者来调用，举例来说，常用的诸如explode，trim，array等内置函数，便是由Standard模块提供的。</p>
+<p>为什么需要谈到这些，是因为在php.ini里除了针对php自身，也就是针对Core模块的一些配置（例如safe_mode，display_errors，max_execution_time等），还有相当多的配置是针对其他不同模块的。</p>
+<p>例如，date模块，它提供了常见的date， time，strtotime等函数。在php.ini中，它的相关配置形如：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[Date]</div><div class="line">;date.timezone = &apos;Asia/Shanghai&apos;</div><div class="line">;date.default_latitude = 31.7667</div><div class="line">;date.default_longitude = 35.2333</div><div class="line">;date.sunrise_zenith = 90.583333</div><div class="line">;date.sunset_zenith = 90.583333</div></pre></td></tr></table></figure>
+<p>除了这些模块拥有独立的配置，zend引擎也是可配的，只不过zend引擎的可配项非常少，只有error_reporting，zend.enable_gc和detect_unicode三项。</p>
+<p>在上一小节中我们已经谈到，php_module_startup会调用php_init_config，其目的是解析ini文件并生成configuration_hash。那么接下来在php_module_startup中还会做什么事情呢？很显然，就是会将configuration_hash中的配置作用于Zend，Core，Standard，SPL等不同模块。当然这并非一个一蹴而就的过程，因为php通常会包含有很多模块，php启动的过程中这些模块也会依次进行启动。那么，对模块A进行配置的过程，便是发生在模块A的启动过程中。</p>
+<p>有扩展开发经验的同学会直接指出，模块A的启动不就是在PHP_MINIT_FUNCTION(A)中么？</p>
+<p>是的，如果模块A需要配置，那么在PHP_MINIT_FUNCTION中，可以调用REGISTER_INI_ENTRIES()来完成。REGISTER_INI_ENTRIES会根据当前模块所需要的配置项名称，去configuration_hash查找用户设置的配置值，并更新到模块自己的全局空间中。</p>
+<h3 id="模块的全局空间"><a href="#模块的全局空间" class="headerlink" title="模块的全局空间"></a>模块的全局空间</h3><p>要理解如何将ini配置从configuration_hash作用到各个模块之前，有必要先了解一下php模块的全局空间。对于不同的php模块，均可以开辟一块属于自己的存储空间，并且这块空间对于该模块来说，是全局可见的。一般而言，它会被用来存放该模块所需的ini配置。也就是说，configuration_hash中的配置项，最终会被存放到该全局空间中。在模块的执行过程中，只需要直接访问这块全局空间，就可以拿到用户针对该模块进行的设置。当然，它也经常被用来记录模块在执行过程中的中间数据。</p>
+<p>我们以bcmath模块来举例说明，bcmath是一个提供数学计算方面接口的php模块，首先我们来看看它有哪些ini配置：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">PHP_INI_BEGIN()</div><div class="line">    STD_PHP_INI_ENTRY(&quot;bcmath.scale&quot;, &quot;0&quot;, PHP_INI_ALL, OnUpdateLongGEZero, bc_precision, zend_bcmath_globals, bcmath_globals)</div><div class="line">PHP_INI_END()</div></pre></td></tr></table></figure>
+<p>bcmath只有一个配置项，我们可以在php.ini中用bcmath.scale来配置bcmath模块。</p>
+<p>接下来继续看看bcmatch模块的全局空间定义。在php_bcmath.h中有如下声明：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">ZEND_BEGIN_MODULE_GLOBALS(bcmath)</div><div class="line">    bc_num _zero_;</div><div class="line">    bc_num _one_;</div><div class="line">    bc_num _two_;</div><div class="line">    long bc_precision;</div><div class="line">ZEND_END_MODULE_GLOBALS(bcmath)</div></pre></td></tr></table></figure>
+<p>宏展开之后，即为：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">typedef struct _zend_bcmath_globals &#123;</div><div class="line">    bc_num _zero_;</div><div class="line">    bc_num _one_;</div><div class="line">    bc_num _two_;</div><div class="line">    long bc_precision;</div><div class="line">&#125; zend_bcmath_globals;</div></pre></td></tr></table></figure>
+<p>其实，<code>zend_bcmath_globals</code>类型就是bcmath模块中的全局空间类型。这里仅仅声明了<code>zend_bcmath_globals</code>结构体，在bcmath.c中还有具体的实例化定义：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">// 展开后即为zend_bcmath_globals bcmath_globals;</div><div class="line">ZEND_DECLARE_MODULE_GLOBALS(bcmath)</div></pre></td></tr></table></figure>
+<p>可以看出，用<code>ZEND_DECLARE_MODULE_GLOBALS</code>完成了对变量<code>bcmath_globals</code>的定义。</p>
+<p>bcmath_globals是一块真正的全局空间，它包含有四个字段。其最后一个字段bc_precision，对应于ini配置中的bcmath.scale。我们在php.ini中设置了bcmath.scale的值，随后在启动bcmath模块的时候，bcmath.scale的值被更新到<code>bcmath_globals.bc_precision</code>中去。</p>
+<p>把<code>configuration_hash</code>中的值，更新到各个模块自己定义的xxx_globals变量中，就是所谓的将ini配置作用到模块。一旦模块启动完成，那么这些配置也都作用到位。所以在随后的执行阶段，php模块无需再次访问<code>configuration_hash</code>，模块仅需要访问自己的XXX_globals，就可以拿到用户设定的配置。</p>
+<p>bcmath_globals，除了有一个字段为ini配置项，其他还有三个字段为何意？这就是模块全局空间的第二个作用，它除了用于ini配置，还可以存储模块执行过程中的一些数据。</p>
+<p><img src="/images/deep-understanding-php.ini-config.png" alt=""></p>
+<p>再例如json模块，也是php中一个很常用的模块：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">ZEND_BEGIN_MODULE_GLOBALS(json)</div><div class="line">    int error_code;</div><div class="line">ZEND_END_MODULE_GLOBALS(json)</div></pre></td></tr></table></figure>
+<p>可以看到json模块并不需要ini配置，它的全局空间只有一个字段error_code。error_code记录了上一次执行json_decode或者json_encode中发生的错误。json_last_error函数便是返回这个error_code，来帮助用户定位错误原因。</p>
+<p>为了能够很便捷的访问模块全局空间变量，php约定俗成的提出了一些宏。比如我们想访问json_globals中的error_code，当然可以直接写做json_globals.error_code（多线程环境下不行），不过更通用的写法是定义JSON_G宏：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">#define JSON_G(v) (json_globals.v)</div></pre></td></tr></table></figure>
+<p>我们使用JSON_G(error_code)来访问json_globals.error_code。本文刚开始的时候，曾提到PG、BG、JSON_G、PCRE_G，XXX_G等等，这些宏在php源代码中也是很常见的。现在我们可以很轻松的理解它们，PG宏可以访问Core模块的全局变量，BG访问Standard模块的全局变量，PCRE_G则访问PCRE模块的全局变量。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">#define PG(v) (core_globals.v)</div><div class="line">#define BG(v) (basic_globals.v)</div></pre></td></tr></table></figure>
+<h3 id="如何确定一个模块需要哪些配置呢？"><a href="#如何确定一个模块需要哪些配置呢？" class="headerlink" title="如何确定一个模块需要哪些配置呢？"></a>如何确定一个模块需要哪些配置呢？</h3><p>模块需要什么样的INI配置，都是在各个模块中自己定义的。举例来说，对于Core模块，有如下的配置项定义：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">PHP_INI_BEGIN()</div><div class="line">    ......</div><div class="line">    STD_PHP_INI_ENTRY_EX(&quot;display_errors&quot;, &quot;1&quot;, PHP_INI_ALL,    OnUpdateDisplayErrors, display_errors, php_core_globals, core_globals, display_errors_mode)</div><div class="line">    STD_PHP_INI_BOOLEAN(&quot;enable_dl&quot;,       &quot;1&quot;, PHP_INI_SYSTEM, OnUpdateBool,          enable_dl,      php_core_globals, core_globals)</div><div class="line">    STD_PHP_INI_BOOLEAN(&quot;expose_php&quot;,      &quot;1&quot;, PHP_INI_SYSTEM, OnUpdateBool,          expose_php,     php_core_globals, core_globals)</div><div class="line">    STD_PHP_INI_BOOLEAN(&quot;safe_mode&quot;,       &quot;0&quot;, PHP_INI_SYSTEM, OnUpdateBool,          safe_mode,      php_core_globals, core_globals)</div><div class="line">    ......</div><div class="line">PHP_INI_END()</div></pre></td></tr></table></figure>
+<p>可以在<code>php-src\main\main.c</code>文件大概450+行找到上述代码。其中涉及的宏比较多，有ZEND_INI_BEGIN 、ZEND_INI_END、PHP_INI_ENTRY_EX、STD_PHP_INI_BOOLEAN等等，本文不一一赘述，感兴趣的读者可自行分析。</p>
+<p>上述代码进行宏展开后得到：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">static const zend_ini_entry ini_entries[] = &#123;</div><div class="line">    ..</div><div class="line">    &#123; 0, PHP_INI_ALL,    &quot;display_errors&quot;,sizeof(&quot;display_errors&quot;),OnUpdateDisplayErrors,(void *)XtOffsetOf(php_core_globals, display_errors), (void *)&amp;core_globals, NULL, &quot;1&quot;, sizeof(&quot;1&quot;)-1, NULL, 0, 0, 0, display_errors_mode &#125;,</div><div class="line">    &#123; 0, PHP_INI_SYSTEM, &quot;enable_dl&quot;,     sizeof(&quot;enable_dl&quot;),     OnUpdateBool,         (void *)XtOffsetOf(php_core_globals, enable_dl),      (void *)&amp;core_globals, NULL, &quot;1&quot;, sizeof(&quot;1&quot;)-1, NULL, 0, 0, 0, zend_ini_boolean_displayer_cb &#125;,</div><div class="line">    &#123; 0, PHP_INI_SYSTEM, &quot;expose_php&quot;,    sizeof(&quot;expose_php&quot;),    OnUpdateBool,         (void *)XtOffsetOf(php_core_globals, expose_php),     (void *)&amp;core_globals, NULL, &quot;1&quot;, sizeof(&quot;1&quot;)-1, NULL, 0, 0, 0, zend_ini_boolean_displayer_cb &#125;,</div><div class="line">    &#123; 0, PHP_INI_SYSTEM, &quot;safe_mode&quot;,     sizeof(&quot;safe_mode&quot;),     OnUpdateBool,         (void *)XtOffsetOf(php_core_globals, safe_mode),      (void *)&amp;core_globals, NULL, &quot;0&quot;, sizeof(&quot;0&quot;)-1, NULL, 0, 0, 0, zend_ini_boolean_displayer_cb &#125;,</div><div class="line">    ...</div><div class="line">    &#123; 0, 0, NULL, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL, 0, 0, 0, NULL &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>我们看到，配置项的定义，其本质上就是定义了一个zend_ini_entry类型的数组。zend_ini_entry结构体的字段具体含义为：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">struct _zend_ini_entry &#123;</div><div class="line">    int module_number;                // 模块的id</div><div class="line">    int modifiable;                   // 可被修改的范围，例如php.ini，ini_set</div><div class="line">    char *name;                       // 配置项的名称</div><div class="line">    uint name_length;</div><div class="line">    ZEND_INI_MH((*on_modify));        // 回调函数，配置项注册或修改的时候会调用</div><div class="line">    void *mh_arg1;                    // 通常为配置项字段在XXX_G中的偏移量</div><div class="line">    void *mh_arg2;                    // 通常为XXX_G</div><div class="line">    void *mh_arg3;                    // 通常为保留字段，极少用到</div><div class="line"></div><div class="line">    char *value;                      // 配置项的值</div><div class="line">    uint value_length;</div><div class="line"></div><div class="line">    char *orig_value;                 // 配置项的原始值</div><div class="line">    uint orig_value_length;</div><div class="line">    int orig_modifiable;              // 配置项的原始modifiable</div><div class="line">    int modified;                     // 是否发生过修改，如果有修改，则orig_value会保存修改前的值</div><div class="line"></div><div class="line">    void (*displayer)(zend_ini_entry *ini_entry, int type);</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>将配置作用到模块——REGISTER_INI_ENTRIES<br>经常能够在不同扩展的PHP_MINIT_FUNCTION里看到REGISTER_INI_ENTRIES。REGISTER_INI_ENTRIES主要负责完成两件事情，第一，对模块的全局空间XXX_G进行填充，同步configuration_hash中的值到XXX_G中去。其次，它还生成了EG(ini_directives)。</p>
+<p>REGISTER_INI_ENTRIES也是一个宏，展开之后实则为zend_register_ini_entries方法。具体来看下zend_register_ini_entries的实现：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">ZEND_API int zend_register_ini_entries(const zend_ini_entry *ini_entry, int module_number TSRMLS_DC) /* &#123;&#123;&#123; */</div><div class="line">&#123;</div><div class="line">    // ini_entry为zend_ini_entry类型数组，p为数组中每一项的指针</div><div class="line">    const zend_ini_entry *p = ini_entry;</div><div class="line">    zend_ini_entry *hashed_ini_entry;</div><div class="line">    zval default_value;</div><div class="line"></div><div class="line">    // EG(ini_directives)就是registered_zend_ini_directives</div><div class="line">    HashTable *directives = registered_zend_ini_directives;</div><div class="line">    zend_bool config_directive_success = 0;</div><div class="line"></div><div class="line">    // 还记得ini_entry最后一项固定为&#123; 0, 0, NULL, ... &#125;么</div><div class="line">    while (p-&gt;name) &#123;</div><div class="line">        config_directive_success = 0;</div><div class="line"></div><div class="line">        // 将p指向的zend_ini_entry加入EG(ini_directives)</div><div class="line">        if (zend_hash_add(directives, p-&gt;name, p-&gt;name_length, (void*)p, sizeof(zend_ini_entry), (void **) &amp;hashed_ini_entry) == FAILURE) &#123;</div><div class="line">            zend_unregister_ini_entries(module_number TSRMLS_CC);</div><div class="line">            return FAILURE;</div><div class="line">        &#125;</div><div class="line">        hashed_ini_entry-&gt;module_number = module_number;</div><div class="line"></div><div class="line">        // 根据name去configuration_hash中查询，取出来的结果放在default_value中</div><div class="line">        // 注意default_value的值比较原始，一般是数字、字符串、数组等，具体取决于php.ini中的写法</div><div class="line">        if ((zend_get_configuration_directive(p-&gt;name, p-&gt;name_length, &amp;default_value)) == SUCCESS) &#123;</div><div class="line">        // 调用on_modify更新到模块的全局空间XXX_G中</div><div class="line">        if (!hashed_ini_entry-&gt;on_modify || hashed_ini_entry-&gt;on_modify(hashed_ini_entry, Z_STRVAL(default_value), Z_STRLEN(default_value), hashed_ini_entry-&gt;mh_arg1, hashed_ini_entry-&gt;mh_arg2, hashed_ini_entry-&gt;mh_arg3, ZEND_INI_STAGE_STARTUP TSRMLS_CC) == SUCCESS) &#123;</div><div class="line">            hashed_ini_entry-&gt;value = Z_STRVAL(default_value);</div><div class="line">            hashed_ini_entry-&gt;value_length = Z_STRLEN(default_value);</div><div class="line">            config_directive_success = 1;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">        // 如果configuration_hash中没有找到，则采用默认值</div><div class="line">        if (!config_directive_success &amp;&amp; hashed_ini_entry-&gt;on_modify) &#123;</div><div class="line">            hashed_ini_entry-&gt;on_modify(hashed_ini_entry, hashed_ini_entry-&gt;value, hashed_ini_entry-&gt;value_length, hashed_ini_entry-&gt;mh_arg1, hashed_ini_entry-&gt;mh_arg2, hashed_ini_entry-&gt;mh_arg3, ZEND_INI_STAGE_STARTUP TSRMLS_CC);</div><div class="line">        &#125;</div><div class="line">        p++;</div><div class="line">    &#125;</div><div class="line">    return SUCCESS;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>简单来说，可以把上述代码的逻辑表述为：</p>
+<p>1、将模块声明的ini配置项添加到 <code>EG(ini_directives)</code>中。注意，ini配置项的值可能在随后被修改。<br>2、尝试去<code>configuration_hash</code>中寻找各个模块需要的ini。</p>
+<pre><code>- 如果能够找到，说明用户叜ini文件中配置了该值，那么采用用户的配置。
+- 如果没有找到，OK，没有关系，因为模块在声明ini的时候，会带上默认值。
+</code></pre><p>3、将ini的值同步到XX_G里面。毕竟在php的执行过程中，起作用的还是这些XXX_globals。具体的过程是调用每条ini配置对应的on_modify方法完成，on_modify由模块在声明ini的时候进行指定。</p>
+<p>我们来具体看下on_modify，它其实是一个函数指针，来看两个具体的Core模块的配置声明：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">STD_PHP_INI_BOOLEAN(&quot;log_errors&quot;,      &quot;0&quot;,    PHP_INI_ALL, OnUpdateBool, log_errors,         php_core_globals, core_globals)</div><div class="line">STD_PHP_INI_ENTRY(&quot;log_errors_max_len&quot;,&quot;1024&quot;, PHP_INI_ALL, OnUpdateLong, log_errors_max_len, php_core_globals, core_globals)</div></pre></td></tr></table></figure>
+<p>对于log_errors，它的on_modify被设置为OnUpdateBool，对于log_errors_max_len，则on_modify被设置为OnUpdateLong。</p>
+<p>进一步假设我们在php.ini中的配置为：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">log_errors = On</div><div class="line">log_errors_max_len = 1024</div></pre></td></tr></table></figure>
+<p>具体来看下OnUpdateBool函数：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">ZEND_API ZEND_INI_MH(OnUpdateBool) </div><div class="line">&#123;</div><div class="line">    zend_bool *p;</div><div class="line"></div><div class="line">    // base表示core_globals的地址</div><div class="line">    char *base = (char *) mh_arg2;</div><div class="line"></div><div class="line">    // p表示core_globals的地址加上log_errors字段的偏移量</div><div class="line">    // 得到的即为log_errors字段的地址</div><div class="line">    p = (zend_bool *) (base+(size_t) mh_arg1);  </div><div class="line"></div><div class="line">    if (new_value_length == 2 &amp;&amp; strcasecmp(&quot;on&quot;, new_value) == 0) &#123;</div><div class="line">        *p = (zend_bool) 1;</div><div class="line">    &#125;</div><div class="line">    else if (new_value_length == 3 &amp;&amp; strcasecmp(&quot;yes&quot;, new_value) == 0) &#123;</div><div class="line">        *p = (zend_bool) 1;</div><div class="line">    &#125;</div><div class="line">    else if (new_value_length == 4 &amp;&amp; strcasecmp(&quot;true&quot;, new_value) == 0) &#123;</div><div class="line">        *p = (zend_bool) 1;</div><div class="line">    &#125;</div><div class="line">    else &#123;</div><div class="line">        // configuration_hash中存放的value是字符串&quot;1&quot;，而非&quot;On&quot;</div><div class="line">        // 因此这里用atoi转化成数字1</div><div class="line">        *p = (zend_bool) atoi(new_value);</div><div class="line">    &#125;</div><div class="line">    return SUCCESS;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>最令人费解的估计就是mh_arg1和mh_arg2了，其实对照前面所述的zend_ini_entry定义，mh_arg1，mh_arg2还是很容易参透的。mh_arg1表示字节偏移量，mh_arg2表示XXX_globals的地址。因此，(char *)mh_arg2 + mh_arg1的结果即为XXX_globals中某个字段的地址。具体到本case中，就是计算core_globals中log_errors的地址。因此，当OnUpdateBool最后执行到</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">*p = (zend_bool) atoi(new_value);</div></pre></td></tr></table></figure>
+<p>其作用就相当于</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">core_globals.log_errors = (zend_bool) atoi(&quot;1&quot;);</div></pre></td></tr></table></figure>
+<p>分析完了OnUpdateBool，我们再来看OnUpdateLong便觉得一目了然：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">ZEND_API ZEND_INI_MH(OnUpdateLong)</div><div class="line">&#123;</div><div class="line">    long *p;</div><div class="line">    char *base = (char *) mh_arg2;</div><div class="line"></div><div class="line">    // 获得log_errors_max_len的地址</div><div class="line">    p = (long *) (base+(size_t) mh_arg1);</div><div class="line"></div><div class="line">    // 将&quot;1024&quot;转化成long型，并赋值给core_globals.log_errors_max_len</div><div class="line">    *p = zend_atol(new_value, new_value_length);</div><div class="line">    return SUCCESS;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>最后需要注意的是，<code>zend_register_ini_entries</code> 函数中，如果 <code>configuration_hash</code> 中存在配置，则当调用 <code>on_modify</code> 结束后，<code>hashed_ini_entry</code> 中的<code>value</code>和<code>value_length</code>会被更新。也就是说，如果用户在php.ini中配置过，则 <code>EG(ini_directives)</code> 存放的就是实际配置的值。如果用户没配，<code>EG(ini_directives)</code> 中存放的是声明<code>zend_ini_entry</code>时给出的默认值。</p>
+<p>zend_register_ini_entries中的default_value变量命名比较糟糕，相当容易造成误解。其实default_value并非表示默认值，而是表示用户实际配置的值。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>至此，三块数据configuration_hash，EG(ini_directives)以及PG、BG、PCRE_G、JSON_G、XXX_G…已经都交代清楚了。</p>
+<p>总结一下：</p>
+<p>1、<code>configuration_hash</code>，存放php.ini文件里的配置，不做校验，其值为字符串。<br>2、<code>EG(ini_directives)</code>，存放的是各个模块中定义的 <code>zend_ini_entry</code>，如果用户在php.ini配置过（<code>configuration_hash</code> 中存在），则值被替换为 <code>configuration_hash</code> 中的值，类型依然是字符串。<br>3、<code>XXX_G</code>，该宏用于访问模块的全局空间，这块内存空间可用来存放ini配置，并通过on_modify指定的函数进行更新，其数据类型由XXX_G中的字段声明来决定。</p>
+
+          
+        
+      
+    </div>
+
+   
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+
+      
+     
+    </footer>
+  </article>
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/04/07/php-garbage-collection-collect-cycles/" itemprop="url">
                   PHP 的垃圾回收机制－理解PHP如何解决循环引用导致的内存泄漏问题
                 </a>
@@ -298,7 +493,7 @@
 <figure class="highlight php"><table><tr><td class="code"><pre><div class="line">typedef struct _gc_root_buffer &#123;</div><div class="line">    zend_refcounted          *ref;</div><div class="line">    struct _gc_root_buffer   *next;     <span class="comment">/* double-linked list               */</span></div><div class="line">    struct _gc_root_buffer   *prev;</div><div class="line">    uint32_t                 refcount;</div><div class="line">&#125; gc_root_buffer;</div></pre></td></tr></table></figure>
 <p>并且这个链表的长度是定义是 <code>#define GC_ROOT_BUFFER_MAX_ENTRIES 10001</code>。猜测简单解决循环引用原理：因为已经没有任何符号指向循环引用指向的zval，于是用这个<em>可能根双向链表</em>来记录可能产生内存泄漏的结构体。</p>
 <p>接着往下看代码， <code>GC_TRACE_SET_COLOR(ref, GC_PURPLE);</code> 设置颜色为紫色，关于颜色的定义可以在代码注释中看到：</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line">* Colors and its meaning</div><div class="line">* ----------------------</div><div class="line">*</div><div class="line">* BLACK  (GC_BLACK)   - In use or free. </div><div class="line">* GREY   (GC_GREY)    - Possible member of cycle.</div><div class="line">* WHITE  (GC_WHITE)   - Member of garbage cycle.</div><div class="line">* PURPLE (GC_PURPLE)  - Possible root of cycle.</div><div class="line">*</div></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment">* Colors and its meaning</span></div><div class="line"><span class="comment">* ----------------------</span></div><div class="line"><span class="comment">*</span></div><div class="line"><span class="comment">* BLACK  (GC_BLACK)   - In use or free. </span></div><div class="line"><span class="comment">* GREY   (GC_GREY)    - Possible member of cycle.</span></div><div class="line"><span class="comment">* WHITE  (GC_WHITE)   - Member of garbage cycle.</span></div><div class="line"><span class="comment">* PURPLE (GC_PURPLE)  - Possible root of cycle.</span></div><div class="line"><span class="comment">*</span></div></pre></td></tr></table></figure>
 <p>紫色表示<em>疑似垃圾（Possible root of cycle）</em>。我们可以推测 PHP 把可能存在内存泄露的引用存放到 Possible roots 里，这样在清理垃圾时，就避免不得不检查所有引用计数。</p>
 <p>现在有了垃圾回收的<em>疑似垃圾</em>的一个链表。那么是在何时清除这些垃圾呢？</p>
 <p>回看 <code>gc_possible_root</code> 函数中，调用了 <code>gc_collect_cycles</code> ，这个函数其实就是 <code>zend_gc_collect_cycles</code>，在 Zend/zend.c 的 <code>zend_startup</code>中定义实现。</p>
@@ -309,7 +504,7 @@
 <figure class="highlight php"><table><tr><td class="code"><pre><div class="line">typedef struct _zend_gc_globals &#123;</div><div class="line">  <span class="comment">// ...</span></div><div class="line">    gc_root_buffer   *buf;              <span class="comment">/* preallocated arrays of buffers   */</span></div><div class="line">    gc_root_buffer    roots;            <span class="comment">/* list of possible roots of cycles */</span></div><div class="line">    gc_root_buffer   *unused;           <span class="comment">/* list of unused buffers           */</span></div><div class="line">    gc_root_buffer   *first_unused;     <span class="comment">/* pointer to first unused buffer   */</span></div><div class="line">    gc_root_buffer   *last_unused;      <span class="comment">/* pointer to last unused buffer    */</span></div><div class="line"></div><div class="line">  <span class="comment">// ...</span></div><div class="line">&#125; zend_gc_globals;</div></pre></td></tr></table></figure>
 <p>于是可以得出结论，仅仅在根缓冲区满了时（也就是<code>GC_ROOT_BUFFER_MAX_ENTRIES</code> 不够时），才对缓冲区内部所有不同的变量容器执行垃圾回收操作。</p>
 <p>那么是如何进行垃圾回收的呢？看 <code>zend_gc_collect_cycles</code> 函数就好了。在注释中也有描述</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"></div><div class="line"> * Flow</div><div class="line">* =====</div><div class="line">*</div><div class="line">* The garbage collect cycle starts from <span class="string">'gc_mark_roots'</span>, which traverses the</div><div class="line">* possible roots, <span class="keyword">and</span> calls mark_grey <span class="keyword">for</span> roots are marked purple with</div><div class="line">* depth-first traverse.</div><div class="line">*</div><div class="line">* After all possible roots are traversed <span class="keyword">and</span> marked,</div><div class="line">* gc_scan_roots will be called, <span class="keyword">and</span> each root will be called with</div><div class="line">* gc_scan(root-&gt;ref)</div><div class="line">*</div><div class="line">* gc_scan checkes the colors of possible members.</div><div class="line">*</div><div class="line">* <span class="keyword">If</span> the node is marked <span class="keyword">as</span> grey <span class="keyword">and</span> the refcount &gt; <span class="number">0</span></div><div class="line">*    gc_scan_black will be called on that node to scan it<span class="string">'s subgraph.</span></div><div class="line">* otherwise (refcount == 0), it marks the node white.</div><div class="line">*</div><div class="line">* A node MAY be added to possbile roots when ZEND_UNSET_VAR happens or</div><div class="line">* zend_assign_to_variable is called only when possible garbage node is</div><div class="line">* produced.</div><div class="line">* gc_possible_root() will be called to add the nodes to possible roots.</div><div class="line">*</div><div class="line">*</div><div class="line">* For objects, we call their get_gc handler (by default 'zend_std_get_gc<span class="string">') to</span></div><div class="line">* get the object properties to scan.</div><div class="line">*</div></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"></div><div class="line"> * Flow</div><div class="line">* =====</div><div class="line">*</div><div class="line">* The garbage collect cycle starts from <span class="string">'gc_mark_roots'</span>, which traverses the</div><div class="line">* possible roots, <span class="keyword">and</span> calls mark_grey <span class="keyword">for</span> roots are marked purple with</div><div class="line">* depth-first traverse.</div><div class="line">*</div><div class="line">* After all possible roots are traversed <span class="keyword">and</span> marked,</div><div class="line">* gc_scan_roots will be called, <span class="keyword">and</span> each root will be called with</div><div class="line">* gc_scan(root-&gt;ref)</div><div class="line">*</div><div class="line">* gc_scan checkes the colors of possible members.</div><div class="line">*</div><div class="line">* <span class="keyword">If</span> the node is marked <span class="keyword">as</span> grey <span class="keyword">and</span> the refcount &gt; <span class="number">0</span></div><div class="line">*    gc_scan_black will be called on that node to scan it<span class="string">'s subgraph.</span></div><div class="line"><span class="string">* otherwise (refcount == 0), it marks the node white.</span></div><div class="line"><span class="string">*</span></div><div class="line"><span class="string">* A node MAY be added to possbile roots when ZEND_UNSET_VAR happens or</span></div><div class="line"><span class="string">* zend_assign_to_variable is called only when possible garbage node is</span></div><div class="line"><span class="string">* produced.</span></div><div class="line"><span class="string">* gc_possible_root() will be called to add the nodes to possible roots.</span></div><div class="line"><span class="string">*</span></div><div class="line"><span class="string">*</span></div><div class="line"><span class="string">* For objects, we call their get_gc handler (by default '</span>zend_std_get_gc<span class="string">') to</span></div><div class="line"><span class="string">* get the object properties to scan.</span></div><div class="line"><span class="string">*</span></div></pre></td></tr></table></figure>
 <p>过程：</p>
 <ol>
 <li>垃圾回收周期从 <code>gc_mark_roots</code> 函数开始，深度优先遍历所有<em>可能根</em>，调用 <code>mark_grey</code> 把原标记为紫色（Possible root of cycle）的root标记为灰色（Possible member of cycle）。</li>
@@ -798,7 +993,7 @@
           
             <p>转载：<a href="https://github.com/laruence/php7-internal/blob/master/zval.md" target="_blank" rel="external">https://github.com/laruence/php7-internal/blob/master/zval.md</a></p>
 <p>PHP7已经发布, 如承诺, 我也要开始这个系列的文章的编写, 今天我想先和大家聊聊zval的变化. 在讲zval变化的之前我们先来看看zval在PHP5下面是什么样子</p>
-<h4 id="PHP5"><a href="#PHP5" class="headerlink" title="PHP5"></a>PHP5</h4><h5 id="zval回顾"><a href="#zval回顾" class="headerlink" title="zval回顾"></a>zval回顾</h5><p>在PHP5的时候, zval的定义如下:<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">struct</span> _zval_struct &#123;</div><div class="line">    <span class="keyword">union</span> &#123;</div><div class="line">        <span class="keyword">long</span> lval;</div><div class="line">        <span class="keyword">double</span> dval;</div><div class="line">        <span class="keyword">struct</span> &#123;</div><div class="line">            <span class="keyword">char</span> *val;</div><div class="line">            <span class="keyword">int</span> len;</div><div class="line">        &#125; str;</div><div class="line">        HashTable *ht;</div><div class="line">        zend_object_value obj;</div><div class="line">        zend_ast *ast;</div><div class="line">    &#125; value;</div><div class="line">    zend_uint refcount__gc;</div><div class="line">    zend_uchar type;</div><div class="line">    zend_uchar is_ref__gc;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<h4 id="PHP5"><a href="#PHP5" class="headerlink" title="PHP5"></a>PHP5</h4><h5 id="zval回顾"><a href="#zval回顾" class="headerlink" title="zval回顾"></a>zval回顾</h5><p>在PHP5的时候, zval的定义如下:<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> _<span class="title">zval_struct</span> &#123;</span></div><div class="line">    <span class="keyword">union</span> &#123;</div><div class="line">        <span class="keyword">long</span> lval;</div><div class="line">        <span class="keyword">double</span> dval;</div><div class="line">        <span class="class"><span class="keyword">struct</span> &#123;</span></div><div class="line">            <span class="keyword">char</span> *val;</div><div class="line">            <span class="keyword">int</span> len;</div><div class="line">        &#125; str;</div><div class="line">        HashTable *ht;</div><div class="line">        zend_object_value obj;</div><div class="line">        zend_ast *ast;</div><div class="line">    &#125; value;</div><div class="line">    zend_uint refcount__gc;</div><div class="line">    zend_uchar type;</div><div class="line">    zend_uchar is_ref__gc;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
 <p>对PHP5内核有了解的同学应该对这个结构比较熟悉, 因为zval可以表示一切PHP中的数据类型, 所以它包含了一个type字段, 表示这个zval存储的是什么类型的值, 常见的可能选项是<code>IS_NULL</code>, <code>IS_LONG</code>, <code>IS_STRING</code>, <code>IS_ARRAY</code>, <code>IS_OBJECT</code>等等.</p>
 <p>根据type字段的值不同, 我们就要用不同的方式解读value的值, 这个value是个联合体, 比如对于type是<code>IS_STRING</code>, 那么我们应该用<code>value.str</code>来解读<code>zval.value</code>字段, 而如果type是<code>IS_LONG</code>, 那么我们就要用<code>value.lval</code>来解读.</p>
 <p>另外, 我们知道PHP是用引用计数来做基本的垃圾回收的, 所以zval中有一个<code>refcount__gc</code>字段, 表示这个zval的引用数目, 但这里有一个要说明的, 在5.3以前, 这个字段的名字还叫做<code>refcount</code>, 5.3以后, 在引入新的垃圾回收算法来对付循环引用计数的时候, 作者加入了大量的宏来操作<code>refcount</code>, 为了能让错误更快的显现, 所以改名为<code>refcount__gc</code>, 迫使大家都使用宏来操作<code>refcount</code>.</p>
@@ -806,12 +1001,12 @@
 <p>这就是PHP5时代的zval, 在2013年我们做PHP5的opcache JIT的时候, 因为JIT在实际项目中表现不佳, 我们转而意识到这个结构体的很多问题. 而PHPNG项目就是从改写这个结构体而开始的.</p>
 <h5 id="存在的问题"><a href="#存在的问题" class="headerlink" title="存在的问题"></a>存在的问题</h5><p>PHP5的zval定义是随着Zend Engine 2诞生的, 随着时间的推移, 当时设计的局限性也越来越明显:</p>
 <p>首先这个结构体的大小是(在64位系统)24个字节, 我们仔细看这个<code>zval.value</code>联合体, 其中<code>zend_object_value</code>是最大的长板, 它导致整个value需要16个字节, 这个应该是很容易可以优化掉的, 比如把它挪出来, 用个指针代替,因为毕竟<code>IS_OBJECT</code>也不是最最常用的类型.</p>
-<p>第二, 这个结构体的每一个字段都有明确的含义定义, 没有预留任何的自定义字段, 导致在PHP5时代做很多的优化的时候, 需要存储一些和zval相关的信息的时候, 不得不采用其他结构体映射, 或者外部包装后打补丁的方式来扩充zval, 比如5.3的时候新引入专门解决循环引用的GC, 它不得采用如下的比较hack的做法:<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">/* The following macroses override macroses from zend_alloc.h */</span></div><div class="line"><span class="meta">#<span class="meta-keyword">undef</span>  ALLOC_ZVAL</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> ALLOC_ZVAL(z)                                   \</span></div><div class="line">    do &#123;                                                \</div><div class="line">        (z) = (zval*)emalloc(sizeof(zval_gc_info));     \</div><div class="line">        GC_ZVAL_INIT(z);                                \</div><div class="line">    &#125; while (0)</div></pre></td></tr></table></figure></p>
-<p>它用<code>zval_gc_info</code>劫持了zval的分配:<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> _zval_gc_info &#123;</div><div class="line">    zval z;</div><div class="line">    <span class="keyword">union</span> &#123;</div><div class="line">        gc_root_buffer       *buffered;</div><div class="line">        <span class="keyword">struct</span> _zval_gc_info *next;</div><div class="line">    &#125; u;</div><div class="line">&#125; zval_gc_info;</div></pre></td></tr></table></figure></p>
+<p>第二, 这个结构体的每一个字段都有明确的含义定义, 没有预留任何的自定义字段, 导致在PHP5时代做很多的优化的时候, 需要存储一些和zval相关的信息的时候, 不得不采用其他结构体映射, 或者外部包装后打补丁的方式来扩充zval, 比如5.3的时候新引入专门解决循环引用的GC, 它不得采用如下的比较hack的做法:<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">/* The following macroses override macroses from zend_alloc.h */</span></div><div class="line"><span class="meta">#<span class="meta-keyword">undef</span>  ALLOC_ZVAL</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> ALLOC_ZVAL(z)                                   \</span></div><div class="line">    <span class="keyword">do</span> &#123;                                                \</div><div class="line">        (z) = (zval*)emalloc(<span class="keyword">sizeof</span>(zval_gc_info));     \</div><div class="line">        GC_ZVAL_INIT(z);                                \</div><div class="line">    &#125; <span class="keyword">while</span> (<span class="number">0</span>)</div></pre></td></tr></table></figure></p>
+<p>它用<code>zval_gc_info</code>劫持了zval的分配:<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">zval_gc_info</span> &#123;</span></div><div class="line">    zval z;</div><div class="line">    <span class="keyword">union</span> &#123;</div><div class="line">        gc_root_buffer       *buffered;</div><div class="line">        <span class="class"><span class="keyword">struct</span> _<span class="title">zval_gc_info</span> *<span class="title">next</span>;</span></div><div class="line">    &#125; u;</div><div class="line">&#125; zval_gc_info;</div></pre></td></tr></table></figure></p>
 <p>然后用<code>zval_gc_info</code>来扩充了zval, 所以实际上来说我们在PHP5时代申请一个zval其实真正的是分配了32个字节, 但其实GC只需要关心<code>IS_ARRAY和IS_OBJECT</code>类型, 这样就导致了大量的内存浪费.</p>
 <p>还比如我之前做的Taint扩展, 我需要对于给一些字符串存储一些标记, zval里没有任何地方可以使用, 所以我不得不采用非常手段:<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line">Z_STRVAL_PP(ppzval) = erealloc(Z_STRVAL_PP(ppzval), Z_STRLEN_PP(ppzval) + <span class="number">1</span> + PHP_TAINT_MAGIC_LENGTH);</div><div class="line">PHP_TAINT_MARK(*ppzval, PHP_TAINT_MAGIC_POSSIBLE);</div></pre></td></tr></table></figure></p>
 <p>就是把字符串的长度扩充一个int, 然后用magic number做标记写到后面去, 这样的做法安全性和稳定性在技术上都是没有保障的</p>
-<p>第三, PHP的zval大部分都是按值传递, 写时拷贝的值, 但是有俩个例外, 就是对象和资源, 他们永远都是按引用传递, 这样就造成一个问题, 对象和资源在除了zval中的引用计数以外, 还需要一个全局的引用计数, 这样才能保证内存可以回收. 所以在PHP5的时代, 以对象为例, 它有俩套引用计数, 一个是zval中的, 另外一个是obj自身的计数:<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> _zend_object_store_bucket &#123;</div><div class="line">    zend_bool destructor_called;</div><div class="line">    zend_bool valid;</div><div class="line">    <span class="keyword">union</span> _store_bucket &#123;</div><div class="line">        <span class="keyword">struct</span> _store_object &#123;</div><div class="line">            <span class="keyword">void</span> *object;</div><div class="line">            <span class="keyword">zend_objects_store_dtor_t</span> dtor;</div><div class="line">            <span class="keyword">zend_objects_free_object_storage_t</span> free_storage;</div><div class="line">            <span class="keyword">zend_objects_store_clone_t</span> clone;</div><div class="line">            <span class="keyword">const</span> zend_object_handlers *handlers;</div><div class="line">            zend_uint refcount;</div><div class="line">            gc_root_buffer *buffered;</div><div class="line">        &#125; obj;</div><div class="line">        <span class="keyword">struct</span> &#123;</div><div class="line">            <span class="keyword">int</span> next;</div><div class="line">        &#125; free_list;</div><div class="line">    &#125; bucket;</div><div class="line">&#125; zend_object_store_bucket;</div></pre></td></tr></table></figure></p>
+<p>第三, PHP的zval大部分都是按值传递, 写时拷贝的值, 但是有俩个例外, 就是对象和资源, 他们永远都是按引用传递, 这样就造成一个问题, 对象和资源在除了zval中的引用计数以外, 还需要一个全局的引用计数, 这样才能保证内存可以回收. 所以在PHP5的时代, 以对象为例, 它有俩套引用计数, 一个是zval中的, 另外一个是obj自身的计数:<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">zend_object_store_bucket</span> &#123;</span></div><div class="line">    zend_bool destructor_called;</div><div class="line">    zend_bool valid;</div><div class="line">    <span class="keyword">union</span> _store_bucket &#123;</div><div class="line">        <span class="class"><span class="keyword">struct</span> _<span class="title">store_object</span> &#123;</span></div><div class="line">            <span class="keyword">void</span> *object;</div><div class="line">            <span class="keyword">zend_objects_store_dtor_t</span> dtor;</div><div class="line">            <span class="keyword">zend_objects_free_object_storage_t</span> free_storage;</div><div class="line">            <span class="keyword">zend_objects_store_clone_t</span> clone;</div><div class="line">            <span class="keyword">const</span> zend_object_handlers *handlers;</div><div class="line">            zend_uint refcount;</div><div class="line">            gc_root_buffer *buffered;</div><div class="line">        &#125; obj;</div><div class="line">        <span class="class"><span class="keyword">struct</span> &#123;</span></div><div class="line">            <span class="keyword">int</span> next;</div><div class="line">        &#125; free_list;</div><div class="line">    &#125; bucket;</div><div class="line">&#125; zend_object_store_bucket;</div></pre></td></tr></table></figure></p>
 <p>除了上面提到的两套引用以外, 如果我们要获取一个object, 则我们需要通过如下方式:</p>
 <figure class="highlight c"><table><tr><td class="code"><pre><div class="line">EG(objects_store).object_buckets[Z_OBJ_HANDLE_P(z)].bucket.obj</div></pre></td></tr></table></figure>
 <p>经过漫长的多次内存读取, 才能获取到真正的objec对象本身. 效率可想而知.</p>
@@ -827,7 +1022,7 @@
 <p>第六, 也是最重要的一个, 为什么说它重要呢? 因为这点促成了很大的性能提升, 我们习惯了在PHP5的时代调用<code>MAKE_STD_ZVAL</code>在堆内存上分配一个zval, 然后对他进行操作, 最后呢通过<code>RETURN_ZVAL</code>把这个zval的值”copy”给<code>return_value</code>, 然后又销毁了这个zval, 比如<code>pathinfo</code>这个函数:<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line">PHP_FUNCTION(pathinfo)</div><div class="line">&#123;</div><div class="line">.....</div><div class="line">    MAKE_STD_ZVAL(tmp);</div><div class="line">    array_init(tmp);</div><div class="line">.....</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (opt == PHP_PATHINFO_ALL) &#123;</div><div class="line">        RETURN_ZVAL(tmp, <span class="number">0</span>, <span class="number">1</span>);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">.....</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>这个tmp变量, 完全是一个临时变量的作用, 我们又何必在堆内存分配它呢? <code>MAKE_STD_ZVAL/ALLOC_ZVAL</code>在PHP5的时候, 到处都有, 是一个非常常见的用法, 如果我们能把这个变量用栈分配, 那无论是内存分配, 还是缓存友好, 都是非常有利的</p>
 <p>还有很多, 我就不一一详细列举了, 但是我相信你们也有了和我们当时一样的想法, zval必须得改改了, 对吧? </p>
-<h4 id="PHP7"><a href="#PHP7" class="headerlink" title="PHP7"></a>PHP7</h4><h5 id="现在的zval"><a href="#现在的zval" class="headerlink" title="现在的zval"></a>现在的zval</h5><p>到了PHP7中, zval变成了如下的结构, 要说明的是, 这个是现在的结构, 已经和PHPNG时候有了一些不同了, 因为我们新增加了一些解释 (联合体的字段), 但是总体大小, 结构, 是和PHPNG的时候一致的:<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">struct</span> _zval_struct &#123;</div><div class="line">    <span class="keyword">union</span> &#123;</div><div class="line">        zend_long         lval;             <span class="comment">/* long value */</span></div><div class="line">        <span class="keyword">double</span>            dval;             <span class="comment">/* double value */</span></div><div class="line">        zend_refcounted  *counted;</div><div class="line">        zend_string      *str;</div><div class="line">        zend_array       *arr;</div><div class="line">        zend_object      *obj;</div><div class="line">        zend_resource    *res;</div><div class="line">        zend_reference   *ref;</div><div class="line">        zend_ast_ref     *ast;</div><div class="line">        zval             *zv;</div><div class="line">        <span class="keyword">void</span>             *ptr;</div><div class="line">        zend_class_entry *ce;</div><div class="line">        zend_function    *func;</div><div class="line">        <span class="keyword">struct</span> &#123;</div><div class="line">            <span class="keyword">uint32_t</span> w1;</div><div class="line">            <span class="keyword">uint32_t</span> w2;</div><div class="line">        &#125; ww;</div><div class="line">    &#125; value;</div><div class="line">    <span class="keyword">union</span> &#123;</div><div class="line">        <span class="keyword">struct</span> &#123;</div><div class="line">            ZEND_ENDIAN_LOHI_4(</div><div class="line">                zend_uchar    type,         <span class="comment">/* active type */</span></div><div class="line">                zend_uchar    type_flags,</div><div class="line">                zend_uchar    const_flags,</div><div class="line">                zend_uchar    reserved)     <span class="comment">/* call info for EX(This) */</span></div><div class="line">        &#125; v;</div><div class="line">        <span class="keyword">uint32_t</span> type_info;</div><div class="line">    &#125; u1;</div><div class="line">    <span class="keyword">union</span> &#123;</div><div class="line">        <span class="keyword">uint32_t</span>     var_flags;</div><div class="line">        <span class="keyword">uint32_t</span>     next;                 <span class="comment">/* hash collision chain */</span></div><div class="line">        <span class="keyword">uint32_t</span>     cache_slot;           <span class="comment">/* literal cache slot */</span></div><div class="line">        <span class="keyword">uint32_t</span>     lineno;               <span class="comment">/* line number (for ast nodes) */</span></div><div class="line">        <span class="keyword">uint32_t</span>     num_args;             <span class="comment">/* arguments number for EX(This) */</span></div><div class="line">        <span class="keyword">uint32_t</span>     fe_pos;               <span class="comment">/* foreach position */</span></div><div class="line">        <span class="keyword">uint32_t</span>     fe_iter_idx;          <span class="comment">/* foreach iterator index */</span></div><div class="line">    &#125; u2;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<h4 id="PHP7"><a href="#PHP7" class="headerlink" title="PHP7"></a>PHP7</h4><h5 id="现在的zval"><a href="#现在的zval" class="headerlink" title="现在的zval"></a>现在的zval</h5><p>到了PHP7中, zval变成了如下的结构, 要说明的是, 这个是现在的结构, 已经和PHPNG时候有了一些不同了, 因为我们新增加了一些解释 (联合体的字段), 但是总体大小, 结构, 是和PHPNG的时候一致的:<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> _<span class="title">zval_struct</span> &#123;</span></div><div class="line">    <span class="keyword">union</span> &#123;</div><div class="line">        zend_long         lval;             <span class="comment">/* long value */</span></div><div class="line">        <span class="keyword">double</span>            dval;             <span class="comment">/* double value */</span></div><div class="line">        zend_refcounted  *counted;</div><div class="line">        zend_string      *str;</div><div class="line">        zend_array       *arr;</div><div class="line">        zend_object      *obj;</div><div class="line">        zend_resource    *res;</div><div class="line">        zend_reference   *ref;</div><div class="line">        zend_ast_ref     *ast;</div><div class="line">        zval             *zv;</div><div class="line">        <span class="keyword">void</span>             *ptr;</div><div class="line">        zend_class_entry *ce;</div><div class="line">        zend_function    *func;</div><div class="line">        <span class="class"><span class="keyword">struct</span> &#123;</span></div><div class="line">            <span class="keyword">uint32_t</span> w1;</div><div class="line">            <span class="keyword">uint32_t</span> w2;</div><div class="line">        &#125; ww;</div><div class="line">    &#125; value;</div><div class="line">    <span class="keyword">union</span> &#123;</div><div class="line">        <span class="class"><span class="keyword">struct</span> &#123;</span></div><div class="line">            ZEND_ENDIAN_LOHI_4(</div><div class="line">                zend_uchar    type,         <span class="comment">/* active type */</span></div><div class="line">                zend_uchar    type_flags,</div><div class="line">                zend_uchar    const_flags,</div><div class="line">                zend_uchar    reserved)     <span class="comment">/* call info for EX(This) */</span></div><div class="line">        &#125; v;</div><div class="line">        <span class="keyword">uint32_t</span> type_info;</div><div class="line">    &#125; u1;</div><div class="line">    <span class="keyword">union</span> &#123;</div><div class="line">        <span class="keyword">uint32_t</span>     var_flags;</div><div class="line">        <span class="keyword">uint32_t</span>     next;                 <span class="comment">/* hash collision chain */</span></div><div class="line">        <span class="keyword">uint32_t</span>     cache_slot;           <span class="comment">/* literal cache slot */</span></div><div class="line">        <span class="keyword">uint32_t</span>     lineno;               <span class="comment">/* line number (for ast nodes) */</span></div><div class="line">        <span class="keyword">uint32_t</span>     num_args;             <span class="comment">/* arguments number for EX(This) */</span></div><div class="line">        <span class="keyword">uint32_t</span>     fe_pos;               <span class="comment">/* foreach position */</span></div><div class="line">        <span class="keyword">uint32_t</span>     fe_iter_idx;          <span class="comment">/* foreach iterator index */</span></div><div class="line">    &#125; u2;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
 <p>虽然看起来变得好大, 但其实你仔细看, 全部都是联合体, 这个新的zval在64位环境下,现在只需要16个字节(2个指针size), 它主要分为俩个部分, <code>value</code>和扩充字段, 而扩充字段又分为<code>u1</code>和<code>u2</code>俩个部分, 其中<code>u1</code>是type info,  <code>u2</code>是各种辅助字段.</p>
 <p>其中<code>value</code>部分, 是一个<code>size_t</code>大小(一个指针大小), 可以保存一个指针, 或者一个<code>long</code>, 或者一个<code>double</code>.</p>
 <p>而type info部分则保存了这个zval的类型. 扩充辅助字段则会在多个其他地方使用, 比如<code>next</code>, 就用在取代Hashtable中原来的拉链指针, 这部分会在以后介绍HashTable的时候再来详解.</p>
@@ -839,8 +1034,8 @@
 <p>而对于复杂类型, 一个<code>size_t</code>保存不下的, 那么我们就用<code>value</code>来保存一个指针, 这个指针指向这个具体的值, 引用计数也随之作用于这个值上, 而不在是作用于zval上了.</p>
 <p><img src="/images/zval.png" alt="zval示意图"></p>
 <p>以<code>IS_ARRAY</code>为例:</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">struct</span> _zend_array &#123;</div><div class="line">    zend_refcounted_h gc;</div><div class="line">    <span class="keyword">union</span> &#123;</div><div class="line">        <span class="keyword">struct</span> &#123;</div><div class="line">            ZEND_ENDIAN_LOHI_4(</div><div class="line">                zend_uchar    flags,</div><div class="line">                zend_uchar    nApplyCount,</div><div class="line">                zend_uchar    nIteratorsCount,</div><div class="line">                zend_uchar    reserve)</div><div class="line">        &#125; v;</div><div class="line">        <span class="keyword">uint32_t</span> flags;</div><div class="line">    &#125; u;</div><div class="line">    <span class="keyword">uint32_t</span>          nTableMask;</div><div class="line">    Bucket           *arData;</div><div class="line">    <span class="keyword">uint32_t</span>          nNumUsed;</div><div class="line">    <span class="keyword">uint32_t</span>          nNumOfElements;</div><div class="line">    <span class="keyword">uint32_t</span>          nTableSize;</div><div class="line">    <span class="keyword">uint32_t</span>          nInternalPointer;</div><div class="line">    zend_long         nNextFreeElement;</div><div class="line">    <span class="keyword">dtor_func_t</span>       pDestructor;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<p><code>zval.value.arr</code>将指向上面的这样的一个结构体, 由它实际保存一个数组, 引用计数部分保存在<code>zend_refcounted_h</code>结构中:<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> _zend_refcounted_h &#123;</div><div class="line">    <span class="keyword">uint32_t</span>         refcount;          <span class="comment">/* reference counter 32-bit */</span></div><div class="line">    <span class="keyword">union</span> &#123;</div><div class="line">        <span class="keyword">struct</span> &#123;</div><div class="line">            ZEND_ENDIAN_LOHI_3(</div><div class="line">                zend_uchar    type,</div><div class="line">                zend_uchar    flags,    <span class="comment">/* used for strings &amp; objects */</span></div><div class="line">                <span class="keyword">uint16_t</span>      gc_info)  <span class="comment">/* keeps GC root number (or 0) and color */</span></div><div class="line">        &#125; v;</div><div class="line">        <span class="keyword">uint32_t</span> type_info;</div><div class="line">    &#125; u;</div><div class="line">&#125; zend_refcounted_h;</div></pre></td></tr></table></figure></p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> _<span class="title">zend_array</span> &#123;</span></div><div class="line">    zend_refcounted_h gc;</div><div class="line">    <span class="keyword">union</span> &#123;</div><div class="line">        <span class="class"><span class="keyword">struct</span> &#123;</span></div><div class="line">            ZEND_ENDIAN_LOHI_4(</div><div class="line">                zend_uchar    flags,</div><div class="line">                zend_uchar    nApplyCount,</div><div class="line">                zend_uchar    nIteratorsCount,</div><div class="line">                zend_uchar    reserve)</div><div class="line">        &#125; v;</div><div class="line">        <span class="keyword">uint32_t</span> flags;</div><div class="line">    &#125; u;</div><div class="line">    <span class="keyword">uint32_t</span>          nTableMask;</div><div class="line">    Bucket           *arData;</div><div class="line">    <span class="keyword">uint32_t</span>          nNumUsed;</div><div class="line">    <span class="keyword">uint32_t</span>          nNumOfElements;</div><div class="line">    <span class="keyword">uint32_t</span>          nTableSize;</div><div class="line">    <span class="keyword">uint32_t</span>          nInternalPointer;</div><div class="line">    zend_long         nNextFreeElement;</div><div class="line">    <span class="keyword">dtor_func_t</span>       pDestructor;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p><code>zval.value.arr</code>将指向上面的这样的一个结构体, 由它实际保存一个数组, 引用计数部分保存在<code>zend_refcounted_h</code>结构中:<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">zend_refcounted_h</span> &#123;</span></div><div class="line">    <span class="keyword">uint32_t</span>         refcount;          <span class="comment">/* reference counter 32-bit */</span></div><div class="line">    <span class="keyword">union</span> &#123;</div><div class="line">        <span class="class"><span class="keyword">struct</span> &#123;</span></div><div class="line">            ZEND_ENDIAN_LOHI_3(</div><div class="line">                zend_uchar    type,</div><div class="line">                zend_uchar    flags,    <span class="comment">/* used for strings &amp; objects */</span></div><div class="line">                <span class="keyword">uint16_t</span>      gc_info)  <span class="comment">/* keeps GC root number (or 0) and color */</span></div><div class="line">        &#125; v;</div><div class="line">        <span class="keyword">uint32_t</span> type_info;</div><div class="line">    &#125; u;</div><div class="line">&#125; zend_refcounted_h;</div></pre></td></tr></table></figure></p>
 <p>所有的复杂类型的定义, 开始的时候都是<code>zend_refcounted_h</code>结构, 这个结构里除了引用计数以外, 还有GC相关的结构. 从而在做GC回收的时候, GC不需要关心具体类型是什么, 所有的它都可以当做<code>zend_refcounted*</code>结构来处理.</p>
 <p>另外有一个需要说明的就是大家可能会好奇的<code>ZEND_ENDIAN_LOHI_4</code>宏, 这个宏的作用是简化赋值, 它会保证在大端或者小端的机器上, 它定义的字段都按照一样顺序排列存储, 从而我们在赋值的时候, 不需要对它的字段分别赋值, 而是可以统一赋值, 比如对于上面的array结构为例, 就可以通过:<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line">arr1.u.flags = arr2.u.flags;</div></pre></td></tr></table></figure></p>
 <p>一次完成相当于如下的赋值序列:<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line">arr1.u.v.flags              = arr2.u.v.flags;</div><div class="line">arr1.u.v.nApplyCount        = arr2.u.v.nApplyCount;</div><div class="line">arr1.u.v.nIteratorsCount    = arr2.u.v.nIteratorsCount;</div><div class="line">arr1.u.v.reserve            = arr2.u.v.reserve;</div></pre></td></tr></table></figure></p>
@@ -857,9 +1052,9 @@
 <p>作用于字符串的有:<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line">IS_STR_PERSISTENT           <span class="comment">//是malloc分配内存的字符串</span></div><div class="line">IS_STR_INTERNED             <span class="comment">//INTERNED STRING</span></div><div class="line">IS_STR_PERMANENT            <span class="comment">//不可变的字符串， 用作哨兵作用</span></div><div class="line">IS_STR_CONSTANT             <span class="comment">//代表常量的字符串</span></div><div class="line">IS_STR_CONSTANT_UNQUALIFIED <span class="comment">//带有可能命名空间的常量字符串</span></div></pre></td></tr></table></figure></p>
 <p>作用于数组的有:<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">define</span> IS_ARRAY_IMMUTABLE  <span class="comment">//同IS_TYPE_IMMUTABLE</span></span></div></pre></td></tr></table></figure></p>
 <p>作用于对象的有：<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line">IS_OBJ_APPLY_COUNT          <span class="comment">//递归保护</span></div><div class="line">IS_OBJ_DESTRUCTOR_CALLED    <span class="comment">//析构函数已经调用</span></div><div class="line">IS_OBJ_FREE_CALLED          <span class="comment">//清理函数已经调用</span></div><div class="line">IS_OBJ_USE_GUARDS           <span class="comment">//魔术方法递归保护</span></div><div class="line">IS_OBJ_HAS_GUARDS           <span class="comment">//是否有魔术方法递归保护标志</span></div></pre></td></tr></table></figure></p>
-<p>有了这些预留的标志位， 我们就会很方便的做一些以前不好做的事情， 就比如我自己的Taint扩展， 现在把一个字符串标记为污染的字符串就会变得无比简单：<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">/* it's important that make sure </span></div><div class="line"> * this value is not used by Zend or</div><div class="line"> * any other extension agianst string */</div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> IS_STR_TAINT_POSSIBLE    (1&lt;&lt;7)</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> TAINT_MARK(str)     (GC_FLAGS((str)) |= IS_STR_TAINT_POSSIBLE)</span></div></pre></td></tr></table></figure></p>
+<p>有了这些预留的标志位， 我们就会很方便的做一些以前不好做的事情， 就比如我自己的Taint扩展， 现在把一个字符串标记为污染的字符串就会变得无比简单：<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">/* it's important that make sure </span></div><div class="line"><span class="comment"> * this value is not used by Zend or</span></div><div class="line"><span class="comment"> * any other extension agianst string */</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> IS_STR_TAINT_POSSIBLE    (1&lt;&lt;7)</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> TAINT_MARK(str)     (GC_FLAGS((str)) |= IS_STR_TAINT_POSSIBLE)</span></div></pre></td></tr></table></figure></p>
 <p>这个标记就会一直随着这个字符串的生存而存在的， 省掉了我之前的很多tricky的做法.</p>
-<h4 id="ZVAL预先分配"><a href="#ZVAL预先分配" class="headerlink" title="ZVAL预先分配"></a>ZVAL预先分配</h4><p> 前面我们说过, PHP5的zval分配采用的是堆上分配内存, 也就是在PHP预案代码中随处可见的MAKE_STD_ZVAL和ALLOC_ZVAL宏. 我们也知道了本来一个zval只需要24个字节, 但是算上gc_info, 其实分配了32个字节, 再加上PHP自己的内存管理在分配内存的时候都会在内存前面保留一部分信息:<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> _zend_mm_block &#123;</div><div class="line">    zend_mm_block_info info;</div><div class="line"><span class="meta">#<span class="meta-keyword">if</span> ZEND_DEBUG</span></div><div class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> magic;</div><div class="line"><span class="meta"># <span class="meta-keyword">ifdef</span> ZTS</span></div><div class="line">    THREAD_T thread_id;</div><div class="line"><span class="meta"># <span class="meta-keyword">endif</span></span></div><div class="line">    zend_mm_debug_info debug;</div><div class="line"><span class="meta">#<span class="meta-keyword">elif</span> ZEND_MM_HEAP_PROTECTION</span></div><div class="line">    zend_mm_debug_info debug;</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div><div class="line">&#125; zend_mm_block;</div></pre></td></tr></table></figure></p>
+<h4 id="ZVAL预先分配"><a href="#ZVAL预先分配" class="headerlink" title="ZVAL预先分配"></a>ZVAL预先分配</h4><p> 前面我们说过, PHP5的zval分配采用的是堆上分配内存, 也就是在PHP预案代码中随处可见的MAKE_STD_ZVAL和ALLOC_ZVAL宏. 我们也知道了本来一个zval只需要24个字节, 但是算上gc_info, 其实分配了32个字节, 再加上PHP自己的内存管理在分配内存的时候都会在内存前面保留一部分信息:<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">zend_mm_block</span> &#123;</span></div><div class="line">    zend_mm_block_info info;</div><div class="line"><span class="meta">#<span class="meta-keyword">if</span> ZEND_DEBUG</span></div><div class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> magic;</div><div class="line"><span class="meta"># <span class="meta-keyword">ifdef</span> ZTS</span></div><div class="line">    THREAD_T thread_id;</div><div class="line"><span class="meta"># <span class="meta-keyword">endif</span></span></div><div class="line">    zend_mm_debug_info debug;</div><div class="line"><span class="meta">#<span class="meta-keyword">elif</span> ZEND_MM_HEAP_PROTECTION</span></div><div class="line">    zend_mm_debug_info debug;</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div><div class="line">&#125; zend_mm_block;</div></pre></td></tr></table></figure></p>
 <p>  从而导致实际上我们只需要24字节的内存, 但最后竟然分配48个字节之多.</p>
 <p>  然而大部分的zval, 尤其是扩展函数内的zval, 我们想想它接受的参数来自外部的zval, 它把返回值返回给return_value, 这个也是来自外部的zval, 而中间变量的zval完全可以采用栈上分配. 也就是说大部分的内部函数都不需要在堆上分配内存, 它需要的zval都可以来自外部.</p>
 <p>  于是当时我们做了一个大胆的想法, 所有的zval都不需要单独申请. </p>
@@ -1138,128 +1333,6 @@
   </article>
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/03/03/installing-gitlab-ce-on-centos7/" itemprop="url">
-                  Centos7 安装 Gitlab-CE
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-03-03T11:30:02+08:00" content="2017-03-03">
-              2017-03-03
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/linux/" itemprop="url" rel="index">
-                    <span itemprop="name">linux</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <ol>
-<li>安装配置依赖项<br>如想使用Postfix来发送邮件,在安装期间请选择’Internet Site’. 您也可以用sendmai或者 配置SMTP服务 并 使用SMTP发送邮件.<br>在 Centos 6 和 7 系统上, 下面的命令将在系统防火墙里面开放HTTP和SSH端口.</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">sudo yum install curl policycoreutils openssh-server openssh-clients</div><div class="line">sudo systemctl enable sshd</div><div class="line">sudo systemctl start sshd</div><div class="line">sudo yum install postfix</div><div class="line">sudo systemctl enable postfix</div><div class="line">sudo systemctl start postfix</div><div class="line">sudo firewall-cmd --permanent --add-service=http</div><div class="line">sudo systemctl reload firewalld</div></pre></td></tr></table></figure>
-<p>如果提示防火墙没打开，执行<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">systemctl start firewalld</div></pre></td></tr></table></figure></p>
-<ol>
-<li>添加GitLab仓库,并安装到服务器上<br>curl -sS <a href="http://packages.gitlab.cc/install/gitlab-ce/script.rpm.sh" target="_blank" rel="external">http://packages.gitlab.cc/install/gitlab-ce/script.rpm.sh</a> | sudo bash<br>sudo yum install gitlab-ce</li>
-</ol>
-<ol>
-<li><p>启动GitLab</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">sudo gitlab-ctl reconfigure</div></pre></td></tr></table></figure>
-</li>
-<li><p>使用浏览器访问GitLab</p>
-</li>
-</ol>
-<p>首次访问GitLab,系统会让你重新设置管理员的密码,设置成功后会返回登录界面.<br>默认的管理员账号是root,如果你想更改默认管理员账号,请输入上面设置的新密码登录系统后修改帐号</p>
-<p>5.配置域名访问<br>以上基本是官方内容，以下配置自己的域名。首先添加 godaddy的域名 A 记录到服务器IP。</p>
-<p>在文件<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">vi /etc/gitlab/gitlab.rb</div></pre></td></tr></table></figure></p>
-<p>找到nginx的配置文件位置，并修改默认域名为自己的域名。</p>
-<p>更多可官方安装文档 ：<a href="https://www.gitlab.cc/downloads/#centos7" target="_blank" rel="external">https://www.gitlab.cc/downloads/#centos7</a></p>
-
-          
-        
-      
-    </div>
-
-   
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-
-      
-     
-    </footer>
-  </article>
-
-    
   </section>
 
   
@@ -1301,7 +1374,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">167</span>
+              <span class="site-state-item-count">168</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

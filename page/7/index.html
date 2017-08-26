@@ -48,6 +48,7 @@
 <meta property="og:url" content="http://blog.100dos.com/page/7/index.html">
 <meta property="og:site_name" content="百作坊">
 <meta property="og:description" content="纪录工作和生活">
+<meta property="og:locale" content="zh-Hans">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="百作坊">
 <meta name="twitter:description" content="纪录工作和生活">
@@ -206,6 +207,120 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2015/11/06/javascript-arrow-functions/" itemprop="url">
+                  Javascript 箭头函数
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2015-11-06T18:37:13+08:00" content="2015-11-06">
+              2015-11-06
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Javascript/" itemprop="url" rel="index">
+                    <span itemprop="name">Javascript</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">var render = function(</div><div class="line">  element: ReactElement,</div><div class="line">  mountInto: number,</div><div class="line">  callback?: ?(() =&gt; void)</div><div class="line">): ?ReactComponent &#123;</div><div class="line">  return ReactNativeMount.renderComponent(element, mountInto, callback);</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>以上代码是 react-native 的核心方法 render 函数，这段看了好久。涉及语法有箭头函数和 flow。那么什么是箭头函数呢？</p>
+<p>箭头函数就是个是简写形式的函数表达式，并且它拥有词法作用域的 this 值，且箭头函数总是匿名的。</p>
+<h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">([param] [, param]) =&gt; &#123;</div><div class="line">statements</div><div class="line">&#125;</div><div class="line"></div><div class="line">param =&gt; expression</div></pre></td></tr></table></figure>
+<h3 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h3><p>若干个参数名，0个参数需要使用()来表示，一个参数的时候小括号可以省略(比如foo =&gt; 1)。</p>
+<h3 id="表达式"><a href="#表达式" class="headerlink" title="表达式"></a>表达式</h3><p>多条语句需要使用大括号围起来，一条表达式不需要大括号，且此时该表达式的值就是此函数的返回值。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">// 一个空箭头函数,返回undefined</div><div class="line">let empty = () =&gt; &#123;&#125;;</div><div class="line"></div><div class="line">// 返回&quot;foobar&quot;</div><div class="line">(() =&gt; &quot;foobar&quot;)()</div><div class="line"></div><div class="line">var simple = a =&gt; a &gt; 15 ? 15 : a;</div><div class="line">simple(16); // 15</div><div class="line">simple(10); // 10</div><div class="line"></div><div class="line">// 多个参数</div><div class="line">var complex = (a, b) =&gt; &#123;</div><div class="line">    if (a &gt; b) &#123;</div><div class="line">        return a;</div><div class="line">    &#125; else &#123;</div><div class="line">        return b;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>目前如果想要在web开发时使用是不现实的，只有 firefox 有箭头函数的支持。如果是做nodejs开发，可以尝试使用箭头函数。还需要注意的是箭头函数处于 ECMAScript 6 规范草案中，目前的实现在未来可能会发生微调，还是谨慎使用吧。不过用箭头函数，还是会让代码变得很nice的，附一些 react-native 中的代码，再感受一下。</p>
+<p>``<br> 173     var start = () =&gt; {<br> 174       if (this._duration === 0) {<br> 175         this._onUpdate(this._toValue);<br> 176         this.__debouncedOnEnd({finished: true});<br> 177       } else {<br> 178         this._startTime = Date.now();<br> 179         this._animationFrame = requestAnimationFrame(this.onUpdate.bind(this));<br> 180       }<br> 181     };</p>
+<p> 19   FacebookSDK: {<br> 20     login: jest.genMockFunction(),<br> 21     logout: jest.genMockFunction(),<br> 22     queryGraphPath: jest.genMockFunction().mockImpl(<br> 23       (path, method, params, callback) =&gt; callback()<br> 24     ),<br> 25   },</p>
+<p>470           Object.defineProperty(map, ‘size’, {<br>471             set: (v) =&gt; {<br>472               console.error(<br>473                 ‘PLEASE FIX ME: You are changing the map size property which ‘ +<br>474                 ‘should not be writable and will break in production.’<br>475               );<br>476               throw new Error(‘The map size property is not writable.’);<br>477             },<br>478             get: () =&gt; map[SECRET_SIZE_PROP]<br>479           });<br>```</p>
+<p>怎么样，是不是觉得代码变得高大上了。</p>
+
+          
+        
+      
+    </div>
+
+   
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+
+      
+     
+    </footer>
+  </article>
+
     
       
 
@@ -1105,119 +1220,6 @@
   </article>
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015/06/19/experience-and-age-of-the-techies/" itemprop="url">
-                  技术从业者的经验和年龄－程序员的职业规划
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2015-06-19T15:09:16+08:00" content="2015-06-19">
-              2015-06-19
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/工作-职场/" itemprop="url" rel="index">
-                    <span itemprop="name">工作&职场</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>在技术圈，一个有意思的事情。管理者总说，很难找到合适的技术人才。但是又会发现很多找不到工作的程序员，多悲催，为什么呢？</p>
-<p>有数据分析显示，30岁左右的技术人员的工资的增长幅度是最大的。40岁之后，增长就会明显变慢，而且还可能会越来越少。而且人们经常谈论的学历问题，在这个圈里似乎也有点反常。同等工作年限的研究生或者博士生的工资待遇不一定比本科毕业的好，在这些个快速发展的互联网公司，竞争激烈到学历也不无关紧要了吧。相对来说，年龄更是影响薪水的重要因素，对那些年龄相对老些的程序员，更加不利。</p>
-<p>技术从业者在工作中面对的是，一旦你的能力和职位不能提升，就会有被解雇的风险。这种事，技术从业者都心里有数。为什么公司不去雇佣一个有丰富经验，但是月薪2w。反而更乐意找那些没经验，工资还只有5k的毕业生呢？因为即使花费几个月去培训这些年轻人，公司的开发工作依旧能够保证非常快进度。年轻人比那些年纪大的理解新技术更快，而且没有技术包袱，能够像白纸一样去快速学习新的代码和技术理念。同时，上了年纪的程序员，有家庭，6点就要准时下班。反观年青人甚至能加班整个通宵，毫无节操可言！！</p>
-<p>创业公司为了降低开销，不太可能给那些有经验的技术人员太高的薪水。所以他们更乐意去找那些有激情、年轻的程序员。他们薪水相对较低，而且可以用期权、未来的期许和职业发展来诱惑他们，让他们积极的、热情饱满的投入到工作中去。而像一些能负担得起相当薪水且颇具规模的公司，很多时候也很难找到合适的人才。于是他们开始去学校里找一些有潜力的学生，发现经过几年的培养。这些菜鸟的工作表现跟那些有经验的开发也没太大差别，当中一些人甚至还成为了团队的核心成员。</p>
-<p>年轻的程序员更有精力和创造力，但是有很多他们不知道的东西，很多东西需要随着时间、经验的慢慢积累去领会。BAT这样的大公司会同时招聘没经验的菜鸟和经验非常丰富的老鸟，俩者都要有。由于年老的更倾向于高端职位，但是高端职位又相对较少，所以公司里还是年青人相对要更多一些。大公司会同时雇佣最好的和最有潜力的程序员，相比之下，年龄和学历好像又都不是问题了。</p>
-<p>所以在竞争激励的互联网行业，对于没有方向的新人：</p>
-<p>1.力争爬到管理或者架构师的岗位上。学习对你现在公司更有价值的技能，抢占那些年轻人不能填补的位置。如果在现公司发现公司方向跟自己的方向，可以考虑转到销售、产品这些岗位。或者跳槽、自己去创业。</p>
-<p>2.如果你还打算继续写代码，走技术路线，你要意识到真的有很多东西要学习，永远没有尽头。即使你很有经验而且很聪明，公司也不会付给你相比那些刚毕业的俩倍或者三倍的工资。而且要做好心理准备，因为随着年龄的增大，自己会越来越被边缘化，且薪水可能也会减少。</p>
-<p>3.与时具进，学习最新的编程技术、开发语言，以适应不断的发展和变化。如果想让自己到50岁的时候还能写代码来养家糊口，就必须要成为业界大拿，并且还能时不时搞出新东西玩玩。</p>
-<p>作为管理者，应该认真的去思考下技术从业者的经验的价值。年龄的增长，除了经验和智慧。还有技术方向上、成为年轻人的导师、领导方面的能力。上年纪开发人员的人更加知道团队的重要性，自负和骄傲会随着时间慢慢被打磨。能写出更优秀的代码，而且更加忠诚。或许能在最困难的时候帮到你。</p>
-<p>对于刚走出校门的学生，学校里不会教你职业规划，如何长期的去考虑自己的未来。已经到了该认真思考下什么才是最适合自己的路的时候了吧。</p>
-
-          
-        
-      
-    </div>
-
-   
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-
-      
-     
-    </footer>
-  </article>
-
-    
   </section>
 
   
@@ -1259,7 +1261,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">167</span>
+              <span class="site-state-item-count">168</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

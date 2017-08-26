@@ -42,19 +42,18 @@
 
 
 
-<meta name="description" content="最近买了 Linode VPS 服务。5刀每月，只有1G的内存，编译 Mysql 内存溢出，然后升级到2G内存的版本，每月10刀……以下纪录 LNMP 环境安装过程：
-安装 Nginx~# yum install wget~# wget http://nginx.org/download/nginx-1.10.3.tar.gz~# tar zxf nginx-1.10.3.tar.gz~# cd">
+<meta name="description" content="最近买了 Linode VPS 服务。5刀每月，只有1G的内存，编译 Mysql 内存溢出，然后升级到2G内存的版本，每月10刀……以下纪录 LNMP 环境安装过程： 安装 Nginx~# yum install wget~# wget http://nginx.org/download/nginx-1.10.3.tar.gz~# tar zxf nginx-1.10.3.tar.gz~# cd">
+<meta name="keywords" content="mysql,PHP,linux,nginx">
 <meta property="og:type" content="article">
-<meta property="og:title" content="CentOS 7 从零开始搭建 LNMP 环境（nginx/1.10.3 PHP/7.1.2 Mysql/5.7.17）">
+<meta property="og:title" content="CentOS 7 从零开始搭建 LNMP 环境（nginx&#x2F;1.10.3 PHP&#x2F;7.1.2 Mysql&#x2F;5.7.17）">
 <meta property="og:url" content="http://blog.100dos.com/2017/03/03/installing-centos7-nginx1-10-3-php7-mysql5-7/index.html">
 <meta property="og:site_name" content="百作坊">
-<meta property="og:description" content="最近买了 Linode VPS 服务。5刀每月，只有1G的内存，编译 Mysql 内存溢出，然后升级到2G内存的版本，每月10刀……以下纪录 LNMP 环境安装过程：
-安装 Nginx~# yum install wget~# wget http://nginx.org/download/nginx-1.10.3.tar.gz~# tar zxf nginx-1.10.3.tar.gz~# cd">
-<meta property="og:updated_time" content="2017-04-12T02:53:08.899Z">
+<meta property="og:description" content="最近买了 Linode VPS 服务。5刀每月，只有1G的内存，编译 Mysql 内存溢出，然后升级到2G内存的版本，每月10刀……以下纪录 LNMP 环境安装过程： 安装 Nginx~# yum install wget~# wget http://nginx.org/download/nginx-1.10.3.tar.gz~# tar zxf nginx-1.10.3.tar.gz~# cd">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-08-26T14:29:13.745Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="CentOS 7 从零开始搭建 LNMP 环境（nginx/1.10.3 PHP/7.1.2 Mysql/5.7.17）">
-<meta name="twitter:description" content="最近买了 Linode VPS 服务。5刀每月，只有1G的内存，编译 Mysql 内存溢出，然后升级到2G内存的版本，每月10刀……以下纪录 LNMP 环境安装过程：
-安装 Nginx~# yum install wget~# wget http://nginx.org/download/nginx-1.10.3.tar.gz~# tar zxf nginx-1.10.3.tar.gz~# cd">
+<meta name="twitter:title" content="CentOS 7 从零开始搭建 LNMP 环境（nginx&#x2F;1.10.3 PHP&#x2F;7.1.2 Mysql&#x2F;5.7.17）">
+<meta name="twitter:description" content="最近买了 Linode VPS 服务。5刀每月，只有1G的内存，编译 Mysql 内存溢出，然后升级到2G内存的版本，每月10刀……以下纪录 LNMP 环境安装过程： 安装 Nginx~# yum install wget~# wget http://nginx.org/download/nginx-1.10.3.tar.gz~# tar zxf nginx-1.10.3.tar.gz~# cd">
 
 
 
@@ -288,7 +287,7 @@
 <h2 id="安装-Mysql"><a href="#安装-Mysql" class="headerlink" title="安装 Mysql"></a>安装 Mysql</h2><figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">~<span class="comment"># wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.17.tar.gz</span></div><div class="line">~<span class="comment"># tar zxf mysql-5.7.17.tar.gz</span></div><div class="line">~<span class="comment"># cd mysql-5.7.17</span></div><div class="line"></div><div class="line">// cmake安装mysql，会自行下载并安装boost</div><div class="line"></div><div class="line">~<span class="comment"># yum install  cmake gcc gcc-c++ ncurses-devel cmake libaio  bison</span></div><div class="line"></div><div class="line">~<span class="comment"># cmake . -DCMAKE_INSTALL_PREFIX=/opt/mysql -DWITH_BOOST=/opt/boost/ -DMYSQL_DATADIR=/opt/mysql/data -DWITH_INNOBASE_STORAGE_ENGINE=1 -DMYSQL_UNIX_ADDR==/opt/mysql/mysql.sock -DMYSQL_USER=mysql -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci</span></div><div class="line"></div><div class="line">~<span class="comment"># make &amp; make install</span></div></pre></td></tr></table></figure>
 <p>创建 Mysql 账户<br><figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">~<span class="comment"># groupadd mysql</span></div><div class="line">~<span class="comment"># useradd -r -g mysql -s /bin/false mysql</span></div><div class="line">~<span class="comment"># chown -R mysql .</span></div><div class="line">~<span class="comment"># chgrp -R mysql .</span></div></pre></td></tr></table></figure></p>
 <p>启动 Mysql 服务</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">//生成初始化 Mysql 帐号root 密码</div><div class="line">[root@li1571-79 mysql]<span class="comment"># bin/mysqld --initialize --user=mysql</span></div><div class="line">2017-03-03T02:59:23.230496Z 0 [Warning] TIMESTAMP with implicit DEFAULT value is deprecated. Please use --explicit_defaults_for_timestamp server option (see documentation <span class="keyword">for</span> more details).</div><div class="line">2017-03-03T02:59:23.576085Z 0 [Warning] InnoDB: New <span class="built_in">log</span> files created, LSN=45790</div><div class="line">2017-03-03T02:59:23.628088Z 0 [Warning] InnoDB: Creating foreign key constraint system tables.</div><div class="line">2017-03-03T02:59:23.685971Z 0 [Warning] No existing UUID has been found, so we assume that this is the first time that this server has been started. Generating a new UUID: 67ce62cb-ffbd-11e6<span class="_">-a</span>9b9<span class="_">-f</span>23c91e57db2.</div><div class="line">2017-03-03T02:59:23.688763Z 0 [Warning] Gtid table is not ready to be used. Table <span class="string">'mysql.gtid_executed'</span> cannot be opened.</div><div class="line">2017-03-03T02:59:23.690301Z 1 [Note] A temporary password is generated <span class="keyword">for</span> root@localhost: &amp;H4FpSyD/b6&lt;</div></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">//生成初始化 Mysql 帐号root 密码</div><div class="line">[root@li1571-79 mysql]<span class="comment"># bin/mysqld --initialize --user=mysql</span></div><div class="line">2017-03-03T02:59:23.230496Z 0 [Warning] TIMESTAMP with implicit DEFAULT value is deprecated. Please use --explicit_defaults_for_timestamp server option (see documentation <span class="keyword">for</span> more details).</div><div class="line">2017-03-03T02:59:23.576085Z 0 [Warning] InnoDB: New <span class="built_in">log</span> files created, LSN=45790</div><div class="line">2017-03-03T02:59:23.628088Z 0 [Warning] InnoDB: Creating foreign key constraint system tables.</div><div class="line">2017-03-03T02:59:23.685971Z 0 [Warning] No existing UUID has been found, so we assume that this is the first time that this server has been started. Generating a new UUID: 67ce62cb-ffbd-11e6-a9b9-f23c91e57db2.</div><div class="line">2017-03-03T02:59:23.688763Z 0 [Warning] Gtid table is not ready to be used. Table <span class="string">'mysql.gtid_executed'</span> cannot be opened.</div><div class="line">2017-03-03T02:59:23.690301Z 1 [Note] A temporary password is generated <span class="keyword">for</span> root@localhost: &amp;H4FpSyD/b6&lt;</div></pre></td></tr></table></figure>
 <p>最后的 <code>&amp;H4FpSyD/b6&lt;</code> 即是生成的临时账户，启动 Mysql 服务<br><figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">~<span class="comment"># cp support-files/mysql.server /opt/mysql/bin</span></div><div class="line">~<span class="comment"># cd /opt/mysql</span></div><div class="line">~<span class="comment"># bin/mysql.server start</span></div></pre></td></tr></table></figure></p>
 <figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">[root@li1571-79 mysql]<span class="comment"># bin/mysql -uroot -p -h127.0.0.1 -P3306</span></div><div class="line">Enter password:</div><div class="line">输入临时帐号密码，即可进入mysql 客户端。第一次登录，强制需要修改临时密码</div></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">mysql&gt; alter user &apos;root&apos;@&apos;localhost&apos; identified by &apos;123abc&apos;;</div><div class="line">Query OK, 0 rows affected (0.01 sec)</div><div class="line"></div><div class="line">mysql&gt; show databases;</div><div class="line">+--------------------+</div><div class="line">| Database           |</div><div class="line">+--------------------+</div><div class="line">| information_schema |</div><div class="line">| mysql              |</div><div class="line">| performance_schema |</div><div class="line">| sys                |</div><div class="line">+--------------------+</div><div class="line">4 rows in set (0.01 sec)</div></pre></td></tr></table></figure>
@@ -354,7 +353,9 @@
             
                 <li><a href="/2014/10/16/http-server-how-nginx-php-work/">http server原理，nginx与php之间是如何工作的</a></li>
             
-                <li><a href="/2014/11/05/mysql-index-and-query-optimization/">MySQL 索引原理及慢查询优化</a></li>
+                <li><a href="/2015/04/10/relearning-php-1-why-we-always-ignor-trailer-php-tags/">Relearning PHP (1) - 为什么php文件尾不闭合标记 ?></a></li>
+            
+                <li><a href="/2017/03/24/copy-and-chage-on-write-with-php/">理解 PHP 的写时复制和写时改变</a></li>
             
                 <li><a href="/2017/03/22/deeper-understanding-php7-reference/">深入理解 PHP7 之 REFERENCE</a></li>
             
@@ -370,11 +371,11 @@
             
                 <li><a href="/2015/04/13/misunderstand-of-php-fpm-max-chindren/">php-fpm的max_chindren的一些误区</a></li>
             
-                <li><a href="/2015/04/10/relearning-php-1-why-we-always-ignor-trailer-php-tags/">Relearning PHP (1) - 为什么php文件尾不闭合标记 ?></a></li>
-            
-                <li><a href="/2017/03/24/copy-and-chage-on-write-with-php/">理解 PHP 的写时复制和写时改变</a></li>
-            
                 <li><a href="/2017/04/07/php-garbage-collection-collect-cycles/">PHP 的垃圾回收机制－理解PHP如何解决循环引用导致的内存泄漏问题</a></li>
+            
+                <li><a href="/2014/11/05/mysql-index-and-query-optimization/">MySQL 索引原理及慢查询优化</a></li>
+            
+                <li><a href="/2017/08/21/deep-understandint-php-ini-config/">深入理解PHP的ini配置</a></li>
             
                 <li><a href="/2014/05/30/blalba-about-redirect/">关于重定向的事儿</a></li>
             
@@ -444,7 +445,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">167</span>
+              <span class="site-state-item-count">168</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

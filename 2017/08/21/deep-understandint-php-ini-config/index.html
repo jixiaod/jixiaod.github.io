@@ -1,0 +1,808 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+
+
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="PHP," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="百作坊" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+<meta name="description" content="好久没更了，今天读到一篇介绍非常详细的文章，转载一下，凑个数。 转自：http://www.cnblogs.com/driftcloudy/p/4011954.html 这篇文章不会详细叙述某个ini配置项的用途，这些在手册上已经讲解的面面俱到。我只是想从某个特定的角度去挖掘php的实现机制，会涉及到一些php内核方面的知识:-) 使用php的同学都知道 php.ini 配置的生效会贯穿整个SAP">
+<meta name="keywords" content="PHP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入理解PHP的ini配置">
+<meta property="og:url" content="http://blog.100dos.com/2017/08/21/deep-understandint-php-ini-config/index.html">
+<meta property="og:site_name" content="百作坊">
+<meta property="og:description" content="好久没更了，今天读到一篇介绍非常详细的文章，转载一下，凑个数。 转自：http://www.cnblogs.com/driftcloudy/p/4011954.html 这篇文章不会详细叙述某个ini配置项的用途，这些在手册上已经讲解的面面俱到。我只是想从某个特定的角度去挖掘php的实现机制，会涉及到一些php内核方面的知识:-) 使用php的同学都知道 php.ini 配置的生效会贯穿整个SAP">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://blog.100dos.com/images/deep-understanding-php.ini-config.png">
+<meta property="og:updated_time" content="2017-08-26T14:29:13.741Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深入理解PHP的ini配置">
+<meta name="twitter:description" content="好久没更了，今天读到一篇介绍非常详细的文章，转载一下，凑个数。 转自：http://www.cnblogs.com/driftcloudy/p/4011954.html 这篇文章不会详细叙述某个ini配置项的用途，这些在手册上已经讲解的面面俱到。我只是想从某个特定的角度去挖掘php的实现机制，会涉及到一些php内核方面的知识:-) 使用php的同学都知道 php.ini 配置的生效会贯穿整个SAP">
+<meta name="twitter:image" content="http://blog.100dos.com/images/deep-understanding-php.ini-config.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"hide"},
+    fancybox: true,
+    motion: true
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://blog.100dos.com/2017/08/21/deep-understandint-php-ini-config/"/>
+
+
+  <title> 深入理解PHP的ini配置 | 百作坊 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?e70448447504ef27f728084c8f2978ea";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="site-title">百作坊</span>
+    </a>
+  </div>
+  <p class="site-subtitle">100dos.com</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+    </ul>
+  
+  <div class="site-search"> 
+    <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="search.placeholder" spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+  </div>
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                深入理解PHP的ini配置
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-08-21T22:50:02+08:00" content="2017-08-21">
+              2017-08-21
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/PHP/" itemprop="url" rel="index">
+                    <span itemprop="name">PHP</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>好久没更了，今天读到一篇介绍非常详细的文章，转载一下，凑个数。</p>
+<p>转自：<a href="http://www.cnblogs.com/driftcloudy/p/4011954.html" target="_blank" rel="external">http://www.cnblogs.com/driftcloudy/p/4011954.html</a></p>
+<p>这篇文章不会详细叙述某个ini配置项的用途，这些在手册上已经讲解的面面俱到。我只是想从某个特定的角度去挖掘php的实现机制，会涉及到一些php内核方面的知识:-)</p>
+<p>使用php的同学都知道 <code>php.ini</code> 配置的生效会贯穿整个SAPI的生命周期。在一段php脚本的执行过程中，如果手动修改ini配置，是不会启作用的。此时如果无法重启apache或者nginx等，那么就只能显式的在php代码中调用ini_set接口。<br>ini_set是php向我们提供的一个动态修改配置的函数，需要注意的是，利用ini_set所设置的配置与ini文件中设置的配置，其生效的时间范围并不相同。在php脚本执行结束之后，｀ini_set｀的设置便会随即失效。</p>
+<p>因此本文打算分两篇，第一篇阐述php.ini配置原理，第二篇讲动态修改php配置。</p>
+<p><code>php.ini</code> 的配置大致会涉及到三块数据，<code>configuration_hash</code>，<code>EG(ini_directives)</code>以及<code>PG</code>、<code>BG</code>、<code>PCRE_G</code>、<code>JSON_G</code>、<code>XXX_G</code>等。如果不清楚这三种数据的含义也没有关系，下文会详细解释。</p>
+<h3 id="解析INI配置文件"><a href="#解析INI配置文件" class="headerlink" title="解析INI配置文件"></a>解析INI配置文件</h3><p>由于php.ini需要在SAPI过程中一直生效，那么解析ini文件并据此来构建php配置的工作，必定是发生SAPI的一开始。换句话说，也就是必定发生在php的启动过程中。php需要任意一个实际的请求到达之前，其内部已经生成好这些配置。</p>
+<p>反映到php的内核，即为<code>php_module_startup</code>函数。</p>
+<p><code>php_module_startup</code> 主要负责对php进行启动，通常它会在SAPI开始的时候被调用。btw，还有一个常见的函数是 <code>php_request_startup</code>，它负责将在每个请求到来的时刻进行初始化，<code>php_module_startup</code> 与<code>php_request_startup</code>是两个标识性的动作，<br>不过对他们进行分析并不在本文的探讨范围内。</p>
+<p>举个例子，当php挂接在apache下面做一个module，那么apache启动的时候，便会激活所有这些module，其中包括php module。在激活php module时，便会调用到<code>php_module_startup</code>。<code>php_module_startup</code>函数完成了茫茫多的工作，<br>一旦<code>php_module_startup</code>调用结束就意味着，OK，php已经启动，现在可以接受请求并作出响应了。</p>
+<p>在php_module_startup函数中，与解析ini文件相关的实现是：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">/* this will read in php.ini, set up the configuration parameters,</span></div><div class="line"><span class="comment">load zend extensions and register php function extensions</span></div><div class="line"><span class="comment">to be loaded later */</span></div><div class="line"><span class="keyword">if</span> (php_init_config(TSRMLS_C) == FAILURE) &#123;</div><div class="line">    <span class="keyword">return</span> FAILURE;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>可以看到，其实就是调用了php_init_config函数，去完成对ini文件的parse。parse工作主要进行lex&amp;grammar分析，并将ini文件中的key、value键值对提取出来并保存。php.ini的格式很简单，等号左侧为key，右侧为value。每当一对kv被提取出来之后，php将它们存储到哪儿呢？答案就是之前提到的<code>configuration_hash</code>。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">static HashTable configuration_hash;</div></pre></td></tr></table></figure>
+<p><code>configuration_hash</code>声明在php_ini.c中，它是一个HashTable类型的数据结构。顾名思义，其实就是张hash表。题外话，在php5.3之前的版本是没法获取<code>configuration_hash</code>的，因为它是php_ini.c文件的一个static的变量。后来php5.3添加了<code>php_ini_get_configuration_hash</code>接口，该接口直接返回<code>&amp;configuration_hash</code>，使 得php各个扩展可以方便的一窥<code>configuration_hash</code>全貌…真是普大喜奔…</p>
+<p>注意四点：</p>
+<p>第一，<code>php_init_config</code> 不会做除了词法语法以外的任何校验。也就是说，假如我们在ini文件中添加一行 <code>hello=world</code>，只要这是一个格式正确的配置项，那么最终 <code>configuration_hash</code> 中就会包含一个键为hello、值为world的元素，<code>configuration_hash</code> 最大限度的反映出ini文件。</p>
+<p>第二，ini文件允许我们以数组的形式进行配置。例如ini文件中写入以下三行：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">drift.arr[]=1</div><div class="line">drift.arr[]=2</div><div class="line">drift.arr[]=3</div></pre></td></tr></table></figure>
+<p>那么最终生成的 <code>configuration_hash</code> 表中，就会存在一个key为 <code>drift.arr</code> 的元素，其value为一个包含的1,2,3三个数字的数组。这是一种极为罕见的配置方法。</p>
+<p>第三，php还允许我们除了默认的php.ini文件（准确说是php-%s.ini）之外，另外构建一些ini文件。这些ini文件会被放入一个额外的目录。该目录由环境变量PHP_INI_SCAN_DIR来指定，当php_init_config解析完了php.ini之后，会再次扫描此目录，然后找出目录中所有.ini文件来分析。这些额外的ini文件中产生的kv键值对，也会被加入到configuration_hash中去。</p>
+<p>这是一个偶尔有用的特性，假设我们自己开发php的扩展，却又不想将配置混入php.ini，便可以另外写一份ini，并通过PHP_INI_SCAN_DIR告诉php该去哪儿找到它。当然，其缺点也显而易见，其需要设置额外的环境变量来支持。更好的解决办法是，开发者在扩展中自己调用php_parse_user_ini_file或zend_parse_ini_file去解析对应的ini文件。</p>
+<p>第四，在configuration_hash中，key是字符串，那么值的类型是什么？答案也是字符串（除了上述很特殊的数组）。具体来说，比如下面的配置：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">display_errors = On</div><div class="line">log_errors = Off</div><div class="line">log_errors_max_len = 1024</div></pre></td></tr></table></figure>
+<p>那么最后configuration_hash中实际存放的键值对为：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">key: &quot;display_errors&quot;</div><div class="line">val : &quot;1&quot;</div><div class="line"></div><div class="line">key: &quot;log_errors&quot;</div><div class="line">val : &quot;&quot;</div><div class="line"></div><div class="line">key: &quot;log_errors_max_len&quot;</div><div class="line">val : &quot;1024&quot;</div></pre></td></tr></table></figure>
+<p>注意log_errors，其存放的值连”0”都不是，就是一个实实在在地空字符串。另外，log_errors_max_len也并非数字，而是字符串1024。</p>
+<p>分析至此，基本上解析ini文件相关的内容都说清楚了。简单总结一下：</p>
+<p>1，解析ini发生在 <code>php_module_startup</code> 阶段<br>2，解析结果存放在 <code>configuration_hash</code> 里。</p>
+<h3 id="配置作用到模块"><a href="#配置作用到模块" class="headerlink" title="配置作用到模块"></a>配置作用到模块</h3><p>php的大致结构可以看成是最下层有一个zend引擎，它负责与OS进行交互、编译php代码、提供内存托管等等，在zend引擎的上层，排列着很多很多的模块。其中最核心的就一个Core模块，其他还有比如Standard，PCRE，Date，Session等等…这些模块还有另一个名字叫php扩展。我们可以简单理解为，每个模块都会提供一组功能接口给开发者来调用，举例来说，常用的诸如explode，trim，array等内置函数，便是由Standard模块提供的。</p>
+<p>为什么需要谈到这些，是因为在php.ini里除了针对php自身，也就是针对Core模块的一些配置（例如safe_mode，display_errors，max_execution_time等），还有相当多的配置是针对其他不同模块的。</p>
+<p>例如，date模块，它提供了常见的date， time，strtotime等函数。在php.ini中，它的相关配置形如：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[Date]</div><div class="line">;date.timezone = &apos;Asia/Shanghai&apos;</div><div class="line">;date.default_latitude = 31.7667</div><div class="line">;date.default_longitude = 35.2333</div><div class="line">;date.sunrise_zenith = 90.583333</div><div class="line">;date.sunset_zenith = 90.583333</div></pre></td></tr></table></figure>
+<p>除了这些模块拥有独立的配置，zend引擎也是可配的，只不过zend引擎的可配项非常少，只有error_reporting，zend.enable_gc和detect_unicode三项。</p>
+<p>在上一小节中我们已经谈到，php_module_startup会调用php_init_config，其目的是解析ini文件并生成configuration_hash。那么接下来在php_module_startup中还会做什么事情呢？很显然，就是会将configuration_hash中的配置作用于Zend，Core，Standard，SPL等不同模块。当然这并非一个一蹴而就的过程，因为php通常会包含有很多模块，php启动的过程中这些模块也会依次进行启动。那么，对模块A进行配置的过程，便是发生在模块A的启动过程中。</p>
+<p>有扩展开发经验的同学会直接指出，模块A的启动不就是在PHP_MINIT_FUNCTION(A)中么？</p>
+<p>是的，如果模块A需要配置，那么在PHP_MINIT_FUNCTION中，可以调用REGISTER_INI_ENTRIES()来完成。REGISTER_INI_ENTRIES会根据当前模块所需要的配置项名称，去configuration_hash查找用户设置的配置值，并更新到模块自己的全局空间中。</p>
+<h3 id="模块的全局空间"><a href="#模块的全局空间" class="headerlink" title="模块的全局空间"></a>模块的全局空间</h3><p>要理解如何将ini配置从configuration_hash作用到各个模块之前，有必要先了解一下php模块的全局空间。对于不同的php模块，均可以开辟一块属于自己的存储空间，并且这块空间对于该模块来说，是全局可见的。一般而言，它会被用来存放该模块所需的ini配置。也就是说，configuration_hash中的配置项，最终会被存放到该全局空间中。在模块的执行过程中，只需要直接访问这块全局空间，就可以拿到用户针对该模块进行的设置。当然，它也经常被用来记录模块在执行过程中的中间数据。</p>
+<p>我们以bcmath模块来举例说明，bcmath是一个提供数学计算方面接口的php模块，首先我们来看看它有哪些ini配置：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">PHP_INI_BEGIN()</div><div class="line">    STD_PHP_INI_ENTRY(&quot;bcmath.scale&quot;, &quot;0&quot;, PHP_INI_ALL, OnUpdateLongGEZero, bc_precision, zend_bcmath_globals, bcmath_globals)</div><div class="line">PHP_INI_END()</div></pre></td></tr></table></figure>
+<p>bcmath只有一个配置项，我们可以在php.ini中用bcmath.scale来配置bcmath模块。</p>
+<p>接下来继续看看bcmatch模块的全局空间定义。在php_bcmath.h中有如下声明：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">ZEND_BEGIN_MODULE_GLOBALS(bcmath)</div><div class="line">    bc_num _zero_;</div><div class="line">    bc_num _one_;</div><div class="line">    bc_num _two_;</div><div class="line">    long bc_precision;</div><div class="line">ZEND_END_MODULE_GLOBALS(bcmath)</div></pre></td></tr></table></figure>
+<p>宏展开之后，即为：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">typedef struct _zend_bcmath_globals &#123;</div><div class="line">    bc_num _zero_;</div><div class="line">    bc_num _one_;</div><div class="line">    bc_num _two_;</div><div class="line">    long bc_precision;</div><div class="line">&#125; zend_bcmath_globals;</div></pre></td></tr></table></figure>
+<p>其实，<code>zend_bcmath_globals</code>类型就是bcmath模块中的全局空间类型。这里仅仅声明了<code>zend_bcmath_globals</code>结构体，在bcmath.c中还有具体的实例化定义：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">// 展开后即为zend_bcmath_globals bcmath_globals;</div><div class="line">ZEND_DECLARE_MODULE_GLOBALS(bcmath)</div></pre></td></tr></table></figure>
+<p>可以看出，用<code>ZEND_DECLARE_MODULE_GLOBALS</code>完成了对变量<code>bcmath_globals</code>的定义。</p>
+<p>bcmath_globals是一块真正的全局空间，它包含有四个字段。其最后一个字段bc_precision，对应于ini配置中的bcmath.scale。我们在php.ini中设置了bcmath.scale的值，随后在启动bcmath模块的时候，bcmath.scale的值被更新到<code>bcmath_globals.bc_precision</code>中去。</p>
+<p>把<code>configuration_hash</code>中的值，更新到各个模块自己定义的xxx_globals变量中，就是所谓的将ini配置作用到模块。一旦模块启动完成，那么这些配置也都作用到位。所以在随后的执行阶段，php模块无需再次访问<code>configuration_hash</code>，模块仅需要访问自己的XXX_globals，就可以拿到用户设定的配置。</p>
+<p>bcmath_globals，除了有一个字段为ini配置项，其他还有三个字段为何意？这就是模块全局空间的第二个作用，它除了用于ini配置，还可以存储模块执行过程中的一些数据。</p>
+<p><img src="/images/deep-understanding-php.ini-config.png" alt=""></p>
+<p>再例如json模块，也是php中一个很常用的模块：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">ZEND_BEGIN_MODULE_GLOBALS(json)</div><div class="line">    int error_code;</div><div class="line">ZEND_END_MODULE_GLOBALS(json)</div></pre></td></tr></table></figure>
+<p>可以看到json模块并不需要ini配置，它的全局空间只有一个字段error_code。error_code记录了上一次执行json_decode或者json_encode中发生的错误。json_last_error函数便是返回这个error_code，来帮助用户定位错误原因。</p>
+<p>为了能够很便捷的访问模块全局空间变量，php约定俗成的提出了一些宏。比如我们想访问json_globals中的error_code，当然可以直接写做json_globals.error_code（多线程环境下不行），不过更通用的写法是定义JSON_G宏：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">#define JSON_G(v) (json_globals.v)</div></pre></td></tr></table></figure>
+<p>我们使用JSON_G(error_code)来访问json_globals.error_code。本文刚开始的时候，曾提到PG、BG、JSON_G、PCRE_G，XXX_G等等，这些宏在php源代码中也是很常见的。现在我们可以很轻松的理解它们，PG宏可以访问Core模块的全局变量，BG访问Standard模块的全局变量，PCRE_G则访问PCRE模块的全局变量。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">#define PG(v) (core_globals.v)</div><div class="line">#define BG(v) (basic_globals.v)</div></pre></td></tr></table></figure>
+<h3 id="如何确定一个模块需要哪些配置呢？"><a href="#如何确定一个模块需要哪些配置呢？" class="headerlink" title="如何确定一个模块需要哪些配置呢？"></a>如何确定一个模块需要哪些配置呢？</h3><p>模块需要什么样的INI配置，都是在各个模块中自己定义的。举例来说，对于Core模块，有如下的配置项定义：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">PHP_INI_BEGIN()</div><div class="line">    ......</div><div class="line">    STD_PHP_INI_ENTRY_EX(&quot;display_errors&quot;, &quot;1&quot;, PHP_INI_ALL,    OnUpdateDisplayErrors, display_errors, php_core_globals, core_globals, display_errors_mode)</div><div class="line">    STD_PHP_INI_BOOLEAN(&quot;enable_dl&quot;,       &quot;1&quot;, PHP_INI_SYSTEM, OnUpdateBool,          enable_dl,      php_core_globals, core_globals)</div><div class="line">    STD_PHP_INI_BOOLEAN(&quot;expose_php&quot;,      &quot;1&quot;, PHP_INI_SYSTEM, OnUpdateBool,          expose_php,     php_core_globals, core_globals)</div><div class="line">    STD_PHP_INI_BOOLEAN(&quot;safe_mode&quot;,       &quot;0&quot;, PHP_INI_SYSTEM, OnUpdateBool,          safe_mode,      php_core_globals, core_globals)</div><div class="line">    ......</div><div class="line">PHP_INI_END()</div></pre></td></tr></table></figure>
+<p>可以在<code>php-src\main\main.c</code>文件大概450+行找到上述代码。其中涉及的宏比较多，有ZEND_INI_BEGIN 、ZEND_INI_END、PHP_INI_ENTRY_EX、STD_PHP_INI_BOOLEAN等等，本文不一一赘述，感兴趣的读者可自行分析。</p>
+<p>上述代码进行宏展开后得到：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">static const zend_ini_entry ini_entries[] = &#123;</div><div class="line">    ..</div><div class="line">    &#123; 0, PHP_INI_ALL,    &quot;display_errors&quot;,sizeof(&quot;display_errors&quot;),OnUpdateDisplayErrors,(void *)XtOffsetOf(php_core_globals, display_errors), (void *)&amp;core_globals, NULL, &quot;1&quot;, sizeof(&quot;1&quot;)-1, NULL, 0, 0, 0, display_errors_mode &#125;,</div><div class="line">    &#123; 0, PHP_INI_SYSTEM, &quot;enable_dl&quot;,     sizeof(&quot;enable_dl&quot;),     OnUpdateBool,         (void *)XtOffsetOf(php_core_globals, enable_dl),      (void *)&amp;core_globals, NULL, &quot;1&quot;, sizeof(&quot;1&quot;)-1, NULL, 0, 0, 0, zend_ini_boolean_displayer_cb &#125;,</div><div class="line">    &#123; 0, PHP_INI_SYSTEM, &quot;expose_php&quot;,    sizeof(&quot;expose_php&quot;),    OnUpdateBool,         (void *)XtOffsetOf(php_core_globals, expose_php),     (void *)&amp;core_globals, NULL, &quot;1&quot;, sizeof(&quot;1&quot;)-1, NULL, 0, 0, 0, zend_ini_boolean_displayer_cb &#125;,</div><div class="line">    &#123; 0, PHP_INI_SYSTEM, &quot;safe_mode&quot;,     sizeof(&quot;safe_mode&quot;),     OnUpdateBool,         (void *)XtOffsetOf(php_core_globals, safe_mode),      (void *)&amp;core_globals, NULL, &quot;0&quot;, sizeof(&quot;0&quot;)-1, NULL, 0, 0, 0, zend_ini_boolean_displayer_cb &#125;,</div><div class="line">    ...</div><div class="line">    &#123; 0, 0, NULL, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL, 0, 0, 0, NULL &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>我们看到，配置项的定义，其本质上就是定义了一个zend_ini_entry类型的数组。zend_ini_entry结构体的字段具体含义为：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">struct _zend_ini_entry &#123;</div><div class="line">    int module_number;                // 模块的id</div><div class="line">    int modifiable;                   // 可被修改的范围，例如php.ini，ini_set</div><div class="line">    char *name;                       // 配置项的名称</div><div class="line">    uint name_length;</div><div class="line">    ZEND_INI_MH((*on_modify));        // 回调函数，配置项注册或修改的时候会调用</div><div class="line">    void *mh_arg1;                    // 通常为配置项字段在XXX_G中的偏移量</div><div class="line">    void *mh_arg2;                    // 通常为XXX_G</div><div class="line">    void *mh_arg3;                    // 通常为保留字段，极少用到</div><div class="line"></div><div class="line">    char *value;                      // 配置项的值</div><div class="line">    uint value_length;</div><div class="line"></div><div class="line">    char *orig_value;                 // 配置项的原始值</div><div class="line">    uint orig_value_length;</div><div class="line">    int orig_modifiable;              // 配置项的原始modifiable</div><div class="line">    int modified;                     // 是否发生过修改，如果有修改，则orig_value会保存修改前的值</div><div class="line"></div><div class="line">    void (*displayer)(zend_ini_entry *ini_entry, int type);</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>将配置作用到模块——REGISTER_INI_ENTRIES<br>经常能够在不同扩展的PHP_MINIT_FUNCTION里看到REGISTER_INI_ENTRIES。REGISTER_INI_ENTRIES主要负责完成两件事情，第一，对模块的全局空间XXX_G进行填充，同步configuration_hash中的值到XXX_G中去。其次，它还生成了EG(ini_directives)。</p>
+<p>REGISTER_INI_ENTRIES也是一个宏，展开之后实则为zend_register_ini_entries方法。具体来看下zend_register_ini_entries的实现：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">ZEND_API int zend_register_ini_entries(const zend_ini_entry *ini_entry, int module_number TSRMLS_DC) /* &#123;&#123;&#123; */</div><div class="line">&#123;</div><div class="line">    // ini_entry为zend_ini_entry类型数组，p为数组中每一项的指针</div><div class="line">    const zend_ini_entry *p = ini_entry;</div><div class="line">    zend_ini_entry *hashed_ini_entry;</div><div class="line">    zval default_value;</div><div class="line"></div><div class="line">    // EG(ini_directives)就是registered_zend_ini_directives</div><div class="line">    HashTable *directives = registered_zend_ini_directives;</div><div class="line">    zend_bool config_directive_success = 0;</div><div class="line"></div><div class="line">    // 还记得ini_entry最后一项固定为&#123; 0, 0, NULL, ... &#125;么</div><div class="line">    while (p-&gt;name) &#123;</div><div class="line">        config_directive_success = 0;</div><div class="line"></div><div class="line">        // 将p指向的zend_ini_entry加入EG(ini_directives)</div><div class="line">        if (zend_hash_add(directives, p-&gt;name, p-&gt;name_length, (void*)p, sizeof(zend_ini_entry), (void **) &amp;hashed_ini_entry) == FAILURE) &#123;</div><div class="line">            zend_unregister_ini_entries(module_number TSRMLS_CC);</div><div class="line">            return FAILURE;</div><div class="line">        &#125;</div><div class="line">        hashed_ini_entry-&gt;module_number = module_number;</div><div class="line"></div><div class="line">        // 根据name去configuration_hash中查询，取出来的结果放在default_value中</div><div class="line">        // 注意default_value的值比较原始，一般是数字、字符串、数组等，具体取决于php.ini中的写法</div><div class="line">        if ((zend_get_configuration_directive(p-&gt;name, p-&gt;name_length, &amp;default_value)) == SUCCESS) &#123;</div><div class="line">        // 调用on_modify更新到模块的全局空间XXX_G中</div><div class="line">        if (!hashed_ini_entry-&gt;on_modify || hashed_ini_entry-&gt;on_modify(hashed_ini_entry, Z_STRVAL(default_value), Z_STRLEN(default_value), hashed_ini_entry-&gt;mh_arg1, hashed_ini_entry-&gt;mh_arg2, hashed_ini_entry-&gt;mh_arg3, ZEND_INI_STAGE_STARTUP TSRMLS_CC) == SUCCESS) &#123;</div><div class="line">            hashed_ini_entry-&gt;value = Z_STRVAL(default_value);</div><div class="line">            hashed_ini_entry-&gt;value_length = Z_STRLEN(default_value);</div><div class="line">            config_directive_success = 1;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">        // 如果configuration_hash中没有找到，则采用默认值</div><div class="line">        if (!config_directive_success &amp;&amp; hashed_ini_entry-&gt;on_modify) &#123;</div><div class="line">            hashed_ini_entry-&gt;on_modify(hashed_ini_entry, hashed_ini_entry-&gt;value, hashed_ini_entry-&gt;value_length, hashed_ini_entry-&gt;mh_arg1, hashed_ini_entry-&gt;mh_arg2, hashed_ini_entry-&gt;mh_arg3, ZEND_INI_STAGE_STARTUP TSRMLS_CC);</div><div class="line">        &#125;</div><div class="line">        p++;</div><div class="line">    &#125;</div><div class="line">    return SUCCESS;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>简单来说，可以把上述代码的逻辑表述为：</p>
+<p>1、将模块声明的ini配置项添加到 <code>EG(ini_directives)</code>中。注意，ini配置项的值可能在随后被修改。<br>2、尝试去<code>configuration_hash</code>中寻找各个模块需要的ini。</p>
+<pre><code>- 如果能够找到，说明用户叜ini文件中配置了该值，那么采用用户的配置。
+- 如果没有找到，OK，没有关系，因为模块在声明ini的时候，会带上默认值。
+</code></pre><p>3、将ini的值同步到XX_G里面。毕竟在php的执行过程中，起作用的还是这些XXX_globals。具体的过程是调用每条ini配置对应的on_modify方法完成，on_modify由模块在声明ini的时候进行指定。</p>
+<p>我们来具体看下on_modify，它其实是一个函数指针，来看两个具体的Core模块的配置声明：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">STD_PHP_INI_BOOLEAN(&quot;log_errors&quot;,      &quot;0&quot;,    PHP_INI_ALL, OnUpdateBool, log_errors,         php_core_globals, core_globals)</div><div class="line">STD_PHP_INI_ENTRY(&quot;log_errors_max_len&quot;,&quot;1024&quot;, PHP_INI_ALL, OnUpdateLong, log_errors_max_len, php_core_globals, core_globals)</div></pre></td></tr></table></figure>
+<p>对于log_errors，它的on_modify被设置为OnUpdateBool，对于log_errors_max_len，则on_modify被设置为OnUpdateLong。</p>
+<p>进一步假设我们在php.ini中的配置为：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">log_errors = On</div><div class="line">log_errors_max_len = 1024</div></pre></td></tr></table></figure>
+<p>具体来看下OnUpdateBool函数：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">ZEND_API ZEND_INI_MH(OnUpdateBool) </div><div class="line">&#123;</div><div class="line">    zend_bool *p;</div><div class="line"></div><div class="line">    // base表示core_globals的地址</div><div class="line">    char *base = (char *) mh_arg2;</div><div class="line"></div><div class="line">    // p表示core_globals的地址加上log_errors字段的偏移量</div><div class="line">    // 得到的即为log_errors字段的地址</div><div class="line">    p = (zend_bool *) (base+(size_t) mh_arg1);  </div><div class="line"></div><div class="line">    if (new_value_length == 2 &amp;&amp; strcasecmp(&quot;on&quot;, new_value) == 0) &#123;</div><div class="line">        *p = (zend_bool) 1;</div><div class="line">    &#125;</div><div class="line">    else if (new_value_length == 3 &amp;&amp; strcasecmp(&quot;yes&quot;, new_value) == 0) &#123;</div><div class="line">        *p = (zend_bool) 1;</div><div class="line">    &#125;</div><div class="line">    else if (new_value_length == 4 &amp;&amp; strcasecmp(&quot;true&quot;, new_value) == 0) &#123;</div><div class="line">        *p = (zend_bool) 1;</div><div class="line">    &#125;</div><div class="line">    else &#123;</div><div class="line">        // configuration_hash中存放的value是字符串&quot;1&quot;，而非&quot;On&quot;</div><div class="line">        // 因此这里用atoi转化成数字1</div><div class="line">        *p = (zend_bool) atoi(new_value);</div><div class="line">    &#125;</div><div class="line">    return SUCCESS;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>最令人费解的估计就是mh_arg1和mh_arg2了，其实对照前面所述的zend_ini_entry定义，mh_arg1，mh_arg2还是很容易参透的。mh_arg1表示字节偏移量，mh_arg2表示XXX_globals的地址。因此，(char *)mh_arg2 + mh_arg1的结果即为XXX_globals中某个字段的地址。具体到本case中，就是计算core_globals中log_errors的地址。因此，当OnUpdateBool最后执行到</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">*p = (zend_bool) atoi(new_value);</div></pre></td></tr></table></figure>
+<p>其作用就相当于</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">core_globals.log_errors = (zend_bool) atoi(&quot;1&quot;);</div></pre></td></tr></table></figure>
+<p>分析完了OnUpdateBool，我们再来看OnUpdateLong便觉得一目了然：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">ZEND_API ZEND_INI_MH(OnUpdateLong)</div><div class="line">&#123;</div><div class="line">    long *p;</div><div class="line">    char *base = (char *) mh_arg2;</div><div class="line"></div><div class="line">    // 获得log_errors_max_len的地址</div><div class="line">    p = (long *) (base+(size_t) mh_arg1);</div><div class="line"></div><div class="line">    // 将&quot;1024&quot;转化成long型，并赋值给core_globals.log_errors_max_len</div><div class="line">    *p = zend_atol(new_value, new_value_length);</div><div class="line">    return SUCCESS;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>最后需要注意的是，<code>zend_register_ini_entries</code> 函数中，如果 <code>configuration_hash</code> 中存在配置，则当调用 <code>on_modify</code> 结束后，<code>hashed_ini_entry</code> 中的<code>value</code>和<code>value_length</code>会被更新。也就是说，如果用户在php.ini中配置过，则 <code>EG(ini_directives)</code> 存放的就是实际配置的值。如果用户没配，<code>EG(ini_directives)</code> 中存放的是声明<code>zend_ini_entry</code>时给出的默认值。</p>
+<p>zend_register_ini_entries中的default_value变量命名比较糟糕，相当容易造成误解。其实default_value并非表示默认值，而是表示用户实际配置的值。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>至此，三块数据configuration_hash，EG(ini_directives)以及PG、BG、PCRE_G、JSON_G、XXX_G…已经都交代清楚了。</p>
+<p>总结一下：</p>
+<p>1、<code>configuration_hash</code>，存放php.ini文件里的配置，不做校验，其值为字符串。<br>2、<code>EG(ini_directives)</code>，存放的是各个模块中定义的 <code>zend_ini_entry</code>，如果用户在php.ini配置过（<code>configuration_hash</code> 中存在），则值被替换为 <code>configuration_hash</code> 中的值，类型依然是字符串。<br>3、<code>XXX_G</code>，该宏用于访问模块的全局空间，这块内存空间可用来存放ini配置，并通过on_modify指定的函数进行更新，其数据类型由XXX_G中的字段声明来决定。</p>
+
+      
+    </div>
+
+   
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+
+      
+        <div class="post-tags">
+          
+            <a href="/tags/PHP/" rel="tag">#PHP</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/07/php-garbage-collection-collect-cycles/" rel="next" title="PHP 的垃圾回收机制－理解PHP如何解决循环引用导致的内存泄漏问题">
+                <i class="fa fa-chevron-left"></i> PHP 的垃圾回收机制－理解PHP如何解决循环引用导致的内存泄漏问题
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+
+      
+        <div class="others-bottom">
+        <div class="related-posts">
+        
+        
+            <h3 class="article-title" style="font-size: 20px;">相关文章</h3>
+            <ul>
+            
+                <li><a href="/2015/11/12/how-php-grab-screenshot-from-video/">PHP 获取视频的预览截图</a></li>
+            
+                <li><a href="/2017/04/07/php-garbage-collection-collect-cycles/">PHP 的垃圾回收机制－理解PHP如何解决循环引用导致的内存泄漏问题</a></li>
+            
+                <li><a href="/2017/03/22/deeper-understanding-php7-reference/">深入理解 PHP7 之 REFERENCE</a></li>
+            
+                <li><a href="/2017/03/22/deeper-understanding-php7-zval/">深入理解 PHP7 之 zval</a></li>
+            
+                <li><a href="/2017/03/03/installing-centos7-nginx1-10-3-php7-mysql5-7/">CentOS 7 从零开始搭建 LNMP 环境（nginx/1.10.3 PHP/7.1.2 Mysql/5.7.17）</a></li>
+            
+                <li><a href="/2016/08/29/debug-in-php/">如何调试 PHP 程序</a></li>
+            
+                <li><a href="/2017/03/24/copy-and-chage-on-write-with-php/">理解 PHP 的写时复制和写时改变</a></li>
+            
+                <li><a href="/2015/04/13/misunderstand-of-php-fpm-max-chindren/">php-fpm的max_chindren的一些误区</a></li>
+            
+                <li><a href="/2015/04/10/relearning-php-1-why-we-always-ignor-trailer-php-tags/">Relearning PHP (1) - 为什么php文件尾不闭合标记 ?></a></li>
+            
+                <li><a href="/2014/10/16/http-server-how-nginx-php-work/">http server原理，nginx与php之间是如何工作的</a></li>
+            
+                <li><a href="/2010/10/20/Remove-duplicate-element-in-array/">去除数组中的重复元素</a></li>
+            
+                <li><a href="/2010/07/18/php-session/">PHP SESSION</a></li>
+            
+            </ul>
+        
+        </div>
+
+        
+<div id="wechat_subscriber">
+    <img id="wechat_subscriber_qcode" src="/images/qrcode_for_gh_b81f9d06ec2e_258.jpg" alt="小弟 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>扫一下呗，反正我也不怎么发～</div>
+</div>
+
+
+        </div>
+      
+     
+    </footer>
+  </article>
+
+  </div>
+
+
+          </div>
+        </div>
+        
+          
+  
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://tva1.sinaimg.cn/crop.0.0.414.414.180/62d98a55jw1e6lb32mfm7j20bo0bo0to.jpg"
+               alt="小弟" />
+          <p class="site-author-name" itemprop="name">小弟</p>
+          <p class="site-description motion-element" itemprop="description">纪录工作和生活</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">168</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">118</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+        
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/jixiaod" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/jixiaod" target="_blank" title="Code">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  Code
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.douban.com/people/ttihgiesr" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+       
+      </section>
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2008 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="author" itemprop="copyrightHolder"> 『百作坊』 Generated by <a href="https://hexo.io" rel="external nofollow">Hexo</a> & Theme by <a href="https://github.com/jixiaod/hexo-theme-next" rel="external nofollow">Next</a> & Public by <a href="https://pages.github.com" rel="external nofollow">Github Pages</a>.</span>
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+    <div class="search-bar">
+            <i class="popup-trigger fa fa-search fa-fw"></i> 
+    </div>
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+
+  
+
+
+</body>
+</html>

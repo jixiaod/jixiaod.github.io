@@ -48,6 +48,7 @@
 <meta property="og:url" content="http://blog.100dos.com/page/9/index.html">
 <meta property="og:site_name" content="百作坊">
 <meta property="og:description" content="纪录工作和生活">
+<meta property="og:locale" content="zh-Hans">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="百作坊">
 <meta name="twitter:description" content="纪录工作和生活">
@@ -206,6 +207,117 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2014/10/16/http-server-how-nginx-php-work/" itemprop="url">
+                  http server原理，nginx与php之间是如何工作的
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2014-10-16T19:38:57+08:00" content="2014-10-16">
+              2014-10-16
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Nginx/" itemprop="url" rel="index">
+                    <span itemprop="name">Nginx</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Nginx (“engine x”) 是一个高性能的 HTTP 和 反向代理 服务器，也是一个 IMAP/POP3/SMTP 代理服务器。 Nginx 是由 Igor Sysoev 为俄罗斯访问量第二的 Rambler.ru 站点开发的，第一个公开版本0.1.0发布于2004年10月4日。其将源代码以类BSD许可证的形式发布，因它的稳定性、丰富的功能集、示例配置文件和低系统资源的消耗而闻名。— 百度百科</p>
+<p>当nginx接收到一个http请求时，通过配置文件找到对应的server。然后匹配server中的所有location，找到最匹配的。而在location中的命令会启动不同的模块去完成工作，比如rewrite模块、index模块。因此在nginx中模块可以看作真正的劳动工作者。nginx的模块是被编译到nginx中的，属于静态方式。启动nginx时，模块被自动加载。不像apache，把模块单独编译成so文件，在配置文件中指定是否加载。所以，单比模块加载方面，nginx也比apache速度上有提升。</p>
+<p>那nginx是怎么调用php的呢？先看下面的nginx中关于php的配置</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">location ~ \.php$ &#123;</div><div class="line">        root           /webpath;</div><div class="line">        fastcgi_pass   127.0.0.1:9000;</div><div class="line">        …</div><div class="line">        ...</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>这个location指令把以php为文件后缀的请求，交给127.0.0.1:9000处理。我想你看到这个应该猜到了，这是一个C/S架构东西。  而这里的IP地址和端口（127.0.0.1:9000）就是fastcgi进程监听的IP地址和端口。fastcgi是一个可伸缩地、高速地在http server和动态脚本语言间通信的接口。多数流行的http server都支持fastcgi，包括apache、nginx和lighttpd等。同时，fastcgi也被许多脚本语言支持，其中就有php。</p>
+<p>那这个fastcgi的配置IP和端口从何而来呢？在php-fpm.conf中可以看到如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">listen = 127.0.0.1:9000  #这个表示php的fastcgi进程监听的ip地址以及端口</div><div class="line"></div><div class="line">pm.start_servers = 2</div></pre></td></tr></table></figure>
+<p>php-fpm作为fastcgi的进程管理器，可以有效控制内存和进程，并且平滑重载php配置。php5.3以后，php-fpm被集成到php的core中，默认安装，无须配置。</p>
+<p>fastcgi进程管理器php-fpm自身初始化，启动主进程php-fpm和启动start_servers个fastcgi子进程。主进程php-fpm主要是管理fastcgi子进程，监听9000端口，fastcgi子进程等待请求。当客户端请求到达nginx时，nginx通过location指令，将所有以php为后缀的文件都交给 127.0.0.1:9000 来处理。php-fpm选择并连接到一个fastcgi子进程，并将环境变量和标准输入发送到fastcgi子进程。fastcgi子进程完成处理后将标准输出和错误信息返回。当fastcgi子进程关闭连接时，请求便告处理完成，等待下次处理。</p>
+
+          
+        
+      
+    </div>
+
+   
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+
+      
+     
+    </footer>
+  </article>
+
     
       
 
@@ -1014,114 +1126,6 @@
   </article>
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2013/08/07/beauty-of-coder/" itemprop="url">
-                  程序员之美
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2013-08-07T17:46:55+08:00" content="2013-08-07">
-              2013-08-07
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/工作-职场/" itemprop="url" rel="index">
-                    <span itemprop="name">工作&职场</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>好的程序员和差程序员的区别在于理解能力，差劲的程序员不理解自己在做的事情，优秀的程序员相反。其实每一个行业都一样，都需要去投入精力。优秀的程序员能够总结归纳之前学习过用过的技术，并能在将来在之前总结的基础上去向更深的层次专研。好的程序员和差的程序员在刚开始接触技术的时候，能力上没什么太大差别，但是日积月累，他们之间的差距就会越来越大。这就是为什么会发现有30多岁的程序员，他们虽然也很努力，但是在跟他们交流的时候就是会发现他们思路很乱，10多年的工作经验都白扯，没有把自己这些年用到的东西消化，因为他们一直不理解自己在做什么。</p>
-<p>优秀的程序员，在完成工作的同时还考虑非常多其他的事情。比如，完成的功能开发的优化。好的程序员总是想把自己的代码变得更简洁，通过不断的重构优化自己的代码。他们会不厌其烦的做各种假设和尝试，表现出他们本不该有的耐心。不仅提高了代码的可读性，运行的性能，而且让自己对系统的设计和架构都有更深入的理解。</p>
-<p>优秀的程序员，大都会想办法提高自己的工作效率。编辑器选择上大部分是VIM或者是Emacs，俩个神级编辑器其中之一。他们不会这样认为：用什么编辑器？都行；能编写代码？还可以；好用吗？无所谓；效率方面呢？没想过。以VIM为例，他们一定会对系统默认的VIM做优化，安装各种可以提高开发效率的插件，高亮、注释、mark、方便查找等等，会做很多很多。用我之前公司的老大的一句话：“不要怕折腾！”，“折腾”俩个字道出了要想成为优秀程序员的真谛，不要怕麻烦，不要怕出错，不要怕走弯路。无穷无尽的“折腾“会让你学会很多东西。而且试着试着，路就走直了。到了那一天，你会发现即使有一天你的上司叫给你一个你之前不曾了解的技术问题，你也不会心里发怵。这就是”折腾“出来的自信。</p>
-<p>优秀的程序员还注重规范，这里的“规范”不仅仅是指代码的规范，有更加宽泛的意义。还包括写文档、写测试用例等等。而且对于一次小小的代码提交commit，就能看出程序员的优劣。优秀的程序员，不仅可以写出这次提交所修改的内容，而且还能写出来我为什么要进行这次修改。而且还要想：我这次修改需不需要提交？或者这次修改要不要分多次提交？以后好方便找到我想要的那个版本。优秀的程序员总是不吝啬使用自己的大脑，每个问题都要好好想想，琢磨琢磨。</p>
-<p>优秀的程序员有时也很懒，不喜欢阅读。怎么办呢？克服吧。唉，能多看就多看点吧，比看泡沫剧和苍老师要有收获。</p>
-<p>可能更重要的，你要热爱这个行业。</p>
-
-          
-        
-      
-    </div>
-
-   
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-
-      
-     
-    </footer>
-  </article>
-
-    
   </section>
 
   
@@ -1163,7 +1167,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">167</span>
+              <span class="site-state-item-count">168</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

@@ -42,22 +42,18 @@
 
 
 
-<meta name="description" content="最近用redis的队列对接公司短信平台服务。对于redis如何实现队列服务，无非是rpop、lpush。网上资料很多，就不废话了，我要说说开发时遇到的问题。
-代码上线后发现一个问题，redis队列长时间没有写入（时间不确定）。读取队列时，会出现redis队列确实rpop弹出内容，但是内容为空。查询redis的队列，发现已经空队列，确实弹出了message。
-怀疑队列疆死所致，于是设置了一个激活时间">
+<meta name="description" content="最近用redis的队列对接公司短信平台服务。对于redis如何实现队列服务，无非是rpop、lpush。网上资料很多，就不废话了，我要说说开发时遇到的问题。 代码上线后发现一个问题，redis队列长时间没有写入（时间不确定）。读取队列时，会出现redis队列确实rpop弹出内容，但是内容为空。查询redis的队列，发现已经空队列，确实弹出了message。 怀疑队列疆死所致，于是设置了一个激活时间">
+<meta name="keywords" content="redis">
 <meta property="og:type" content="article">
 <meta property="og:title" content="关于redis实现队列问题">
 <meta property="og:url" content="http://blog.100dos.com/2013/04/02/redis-queue-bug/index.html">
 <meta property="og:site_name" content="百作坊">
-<meta property="og:description" content="最近用redis的队列对接公司短信平台服务。对于redis如何实现队列服务，无非是rpop、lpush。网上资料很多，就不废话了，我要说说开发时遇到的问题。
-代码上线后发现一个问题，redis队列长时间没有写入（时间不确定）。读取队列时，会出现redis队列确实rpop弹出内容，但是内容为空。查询redis的队列，发现已经空队列，确实弹出了message。
-怀疑队列疆死所致，于是设置了一个激活时间">
-<meta property="og:updated_time" content="2017-04-12T02:53:08.903Z">
+<meta property="og:description" content="最近用redis的队列对接公司短信平台服务。对于redis如何实现队列服务，无非是rpop、lpush。网上资料很多，就不废话了，我要说说开发时遇到的问题。 代码上线后发现一个问题，redis队列长时间没有写入（时间不确定）。读取队列时，会出现redis队列确实rpop弹出内容，但是内容为空。查询redis的队列，发现已经空队列，确实弹出了message。 怀疑队列疆死所致，于是设置了一个激活时间">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-08-26T14:29:13.745Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="关于redis实现队列问题">
-<meta name="twitter:description" content="最近用redis的队列对接公司短信平台服务。对于redis如何实现队列服务，无非是rpop、lpush。网上资料很多，就不废话了，我要说说开发时遇到的问题。
-代码上线后发现一个问题，redis队列长时间没有写入（时间不确定）。读取队列时，会出现redis队列确实rpop弹出内容，但是内容为空。查询redis的队列，发现已经空队列，确实弹出了message。
-怀疑队列疆死所致，于是设置了一个激活时间">
+<meta name="twitter:description" content="最近用redis的队列对接公司短信平台服务。对于redis如何实现队列服务，无非是rpop、lpush。网上资料很多，就不废话了，我要说说开发时遇到的问题。 代码上线后发现一个问题，redis队列长时间没有写入（时间不确定）。读取队列时，会出现redis队列确实rpop弹出内容，但是内容为空。查询redis的队列，发现已经空队列，确实弹出了message。 怀疑队列疆死所致，于是设置了一个激活时间">
 
 
 
@@ -402,7 +398,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">167</span>
+              <span class="site-state-item-count">168</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
