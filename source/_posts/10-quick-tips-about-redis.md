@@ -7,7 +7,7 @@ categories:
 date: 2015-06-02 16:32:45
 ---
 
-英文原文：[http://objectrocket.com/blog/how-to/10-quick-tips-about-redis/](http://objectrocket.com/blog/how-to/10-quick-tips-about-redis/ "http://objectrocket.com/blog/how-to/10-quick-tips-about-redis/")
+英文原文：[http://objectrocket.com/blog/how-to/10-quick-tips-about-redis/](http://objectrocket.com/blog/how-to/10-quick-tips-about-redis/)
 
 Redis在当下的技术圈自然是非常火的。从Antirez的个人小项目，发展到现在能达到工业标准的内存数据存储。伴随而来的，有很多人认可的正确使用redis的优秀实践。下面我们将会一起探索10个redis正确使用的小贴士。
 
