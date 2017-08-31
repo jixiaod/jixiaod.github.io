@@ -1,0 +1,730 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+
+
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="程序员," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="百作坊" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+<meta name="description" content="原文链接: http://www.infoq.com/cn/news/2017/04/Redis-father-10x Fred Brooks（《人月神话》的作者）最早在他的论文“没有银弹——软件工程的本质和偶然性（No Silver Bullet - Essence and Accidents of Software Engineering）”中提出了“10x程序员”的概念。技术社区对于这个概念">
+<meta name="keywords" content="程序员">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis之父：10x程序员应该具备哪些素质">
+<meta property="og:url" content="http://blog.100dos.com/2017/08/31/redis-father-10x/index.html">
+<meta property="og:site_name" content="百作坊">
+<meta property="og:description" content="原文链接: http://www.infoq.com/cn/news/2017/04/Redis-father-10x Fred Brooks（《人月神话》的作者）最早在他的论文“没有银弹——软件工程的本质和偶然性（No Silver Bullet - Essence and Accidents of Software Engineering）”中提出了“10x程序员”的概念。技术社区对于这个概念">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-08-31T02:52:15.076Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Redis之父：10x程序员应该具备哪些素质">
+<meta name="twitter:description" content="原文链接: http://www.infoq.com/cn/news/2017/04/Redis-father-10x Fred Brooks（《人月神话》的作者）最早在他的论文“没有银弹——软件工程的本质和偶然性（No Silver Bullet - Essence and Accidents of Software Engineering）”中提出了“10x程序员”的概念。技术社区对于这个概念">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"hide"},
+    fancybox: true,
+    motion: true
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://blog.100dos.com/2017/08/31/redis-father-10x/"/>
+
+
+  <title> Redis之父：10x程序员应该具备哪些素质 | 百作坊 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?e70448447504ef27f728084c8f2978ea";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="site-title">百作坊</span>
+    </a>
+  </div>
+  <p class="site-subtitle">100dos.com</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+    </ul>
+  
+  <div class="site-search"> 
+    <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="search.placeholder" spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+  </div>
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Redis之父：10x程序员应该具备哪些素质
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-08-31T10:43:48+08:00" content="2017-08-31">
+              2017-08-31
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/工作-职场/" itemprop="url" rel="index">
+                    <span itemprop="name">工作&职场</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>原文链接: <a href="http://www.infoq.com/cn/news/2017/04/Redis-father-10x" target="_blank" rel="external">http://www.infoq.com/cn/news/2017/04/Redis-father-10x</a></p>
+<p>Fred Brooks（《人月神话》的作者）最早在他的论文“没有银弹——软件工程的本质和偶然性（No Silver Bullet - Essence and Accidents of Software Engineering）”中提出了“10x程序员”的概念。技术社区对于这个概念呈现出两级分化的观点。Redis之父Salvatore Sanfilippo（antirez）列出了9种特质，他认为，如果一个程序员同时具备了这9种特质，那么就可以说他是一个10x程序员。以下内容已获得antirez的翻译授权，查看英文原文<a href="http://antirez.com/news/112" target="_blank" rel="external">The mythical 10x programmer</a>。</p>
+<p>一个10x程序员，在相同条件下，可以完成十倍于普通程序员的工作。这里所说的“普通程序员”，是指那些能够胜任自己工作的程序员，只是他们不具备10x程序员的神奇能力。普通程序员代表了这个领域所有专业程序员的平均水准。</p>
+<p>对于是否存在10x程序员这种“神兽”，编程社区的观点呈现出两级分化：有人认为根本不存在所谓的10x程序员，有人则认为不仅存在10x程序员，如果找对了门路，甚至能找到100x的程序员。</p>
+<p>如果说编程是一项“线性”的工作，那么很明显，10x程序员是不可能存在的。一个跑步运动员怎么可能跑得比另一个快上十倍？在相同时间内，一个建筑工人建造的东西怎么可能是其他人的十倍？不过，编程是一项很特别的设计工作。虽然程序员可能不会参与程序的架构设计，但程序的实现仍然涉及到一些设计工作，而这部分需要程序员去完成。</p>
+<p>如果说程序的设计和实现不是线性的，那么在我看来，经验、编码能力、知识和去伪存真的能力就不仅仅是线性的优势，它们在编程过程中相互交织，成倍地发挥效能。当然，如果程序员能够同时胜任设计和实现工作，那么这种现象就尤为明显。任务越是具有目标导向性，程序员就越是能够以更少的付出达成相同的目标，从而体现10x程序员的潜在能力。如果手头的工作很死板，而且限定了可使用的工具和实现方式，那么10x程序员事半功倍的能力就会大打折扣。不过，在不改变大前提的情况下，程序员仍然可能通过局部的设计优化来改进工作，包括在项目的某些部分不按常理出牌。所以，他们可以少付出很多却能达成几乎相同的目标。</p>
+<p>在我的二十年程序员生涯中，我与其他程序员一起工作，作为同事，或者由我指导他们达成目标，为Redis和其他项目贡献代码补丁。在工作过程中，我仔细观察他们。与此同时，有很多人说我是一个高能的程序员。不过我不认为自己是一个工作狂，我只是编码速度比较快而已。</p>
+<p>下面列出了我认为可以用于区分程序员生产力高低的重要特质。</p>
+<p>编程裸技能：完成子任务</p>
+<p>从处理编程子任务可以看出一个程序员的短板和长处，比如实现一个函数或者一个算法。但从我的经验来看，擅于应用基本的编程技能来高效完成任务的程序员并非如人们所想得那样普遍存在。有时候，团队里有些不是很称职的程序员，他们甚至不知道该怎么写一个简单的排序算法，但比起那些看似称职却缺乏实战经验的程序员，这些不称职的程序员却能完成更多的工作。</p>
+<p>经验：模式匹配</p>
+<p>我认为，经验就是一系列解决方案，它们已经被证实可以用于处理一些重复性的任务。经验老道的程序员知道该如何处理各种子任务，这样不但省掉了很多设计工作，而且避免了很多设计错误，而设计错误是简洁性最大的敌人。</p>
+<p>专注：实际时间和假设时间</p>
+<p>花在编码上的时间不仅要看数量，也要看质量。造成注意力不集中的因素既有内部的，也有外部的。内部的因素包括拖延、对手头的项目不感兴趣（一个人总是做不好自己不喜欢的事情）、缺乏练习、缺乏睡眠。外部因素包括频繁的会议、不固定的工作环境、同事的打扰，等等。集中注意力和避免被打扰对于提高编程效率来说是至关重要的。有时候，为了集中注意力，需要采取一些极端的手段。例如，我会时不时地查看邮件，但大部分邮件先不做回复。</p>
+<p>设计权衡：用5%换取90%</p>
+<p>项目的非根本性目标在很大程度上导致了设计的复杂性，或者导致无法达成其他更重要的目标，因为根本性功能和非根本性功能在设计上存在竞争关系。如果意识不到这点，复杂性就会随之而来。实现全面的设计并不是件轻而易举的事，付出与回报之间不能通过简单的比例来衡量。对于设计者来说，意识到这一点是很重要的。如果项目要最大化产出，那么就要把精力集中在重要的事情上，并在合理的时间内完成。例如，在设计Disque（一个分布式消息队列）时，我发现对消息进行排序之后，项目的其他方面就会得到实质性的改进：可用性、查询和客户端交互、简洁性和性能。</p>
+<p>简洁性</p>
+<p>简洁性是成败之间最为明显的分界点。理解复杂性的产生过程有助于理解什么是简洁性。我认为，不愿意做出设计权衡和设计错误的累积是导致复杂性的两个主要因素。</p>
+<p>在设计过程中，每次走错一条道，就离最优的方案越来越远。一个初始的设计错误，如果没能被纠正过来，那么可能导致一条道走到黑，最终得到的是一个复杂的系统，而不是对原先系统的重新设计。项目会因此变得更加复杂和低效。</p>
+<p>程序员可以在脑子里进行“概念验证”，从大量简单的设计想法中选择可行性最高且最直接的方案，从而达成简洁性。在后续的改进工作中，个人的经验和设计能力开始发挥作用，为子任务找到更加明智的解决方案。</p>
+<p>不过，如果系统复杂性不可避免，那么在放弃挣扎之前也要尽量想办法降低系统复杂性，甚至尝试采取完全相反的设计。</p>
+<p>完美主义（为了偏袒设计而放弃生产力）</p>
+<p>完美主义可以分为两种：一种是追求程序极致性能的工程文化，另一种是个人特质。不管是哪一种完美主义，它们都会对程序员实现快速交付造成阻碍。完美主义和对外部评判的恐惧会导致设计上的偏袒，程序员根据主观的心理因素和无关紧要的衡量参数做出设计决策，却忽略了健壮性、简洁性和及时交付。</p>
+<p>知识：理论有益</p>
+<p>在处理复杂任务时，具备一些理论方面的知识会对设计产生重要影响，比如数据结构方面的知识、了解计算能力的局限性和一些重要的算法。我们没有必要成为无所不知的超级专家，但至少要知道一些问题的潜在解决方案。例如，在给一个给定流统计单一元素的个数时，我们可以在设计上做出权衡（接受一定程度的错误），并结合概率集合的基数估计（cardinality estimation）算法，避免设计出复杂、缓慢、低内存效能的解决方案。</p>
+<p>底层：理解机器原理</p>
+<p>程序的很多问题都是源于对计算机工作原理的误解，即使是使用高级语言开发的程序也不外乎如此。这种情况可能导致一个项目需要重新设计和实现，因为项目所使用的工具和算法出现了根本性的错误。精通C语言，知道CPU的工作原理，了解系统内核的行为以及系统调用的实现原理，做到这几点可以挽救你于危难之中。</p>
+<p>调试技能</p>
+<p>查找和解决bug经常会占用我们大量的时间。查找引起bug的问题根源，在合理的步骤内修复bug，以简单的方式编写包含较少bug的代码，对于程序员来说，做到这几点可以显著提升效率。</p>
+<p>一个程序员如果具备了上述几点特质，那么他们的产出将会有10倍的提升，对此我一点也不感到惊讶。综合这些特质，从一个可行的模型开始，实现更简单更好的设计。我认为简洁性就是一种“投机取巧的编程”。简而言之，就是在开发的每个阶段选择性地实现一些功能，以最小化的付出为用户带来最大化的影响。</p>
+
+      
+    </div>
+
+   
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+
+      
+        <div class="post-tags">
+          
+            <a href="/tags/程序员/" rel="tag">#程序员</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/21/deep-understandint-php-ini-config/" rel="next" title="深入理解PHP的ini配置">
+                <i class="fa fa-chevron-left"></i> 深入理解PHP的ini配置
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+
+      
+        <div class="others-bottom">
+        <div class="related-posts">
+        
+        
+            <h3 class="article-title" style="font-size: 20px;">相关文章</h3>
+            <ul>
+            
+                <li><a href="/2016/01/09/how-to-be-a-programer-which-is-favourite-of-your-leader/">如何做一个让领导待见的程序员？</a></li>
+            
+                <li><a href="/2015/07/03/1st-anniversary-for-moji/">周年记</a></li>
+            
+                <li><a href="/2015/06/19/experience-and-age-of-the-techies/">技术从业者的经验和年龄－程序员的职业规划</a></li>
+            
+                <li><a href="/2013/08/14/how-to-deal-with-relationship-between-coder-and-pm/">程序开发如何处理和PM的关系</a></li>
+            
+                <li><a href="/2013/08/07/beauty-of-coder/">程序员之美</a></li>
+            
+            </ul>
+        
+        </div>
+
+        
+<div id="wechat_subscriber">
+    <img id="wechat_subscriber_qcode" src="/images/qrcode_for_gh_b81f9d06ec2e_258.jpg" alt="小弟 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>扫一下呗，反正我也不怎么发～</div>
+</div>
+
+
+        </div>
+      
+     
+    </footer>
+  </article>
+
+  </div>
+
+
+          </div>
+        </div>
+        
+          
+  
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://tva1.sinaimg.cn/crop.0.0.414.414.180/62d98a55jw1e6lb32mfm7j20bo0bo0to.jpg"
+               alt="小弟" />
+          <p class="site-author-name" itemprop="name">小弟</p>
+          <p class="site-description motion-element" itemprop="description">纪录工作和生活</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">169</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">118</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+        
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/jixiaod" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/jixiaod" target="_blank" title="Code">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  Code
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.douban.com/people/ttihgiesr" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+       
+      </section>
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2008 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="author" itemprop="copyrightHolder"> 『百作坊』 Generated by <a href="https://hexo.io" rel="external nofollow">Hexo</a> & Theme by <a href="https://github.com/jixiaod/hexo-theme-next" rel="external nofollow">Next</a> & Public by <a href="https://pages.github.com" rel="external nofollow">Github Pages</a>.</span>
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+    <div class="search-bar">
+            <i class="popup-trigger fa fa-search fa-fw"></i> 
+    </div>
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+
+  
+
+
+</body>
+</html>

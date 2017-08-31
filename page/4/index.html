@@ -229,6 +229,252 @@
             
               
                 
+                <a class="post-title-link" href="/2016/08/29/debug-in-php/" itemprop="url">
+                  如何调试 PHP 程序
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-29T17:52:26+08:00" content="2016-08-29">
+              2016-08-29
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/PHP/" itemprop="url" rel="index">
+                    <span itemprop="name">PHP</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>对于大部分 PHP debug 问题来说，只要会 echo、var_dump 可能就够了。但是还有一些其他的函数方法和 PHP 调试相关的知识需要了解。</p>
+<h2 id="打印输出调试"><a href="#打印输出调试" class="headerlink" title="打印输出调试"></a>打印输出调试</h2><p><code>echo</code> 输出一个或多个字符串。</p>
+<p><code>print</code> 输出一个字符串。</p>
+<p><code>print_r</code> 跟 <code>var_dump</code> 类似，也是查看数组或对象时使用。不同的是，不会输出额外的数据类型，格式比较整齐。</p>
+<p><code>printf</code> 输出格式化字符串，比如要输出浮点数的时候，可以指定输出服点数的精确长度。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$float = (<span class="number">0.1</span>+<span class="number">0.7</span>) * <span class="number">10</span>;</div><div class="line">$int = (int) $float;</div><div class="line">var_dump($int);</div><div class="line">printf(<span class="string">"%.20f"</span>,$float);</div><div class="line"></div><div class="line"><span class="comment">// outputs</span></div><div class="line">int(<span class="number">7</span>)</div><div class="line"><span class="number">7.99999999999999911182</span></div></pre></td></tr></table></figure>
+<p><code>var_dump</code> 当查看数组或者对象时常用，会额外输出数据类型。</p>
+<p><code>var_export</code> 的输出可以直接当作php代码赋值个一个变量，而这个变量就会取得和被 <code>var_export</code> 一样的类型的值。需要注意的是，当变量类型为 resource 的时候， 是无法简单 copy 复制的。当 <code>var_export</code> 的变量是 resource 类型时， <code>var_export</code> 会返回 NULL。</p>
+<p><code>debug_zval_dump</code> 的输出跟 <code>var_dump</code> 类似，但是多了一个 refcount，记录一个变量被引用了多少次。</p>
+<p><code>debug_print_backtrace</code> 查看程序的调用栈，查找出错时的上下文。</p>
+<p>使用以上方法时，根据具体 debug 场景，选择最合适的打印方法即可。</p>
+<h2 id="错误输出控制"><a href="#错误输出控制" class="headerlink" title="错误输出控制"></a>错误输出控制</h2><p>在 php.ini 配置文件中，可以通过 <code>error_reporting</code>、<code>display_errors</code>、<code>display_startup_errors</code>、<code>log_error</code>、<code>track_errors</code>、<code>error_log</code>。</p>
+<p><code>error_reporting</code> 设置 PHP 的错误显示级别，PHP的错误显示级别的预定义常量：</p>
+<table>
+<thead>
+<tr>
+<th>值</th>
+<th>常量</th>
+<th>说明</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>E_ERROR (integer)</td>
+<td>致命的运行时错误。这类错误一般是不可恢复的情况，例如内存分配导致的问题。后果是导致脚本终止不再继续运行。</td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>E_WARNING (integer)</td>
+<td>运行时警告 (非致命错误)。仅给出提示信息，但是脚本不会终止运行。</td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td>E_PARSE (integer)</td>
+<td>编译时语法解析错误。解析错误仅仅由分析器产生。</td>
+<td></td>
+</tr>
+<tr>
+<td>8</td>
+<td>E_NOTICE (integer)</td>
+<td>运行时通知。表示脚本遇到可能会表现为错误的情况，但是在可以正常运行的脚本里面也可能会有类似的通知。</td>
+<td></td>
+</tr>
+<tr>
+<td>16</td>
+<td>E_CORE_ERROR (integer)</td>
+<td>在PHP初始化启动过程中发生的致命错误。该错误类似 E_ERROR，但是是由PHP引擎核心产生的。</td>
+<td>since PHP 4</td>
+</tr>
+<tr>
+<td>32</td>
+<td>E_CORE_WARNING (integer)</td>
+<td>PHP初始化启动过程中发生的警告 (非致命错误) 。类似 E_WARNING，但是是由PHP引擎核心产生的。</td>
+<td>since PHP 4</td>
+</tr>
+<tr>
+<td>64</td>
+<td>E_COMPILE_ERROR (integer)</td>
+<td>致命编译时错误。类似E_ERROR, 但是是由Zend脚本引擎产生的。</td>
+<td>since PHP 4</td>
+</tr>
+<tr>
+<td>128</td>
+<td>E_COMPILE_WARNING (integer)</td>
+<td>编译时警告 (非致命错误)。类似 E_WARNING，但是是由Zend脚本引擎产生的。</td>
+<td>since PHP 4</td>
+</tr>
+<tr>
+<td>256</td>
+<td>E_USER_ERROR (integer)</td>
+<td>用户产生的错误信息。类似 E_ERROR, 但是是由用户自己在代码中使用PHP函数 trigger_error()来产生的。</td>
+<td>since PHP 4</td>
+</tr>
+<tr>
+<td>512</td>
+<td>E_USER_WARNING (integer)</td>
+<td>用户产生的警告信息。类似 E_WARNING, 但是是由用户自己在代码中使用PHP函数 trigger_error()来产生的。</td>
+<td>since PHP 4</td>
+</tr>
+<tr>
+<td>1024</td>
+<td>E_USER_NOTICE (integer)</td>
+<td>用户产生的通知信息。类似 E_NOTICE, 但是是由用户自己在代码中使用PHP函数 trigger_error()来产生的。</td>
+<td>since PHP 4</td>
+</tr>
+<tr>
+<td>2048</td>
+<td>E_STRICT (integer)</td>
+<td>启用 PHP 对代码的修改建议，以确保代码具有最佳的互操作性和向前兼容性。</td>
+<td>since PHP 5</td>
+</tr>
+<tr>
+<td>4096</td>
+<td>E_RECOVERABLE_ERROR (integer)</td>
+<td>可被捕捉的致命错误。 它表示发生了一个可能非常危险的错误，但是还没有导致PHP引擎处于不稳定的状态。 如果该错误没有被用户自定义句柄捕获 (参见 set_error_handler())，将成为一个 E_ERROR　从而脚本会终止运行。</td>
+<td>since PHP 5.2.0</td>
+</tr>
+<tr>
+<td>8192</td>
+<td>E_DEPRECATED (integer)</td>
+<td>运行时通知。启用后将会对在未来版本中可能无法正常工作的代码给出警告。</td>
+<td>since PHP 5.3.0</td>
+</tr>
+<tr>
+<td>16384</td>
+<td>E_USER_DEPRECATED (integer)</td>
+<td>用户产少的警告信息。 类似 E_DEPRECATED, 但是是由用户自己在代码中使用PHP函数 trigger_error()来产生的。</td>
+<td>since PHP 5.3.0</td>
+</tr>
+<tr>
+<td>30719</td>
+<td>E_ALL (integer)</td>
+<td>E_STRICT出外的所有错误和警告信息。</td>
+<td>30719 in PHP 5.3.x, 6143 in PHP 5.2.x, 2047 previously</td>
+</tr>
+</tbody>
+</table>
+<p>即可以通过配置 php.ini 文件配置 <code>error_reporting</code> 等级，也可以通过内置函数<code>error_reporting()</code>来配置。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"></div><div class="line"><span class="comment">// Turn off all error reporting</span></div><div class="line">error_reporting(<span class="number">0</span>);</div><div class="line"></div><div class="line"><span class="comment">// Report simple running errors</span></div><div class="line">error_reporting(E_ERROR | E_WARNING | E_PARSE);</div><div class="line"></div><div class="line"><span class="comment">// Reporting E_NOTICE can be good too (to report uninitialized</span></div><div class="line"><span class="comment">// variables or catch variable name misspellings ...)</span></div><div class="line">error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);</div><div class="line"></div><div class="line"><span class="comment">// Report all errors except E_NOTICE</span></div><div class="line">error_reporting(E_ALL &amp; ~E_NOTICE);</div><div class="line"></div><div class="line"><span class="comment">// Report all PHP errors (see changelog)</span></div><div class="line">error_reporting(E_ALL);</div><div class="line"></div><div class="line"><span class="comment">// Report all PHP errors</span></div><div class="line">error_reporting(<span class="number">-1</span>);</div><div class="line"></div><div class="line"><span class="comment">// Same as error_reporting(E_ALL);</span></div><div class="line">ini_set(<span class="string">'error_reporting'</span>, E_ALL);</div><div class="line"></div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<p><code>display_errors</code> 设置是否将错误信息作为输出的一部分显示到屏幕，或者对用户隐藏而不显示。</p>
+<ul>
+<li>这是一个辅助开发的功能，建议不要在正式环境中使用；</li>
+<li>尽管 <code>display_errors</code> 也可以在运行时设置 (使用 ini_set())， 但是脚本出现致命错误时任何运行时的设置都是无效的。 因为在这种情况下预期运行的操作不会被执行；</li>
+<li>并且 <code>display_errors</code> 显示的错误信息内容是根据 <code>error_reporting</code> 设置的错误显示等级。</li>
+</ul>
+<p><code>display_startup_errors</code>  显示 PHP 启动过程中的错误信息。</p>
+<ul>
+<li>即使 <code>display_errors</code> 设置为开启, PHP 启动过程中的错误信息也不会被显示。强烈建议除了调试目的以外，将 <code>display_startup_errors</code> 设置为关闭。</li>
+</ul>
+<p><code>log_error</code> 设置是否将脚本运行的错误信息记录到服务器错误日志或者 <code>error_log</code> 之中。</p>
+<ul>
+<li>在正式环境，建议使用错误日志代替 <code>display_error</code>。以免打印错误信息，暴露服务器配置，且影响用户体验。</li>
+</ul>
+<p><code>track_errors</code> 记录最后一个警告／错误到变量 <code>$php_errormsg</code>中。</p>
+<p><code>error_log</code> 设置脚本错误将被记录到的日志文件。PHP 必须有改文件的写入权限，如果是 PHP-FPM 运行，则必须是 PHP-FPM 的运行用户有该文件的写入权限。</p>
+<p>综上，在本地的开发环境的配置建议为：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">error_reporting = E_ALL</div><div class="line">display_errors = On</div><div class="line">display_startup_errors = On</div><div class="line">log_errors = On</div><div class="line">track_errors = On</div><div class="line">error_log = /tmp/php_error.log</div></pre></td></tr></table></figure>
+<p>线上正式环境配置建议为：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">error_reporting = E_ALL &amp; ~E_DEPRECATED &amp; ~E_STRICT</div><div class="line">display_errors = Off</div><div class="line">display_startup_errors = Off</div><div class="line">log_errors = On</div><div class="line">track_errors = Off</div><div class="line">error_log = /tmp/php_error.log</div></pre></td></tr></table></figure>
+<h2 id="断点调试"><a href="#断点调试" class="headerlink" title="断点调试"></a>断点调试</h2><p>感兴趣的话，可以看看 Xdebug/DBGp 结合 Zend Studio 或 Eclipse 等 IDE。</p>
+
+          
+        
+      
+    </div>
+
+   
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+
+      
+     
+    </footer>
+  </article>
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/08/23/deep-understanding-of-float-type-in-PHP/" itemprop="url">
                   深入理解 PHP 中的浮点型
                 </a>
@@ -710,7 +956,7 @@
 <li>现居住地 : 北京市</li>
 <li>婚姻状况 : 已婚</li>
 <li>联系电话 : 188<em>**</em>6729</li>
-<li>邮箱 : <a href="&#x6d;&#x61;&#x69;&#x6c;&#x74;&#111;&#58;&#106;&#105;&#46;&#120;&#x69;&#x61;&#x6f;&#x64;&#x40;&#103;&#109;&#x61;&#x69;&#x6c;&#x2e;&#99;&#x6f;&#x6d;">&#106;&#105;&#46;&#120;&#x69;&#x61;&#x6f;&#x64;&#x40;&#103;&#109;&#x61;&#x69;&#x6c;&#x2e;&#99;&#x6f;&#x6d;</a></li>
+<li>邮箱 : <a href="&#x6d;&#97;&#105;&#108;&#116;&#111;&#58;&#x6a;&#105;&#x2e;&#x78;&#x69;&#97;&#x6f;&#100;&#x40;&#103;&#109;&#97;&#105;&#108;&#x2e;&#99;&#111;&#109;">&#x6a;&#105;&#x2e;&#x78;&#x69;&#97;&#x6f;&#100;&#x40;&#103;&#109;&#97;&#105;&#108;&#x2e;&#99;&#111;&#109;</a></li>
 <li>出生年月 : 1986年10月</li>
 <li>博客 : <a href="http://blog.100dos.com">http://blog.100dos.com</a></li>
 <li>Github : <a href="https://github.com/jixiaod" target="_blank" rel="external">https://github.com/jixiaod</a></li>
@@ -1472,153 +1718,11 @@
   </article>
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/25/kong-introduction/" itemprop="url">
-                  Kong 介绍
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-25T14:01:05+08:00" content="2016-07-25">
-              2016-07-25
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Nginx/" itemprop="url" rel="index">
-                    <span itemprop="name">Nginx</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Kong 是开源的高性能、高可用，基于 Nginx 的接口管理中间层，并且能通过 Kong 管理和扩展你的 API 接口和微服务。包含很多功能强大的插件，HTTP基本认证、秘钥认证、IP黑白名单限制、CORS、API 请求限流、限制请求包尺寸、请求转发、TCP、UDP、文件日志、以及 nginx 监控等。Kong的插件使用 Lua 编写，能减少开发者基于 Nginx 开发接口时的复杂度和开发时间。</p>
-<ul>
-<li>RESTful 的接口管理<ul>
-<li>建立在 Nginx 之上，Kong 能够完全通过简单的RESTful 接口来操作管理；</li>
-</ul>
-</li>
-<li>面向插件<ul>
-<li>把你的服务放到 Kong 的后面，然后只需执行简单的命令，就能使用功能强大的插件；</li>
-</ul>
-</li>
-<li>支持多种平台和环境<ul>
-<li>Kong 几乎可以运行在任何环境，云服务或者预置系统，单个服务器、虚拟机，或者跨多个数据中心的部署。</li>
-</ul>
-</li>
-</ul>
-<h2 id="为什么要使用-Kong-？"><a href="#为什么要使用-Kong-？" class="headerlink" title="为什么要使用 Kong ？"></a>为什么要使用 Kong ？</h2><p>传统的 API 接口服务的架构大致如下：</p>
-<p><img src="/images/kong-introduction/without-kong.png" alt=""></p>
-<ul>
-<li>通用的功能在多个 API 服务之间有冗余</li>
-<li>整个系统是一个整体，很难维护</li>
-<li>在不影响其他服务的情况下，很难再继续扩展</li>
-<li>由于系统的限制，开发效率不高</li>
-</ul>
-<p>使用 Kong 的架构：</p>
-<p><img src="/images/kong-introduction/with-kong.png" alt=""></p>
-<ul>
-<li>以 Kong 为中心，并且结合 Kong 的插件功能集成到一起</li>
-<li>能够随意扩展，构建高效的分布式架构</li>
-<li>通过简单的命令就可以在 Kong 上通过插件的方式扩展功能</li>
-<li>开发团队能够更多的专注产品开发，Kong 能够帮你去解决其他问题</li>
-</ul>
-<h2 id="Kong-有两个核心功能组件："><a href="#Kong-有两个核心功能组件：" class="headerlink" title="Kong 有两个核心功能组件："></a>Kong 有两个核心功能组件：</h2><ul>
-<li>Kong Server ：基于 nginx 的服务器，用来接收 API 请求。</li>
-<li>Apache Cassandra ：用来存储操作数据，并且从 Kong 0.8.3 开始支持PostgreSQL做为数据库存储。</li>
-</ul>
-<p>了解更多</p>
-<ul>
-<li>Github :  <a href="https://github.com/Mashape/kong" target="_blank" rel="external">https://github.com/Mashape/kong</a></li>
-<li>官方网站：<a href="https://getkong.org" target="_blank" rel="external">https://getkong.org</a></li>
-</ul>
-
-          
-        
-      
-    </div>
-
-   
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-
-      
-     
-    </footer>
-  </article>
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/">22</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1655,7 +1759,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">168</span>
+              <span class="site-state-item-count">169</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

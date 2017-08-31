@@ -229,6 +229,121 @@
             
               
                 
+                <a class="post-title-link" href="/2015/11/12/how-php-grab-screenshot-from-video/" itemprop="url">
+                  PHP 获取视频的预览截图
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2015-11-12T12:22:10+08:00" content="2015-11-12">
+              2015-11-12
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/PHP/" itemprop="url" rel="index">
+                    <span itemprop="name">PHP</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><a href="http://ffmpeg.org/" target="_blank" rel="external">ffmpeg</a> 是一个非常快的视频音频转换器，也能从视频音频数据里抓取一段内容。Mac OS 下安装非常简单，只需</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~# brew install ffmpeg</div></pre></td></tr></table></figure>
+<p>就能安装最新的版本。如果需要编译安装，也可以去官网下载安装包。</p>
+<p><a href="http://sourceforge.net/projects/ffmpeg-php/files/ffmpeg-php/" target="_blank" rel="external">php-ffmpeg</a> 是 ffmpeg 的 php 扩展，但是它从 2008-10-15 就没有再更新过，最新版本是 0.6.0。已经不兼容最新版本的 ffmpeg。不过用低版本的 ffmpeg （比如08年的某个ffmpeg版本）应该能够成功安装 php-ffmpeg，不过我并没有尝试，除非它将来还会持续更新。</p>
+<p>获取视频截图的命令</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~# ffmpeg -i input.mp4 -f mjpeg -ss 3 -t 0.001 -s 640x960 output.jpg</div></pre></td></tr></table></figure>
+<p>参数解析：</p>
+<p>-i 输入的视频文件<br>-f 强制转换的格式，可通过</p>
+<p>~# ffmpeg -formats</p>
+<p>去查看所有支持转换的格式。</p>
+<p>-ss 定位到视频的截图时间位置，单位是 “秒”<br>-t 截图的时间，上命令的意思就是第3秒开始，0.001s瞬间的截图。所以如果你的视频只有 3 秒，这条命令是截取不到任何图片的。<br>-s 图片的宽高尺寸，单位是像素</p>
+<p>在php中执行</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;?php</div><div class="line">// php sample</div><div class="line">$target_file        = &apos;/tmp/input.mp4&apos;;</div><div class="line">$target_img_file    = &apos;/tmp/ouput.jpg&apos;;</div><div class="line">$width              = 640;</div><div class="line">$height             = 960;</div><div class="line"></div><div class="line">exec(&quot;ffmpeg -i &#123;$target_file&#125; -y -f mjpeg -ss 3 -t 0.001 -s &#123;$width&#125;x&#123;$height&#125; &#123;$target_img_file&#125;&quot;);</div></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+   
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+
+      
+     
+    </footer>
+  </article>
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2015/11/06/javascript-arrow-functions/" itemprop="url">
                   Javascript 箭头函数
                 </a>
@@ -1107,124 +1222,11 @@
   </article>
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015/07/03/1st-anniversary-for-moji/" itemprop="url">
-                  周年记
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2015-07-03T18:50:33+08:00" content="2015-07-03">
-              2015-07-03
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/杂/" itemprop="url" rel="index">
-                    <span itemprop="name">杂</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>时间如流水，人生如落花。来到这家公司整一年了，最大的感悟就是，跳槽似乎解决了一些问题，同时也带来了新的问题。</p>
-<p>还是有种种的不如意，但是心态比之前好多了。也不是每天都有惊喜，每天写写自己看着还舒服的代码，工作的也很惬意。绝逼不是自甘堕落，消极颓废，而是觉得生活本该如此。又何必去强求，该来来，该走走，人走人留，工作还是工作。</p>
-<p>几年前上学的时候，如果有人问我，工作是什么样的？我一定答不上来。</p>
-<p>如果你现在问我几年之后工作是什么样的，我一定会跟你说：也就现在这样，上班，下班。忙的时候加个班，闲的时候扯扯淡。</p>
-<p>反正不管做什么，能从中感受到快乐就是最高的境界。如果能在感受快乐的同时把钱给赚了，就更好了，快乐和赚钱并不冲突。有些人总是觉得只有压抑自己的内心，委曲求全，卧薪尝胆，才能赚到钱，才能成功。为名为利确实是好事，但是为了名利丢失掉了乐趣。即使你得到了，成功了，又能怎样呢？你不快乐。。。你不快乐。。。你不快乐。。。然后大部分这种人也可能不会成事。</p>
-<p>如果给下半年许个愿望的话，我希望是涨工资，毕竟</p>
-<p>Code is cheap, show me the money!</p>
-<p>人民币确实是好东西，我承认我是个俗人！哈哈哈</p>
-<p>&nbsp;</p>
-<p>－－－－－－－－－－－华丽的分割线－－－－－－－－－－<br>后记</p>
-<p>去年6月30号从上家公司离职，7月1号入职<br>2014年7月，一个人开发墨迹商城后台，进销存管理<br>2014年8月，墨迹电源&amp;毛巾抢购预热<br>2014年9月，空气果每周蓝色星期二开抢<br>2014年10月，客服后台<br>2014年11月，统计后台<br>2015年1月，广告后台<br>2015年3月，商城首页改版<br>2015年4月，商城上线购物车功能<br>2015年5月，统计后台代码迁移<br>2015年6月，后台代码重构<br>2015年7月，广告SSP竞价</p>
-
-          
-        
-      
-    </div>
-
-   
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-
-      
-     
-    </footer>
-  </article>
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/">22</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1261,7 +1263,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">168</span>
+              <span class="site-state-item-count">169</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

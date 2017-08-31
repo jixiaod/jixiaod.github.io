@@ -229,6 +229,138 @@
             
               
                 
+                <a class="post-title-link" href="/2017/08/31/redis-father-10x/" itemprop="url">
+                  Redis之父：10x程序员应该具备哪些素质
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-08-31T10:43:48+08:00" content="2017-08-31">
+              2017-08-31
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/工作-职场/" itemprop="url" rel="index">
+                    <span itemprop="name">工作&职场</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>原文链接: <a href="http://www.infoq.com/cn/news/2017/04/Redis-father-10x" target="_blank" rel="external">http://www.infoq.com/cn/news/2017/04/Redis-father-10x</a></p>
+<p>Fred Brooks（《人月神话》的作者）最早在他的论文“没有银弹——软件工程的本质和偶然性（No Silver Bullet - Essence and Accidents of Software Engineering）”中提出了“10x程序员”的概念。技术社区对于这个概念呈现出两级分化的观点。Redis之父Salvatore Sanfilippo（antirez）列出了9种特质，他认为，如果一个程序员同时具备了这9种特质，那么就可以说他是一个10x程序员。以下内容已获得antirez的翻译授权，查看英文原文<a href="http://antirez.com/news/112" target="_blank" rel="external">The mythical 10x programmer</a>。</p>
+<p>一个10x程序员，在相同条件下，可以完成十倍于普通程序员的工作。这里所说的“普通程序员”，是指那些能够胜任自己工作的程序员，只是他们不具备10x程序员的神奇能力。普通程序员代表了这个领域所有专业程序员的平均水准。</p>
+<p>对于是否存在10x程序员这种“神兽”，编程社区的观点呈现出两级分化：有人认为根本不存在所谓的10x程序员，有人则认为不仅存在10x程序员，如果找对了门路，甚至能找到100x的程序员。</p>
+<p>如果说编程是一项“线性”的工作，那么很明显，10x程序员是不可能存在的。一个跑步运动员怎么可能跑得比另一个快上十倍？在相同时间内，一个建筑工人建造的东西怎么可能是其他人的十倍？不过，编程是一项很特别的设计工作。虽然程序员可能不会参与程序的架构设计，但程序的实现仍然涉及到一些设计工作，而这部分需要程序员去完成。</p>
+<p>如果说程序的设计和实现不是线性的，那么在我看来，经验、编码能力、知识和去伪存真的能力就不仅仅是线性的优势，它们在编程过程中相互交织，成倍地发挥效能。当然，如果程序员能够同时胜任设计和实现工作，那么这种现象就尤为明显。任务越是具有目标导向性，程序员就越是能够以更少的付出达成相同的目标，从而体现10x程序员的潜在能力。如果手头的工作很死板，而且限定了可使用的工具和实现方式，那么10x程序员事半功倍的能力就会大打折扣。不过，在不改变大前提的情况下，程序员仍然可能通过局部的设计优化来改进工作，包括在项目的某些部分不按常理出牌。所以，他们可以少付出很多却能达成几乎相同的目标。</p>
+<p>在我的二十年程序员生涯中，我与其他程序员一起工作，作为同事，或者由我指导他们达成目标，为Redis和其他项目贡献代码补丁。在工作过程中，我仔细观察他们。与此同时，有很多人说我是一个高能的程序员。不过我不认为自己是一个工作狂，我只是编码速度比较快而已。</p>
+<p>下面列出了我认为可以用于区分程序员生产力高低的重要特质。</p>
+<p>编程裸技能：完成子任务</p>
+<p>从处理编程子任务可以看出一个程序员的短板和长处，比如实现一个函数或者一个算法。但从我的经验来看，擅于应用基本的编程技能来高效完成任务的程序员并非如人们所想得那样普遍存在。有时候，团队里有些不是很称职的程序员，他们甚至不知道该怎么写一个简单的排序算法，但比起那些看似称职却缺乏实战经验的程序员，这些不称职的程序员却能完成更多的工作。</p>
+<p>经验：模式匹配</p>
+<p>我认为，经验就是一系列解决方案，它们已经被证实可以用于处理一些重复性的任务。经验老道的程序员知道该如何处理各种子任务，这样不但省掉了很多设计工作，而且避免了很多设计错误，而设计错误是简洁性最大的敌人。</p>
+<p>专注：实际时间和假设时间</p>
+<p>花在编码上的时间不仅要看数量，也要看质量。造成注意力不集中的因素既有内部的，也有外部的。内部的因素包括拖延、对手头的项目不感兴趣（一个人总是做不好自己不喜欢的事情）、缺乏练习、缺乏睡眠。外部因素包括频繁的会议、不固定的工作环境、同事的打扰，等等。集中注意力和避免被打扰对于提高编程效率来说是至关重要的。有时候，为了集中注意力，需要采取一些极端的手段。例如，我会时不时地查看邮件，但大部分邮件先不做回复。</p>
+<p>设计权衡：用5%换取90%</p>
+<p>项目的非根本性目标在很大程度上导致了设计的复杂性，或者导致无法达成其他更重要的目标，因为根本性功能和非根本性功能在设计上存在竞争关系。如果意识不到这点，复杂性就会随之而来。实现全面的设计并不是件轻而易举的事，付出与回报之间不能通过简单的比例来衡量。对于设计者来说，意识到这一点是很重要的。如果项目要最大化产出，那么就要把精力集中在重要的事情上，并在合理的时间内完成。例如，在设计Disque（一个分布式消息队列）时，我发现对消息进行排序之后，项目的其他方面就会得到实质性的改进：可用性、查询和客户端交互、简洁性和性能。</p>
+<p>简洁性</p>
+<p>简洁性是成败之间最为明显的分界点。理解复杂性的产生过程有助于理解什么是简洁性。我认为，不愿意做出设计权衡和设计错误的累积是导致复杂性的两个主要因素。</p>
+<p>在设计过程中，每次走错一条道，就离最优的方案越来越远。一个初始的设计错误，如果没能被纠正过来，那么可能导致一条道走到黑，最终得到的是一个复杂的系统，而不是对原先系统的重新设计。项目会因此变得更加复杂和低效。</p>
+<p>程序员可以在脑子里进行“概念验证”，从大量简单的设计想法中选择可行性最高且最直接的方案，从而达成简洁性。在后续的改进工作中，个人的经验和设计能力开始发挥作用，为子任务找到更加明智的解决方案。</p>
+<p>不过，如果系统复杂性不可避免，那么在放弃挣扎之前也要尽量想办法降低系统复杂性，甚至尝试采取完全相反的设计。</p>
+<p>完美主义（为了偏袒设计而放弃生产力）</p>
+<p>完美主义可以分为两种：一种是追求程序极致性能的工程文化，另一种是个人特质。不管是哪一种完美主义，它们都会对程序员实现快速交付造成阻碍。完美主义和对外部评判的恐惧会导致设计上的偏袒，程序员根据主观的心理因素和无关紧要的衡量参数做出设计决策，却忽略了健壮性、简洁性和及时交付。</p>
+<p>知识：理论有益</p>
+<p>在处理复杂任务时，具备一些理论方面的知识会对设计产生重要影响，比如数据结构方面的知识、了解计算能力的局限性和一些重要的算法。我们没有必要成为无所不知的超级专家，但至少要知道一些问题的潜在解决方案。例如，在给一个给定流统计单一元素的个数时，我们可以在设计上做出权衡（接受一定程度的错误），并结合概率集合的基数估计（cardinality estimation）算法，避免设计出复杂、缓慢、低内存效能的解决方案。</p>
+<p>底层：理解机器原理</p>
+<p>程序的很多问题都是源于对计算机工作原理的误解，即使是使用高级语言开发的程序也不外乎如此。这种情况可能导致一个项目需要重新设计和实现，因为项目所使用的工具和算法出现了根本性的错误。精通C语言，知道CPU的工作原理，了解系统内核的行为以及系统调用的实现原理，做到这几点可以挽救你于危难之中。</p>
+<p>调试技能</p>
+<p>查找和解决bug经常会占用我们大量的时间。查找引起bug的问题根源，在合理的步骤内修复bug，以简单的方式编写包含较少bug的代码，对于程序员来说，做到这几点可以显著提升效率。</p>
+<p>一个程序员如果具备了上述几点特质，那么他们的产出将会有10倍的提升，对此我一点也不感到惊讶。综合这些特质，从一个可行的模型开始，实现更简单更好的设计。我认为简洁性就是一种“投机取巧的编程”。简而言之，就是在开发的每个阶段选择性地实现一些功能，以最小化的付出为用户带来最大化的影响。</p>
+
+          
+        
+      
+    </div>
+
+   
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+
+      
+     
+    </footer>
+  </article>
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/08/21/deep-understandint-php-ini-config/" itemprop="url">
                   深入理解PHP的ini配置
                 </a>
@@ -1219,125 +1351,11 @@
   </article>
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/03/14/understand-aclocal-autoconf-automake-autoheader-configure/" itemprop="url">
-                  图解 autoscan、aclocal、automake、autoconf、autoheader、configure
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-03-14T11:02:23+08:00" content="2017-03-14">
-              2017-03-14
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/C-C/" itemprop="url" rel="index">
-                    <span itemprop="name">C/C++</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="autoscan-autoconf"><a href="#autoscan-autoconf" class="headerlink" title="autoscan (autoconf)"></a>autoscan (autoconf)</h3><p>扫描源代码以搜寻普通的可移植性问题，比如检查编译器、库、头文件等，生成文件configure.scan，它是configure.ac的一个雏形。</p>
-<h3 id="aclocal-automake"><a href="#aclocal-automake" class="headerlink" title="aclocal (automake)"></a>aclocal (automake)</h3><p>根据已经安装的宏，用户定义宏和 acinclude.m4 文件中的宏将 configure.ac 文件所需要的宏集中定义到文件 aclocal.m4 中。aclocal是一个 perl 脚本程序，它的定义是：</p>
-<blockquote>
-<p>aclocal - create aclocal.m4 by scanning configure.ac</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">user input files   optional input     process          output files</div><div class="line">================   ==============     =======          ============</div><div class="line"> </div><div class="line">                    acinclude.m4 - - - - -.</div><div class="line">                                          V</div><div class="line">                                      .-------,</div><div class="line">configure.ac ------------------------&gt;|aclocal|</div><div class="line">                 &#123;user macro files&#125; -&gt;|       |------&gt; aclocal.m4</div><div class="line">                                      `-------&apos;</div></pre></td></tr></table></figure>
-<h3 id="autoheader-autoconf"><a href="#autoheader-autoconf" class="headerlink" title="autoheader(autoconf)"></a>autoheader(autoconf)</h3><p>根据 configure.ac 中的某些宏，比如 cpp 宏定义，运行 m4，生成 autoconfig.h.in</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">user input files    optional input     process          output files</div><div class="line">================    ==============     =======          ============</div><div class="line"> </div><div class="line">                    aclocal.m4 - - - - - - - .</div><div class="line">                                             |</div><div class="line">                                             V</div><div class="line">                                     .----------,</div><div class="line">configure.ac -----------------------&gt;|autoheader|----&gt; autoconfig.h.in</div><div class="line">                                     `----------&apos;</div></pre></td></tr></table></figure>
-<h3 id="automake"><a href="#automake" class="headerlink" title="automake"></a>automake</h3><p>automake 将 Makefile.am 中定义的结构建立 Makefile.in，然后 configure 脚本将生成的 Makefile.in 文件转换为 Makefile。如果在 configure.ac 中定义了一些特殊的宏，比如 <code>AC_PROG_LIBTOOL</code>，它会调用 libtoolize，否则它会自己产生 config.guess 和 config.sub。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">user input files   optional input   processes          output files</div><div class="line">================   ==============   =========          ============</div><div class="line"> </div><div class="line">                                     .--------,</div><div class="line">                                     |        | - - -&gt; COPYING</div><div class="line">                                     |        | - - -&gt; INSTALL</div><div class="line">                                     |        |------&gt; install-sh</div><div class="line">                                     |        |------&gt; missing</div><div class="line">                                     |automake|------&gt; mkinstalldirs</div><div class="line">configure.ac -----------------------&gt;|        |</div><div class="line">Makefile.am  -----------------------&gt;|        |------&gt; Makefile.in</div><div class="line">                                     |        |------&gt; stamp-h.in</div><div class="line">                                 .---+        | - - -&gt; config.guess</div><div class="line">                                 |   |        | - - -&gt; config.sub</div><div class="line">                                 |   `------+-&apos;</div><div class="line">                                 |          | - - - -&gt; config.guess</div><div class="line">                                 |libtoolize| - - - -&gt; config.sub</div><div class="line">                                 |          |--------&gt; ltmain.sh</div><div class="line">                                 |          |--------&gt; ltconfig</div><div class="line">                                 `----------&apos;</div></pre></td></tr></table></figure>
-<h3 id="autoconf"><a href="#autoconf" class="headerlink" title="autoconf"></a>autoconf</h3><p>将 configure.ac 中的宏展开，生成 configure 脚本。这个过程可能要用到 aclocal.m4 中定义的宏。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">user input files   optional input   processes          output files</div><div class="line">================   ==============   =========          ============</div><div class="line"> </div><div class="line">                   aclocal.m4 - - - - - -.</div><div class="line">                                         V</div><div class="line">                                     .--------,</div><div class="line">configure.ac -----------------------&gt;|autoconf|------&gt; configure -----&gt;autoconfig.h, Makefile</div></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-   
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-
-      
-     
-    </footer>
-  </article>
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/">22</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1374,7 +1392,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">168</span>
+              <span class="site-state-item-count">169</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

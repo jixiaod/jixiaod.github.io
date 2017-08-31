@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.100dos.com/"/>
-  <updated>2017-08-26T14:29:13.741Z</updated>
+  <updated>2017-08-31T02:52:15.076Z</updated>
   <id>http://blog.100dos.com/</id>
   
   <author>
@@ -16,11 +16,63 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Redis之父：10x程序员应该具备哪些素质</title>
+    <link href="http://blog.100dos.com/2017/08/31/redis-father-10x/"/>
+    <id>http://blog.100dos.com/2017/08/31/redis-father-10x/</id>
+    <published>2017-08-31T02:43:48.000Z</published>
+    <updated>2017-08-31T02:52:15.076Z</updated>
+    
+    <content type="html"><![CDATA[<p>原文链接: <a href="http://www.infoq.com/cn/news/2017/04/Redis-father-10x" target="_blank" rel="external">http://www.infoq.com/cn/news/2017/04/Redis-father-10x</a></p>
+<p>Fred Brooks（《人月神话》的作者）最早在他的论文“没有银弹——软件工程的本质和偶然性（No Silver Bullet - Essence and Accidents of Software Engineering）”中提出了“10x程序员”的概念。技术社区对于这个概念呈现出两级分化的观点。Redis之父Salvatore Sanfilippo（antirez）列出了9种特质，他认为，如果一个程序员同时具备了这9种特质，那么就可以说他是一个10x程序员。以下内容已获得antirez的翻译授权，查看英文原文<a href="http://antirez.com/news/112" target="_blank" rel="external">The mythical 10x programmer</a>。</p>
+<p>一个10x程序员，在相同条件下，可以完成十倍于普通程序员的工作。这里所说的“普通程序员”，是指那些能够胜任自己工作的程序员，只是他们不具备10x程序员的神奇能力。普通程序员代表了这个领域所有专业程序员的平均水准。</p>
+<p>对于是否存在10x程序员这种“神兽”，编程社区的观点呈现出两级分化：有人认为根本不存在所谓的10x程序员，有人则认为不仅存在10x程序员，如果找对了门路，甚至能找到100x的程序员。</p>
+<p>如果说编程是一项“线性”的工作，那么很明显，10x程序员是不可能存在的。一个跑步运动员怎么可能跑得比另一个快上十倍？在相同时间内，一个建筑工人建造的东西怎么可能是其他人的十倍？不过，编程是一项很特别的设计工作。虽然程序员可能不会参与程序的架构设计，但程序的实现仍然涉及到一些设计工作，而这部分需要程序员去完成。</p>
+<p>如果说程序的设计和实现不是线性的，那么在我看来，经验、编码能力、知识和去伪存真的能力就不仅仅是线性的优势，它们在编程过程中相互交织，成倍地发挥效能。当然，如果程序员能够同时胜任设计和实现工作，那么这种现象就尤为明显。任务越是具有目标导向性，程序员就越是能够以更少的付出达成相同的目标，从而体现10x程序员的潜在能力。如果手头的工作很死板，而且限定了可使用的工具和实现方式，那么10x程序员事半功倍的能力就会大打折扣。不过，在不改变大前提的情况下，程序员仍然可能通过局部的设计优化来改进工作，包括在项目的某些部分不按常理出牌。所以，他们可以少付出很多却能达成几乎相同的目标。</p>
+<p>在我的二十年程序员生涯中，我与其他程序员一起工作，作为同事，或者由我指导他们达成目标，为Redis和其他项目贡献代码补丁。在工作过程中，我仔细观察他们。与此同时，有很多人说我是一个高能的程序员。不过我不认为自己是一个工作狂，我只是编码速度比较快而已。</p>
+<p>下面列出了我认为可以用于区分程序员生产力高低的重要特质。</p>
+<p>编程裸技能：完成子任务</p>
+<p>从处理编程子任务可以看出一个程序员的短板和长处，比如实现一个函数或者一个算法。但从我的经验来看，擅于应用基本的编程技能来高效完成任务的程序员并非如人们所想得那样普遍存在。有时候，团队里有些不是很称职的程序员，他们甚至不知道该怎么写一个简单的排序算法，但比起那些看似称职却缺乏实战经验的程序员，这些不称职的程序员却能完成更多的工作。</p>
+<p>经验：模式匹配</p>
+<p>我认为，经验就是一系列解决方案，它们已经被证实可以用于处理一些重复性的任务。经验老道的程序员知道该如何处理各种子任务，这样不但省掉了很多设计工作，而且避免了很多设计错误，而设计错误是简洁性最大的敌人。</p>
+<p>专注：实际时间和假设时间</p>
+<p>花在编码上的时间不仅要看数量，也要看质量。造成注意力不集中的因素既有内部的，也有外部的。内部的因素包括拖延、对手头的项目不感兴趣（一个人总是做不好自己不喜欢的事情）、缺乏练习、缺乏睡眠。外部因素包括频繁的会议、不固定的工作环境、同事的打扰，等等。集中注意力和避免被打扰对于提高编程效率来说是至关重要的。有时候，为了集中注意力，需要采取一些极端的手段。例如，我会时不时地查看邮件，但大部分邮件先不做回复。</p>
+<p>设计权衡：用5%换取90%</p>
+<p>项目的非根本性目标在很大程度上导致了设计的复杂性，或者导致无法达成其他更重要的目标，因为根本性功能和非根本性功能在设计上存在竞争关系。如果意识不到这点，复杂性就会随之而来。实现全面的设计并不是件轻而易举的事，付出与回报之间不能通过简单的比例来衡量。对于设计者来说，意识到这一点是很重要的。如果项目要最大化产出，那么就要把精力集中在重要的事情上，并在合理的时间内完成。例如，在设计Disque（一个分布式消息队列）时，我发现对消息进行排序之后，项目的其他方面就会得到实质性的改进：可用性、查询和客户端交互、简洁性和性能。</p>
+<p>简洁性</p>
+<p>简洁性是成败之间最为明显的分界点。理解复杂性的产生过程有助于理解什么是简洁性。我认为，不愿意做出设计权衡和设计错误的累积是导致复杂性的两个主要因素。</p>
+<p>在设计过程中，每次走错一条道，就离最优的方案越来越远。一个初始的设计错误，如果没能被纠正过来，那么可能导致一条道走到黑，最终得到的是一个复杂的系统，而不是对原先系统的重新设计。项目会因此变得更加复杂和低效。</p>
+<p>程序员可以在脑子里进行“概念验证”，从大量简单的设计想法中选择可行性最高且最直接的方案，从而达成简洁性。在后续的改进工作中，个人的经验和设计能力开始发挥作用，为子任务找到更加明智的解决方案。</p>
+<p>不过，如果系统复杂性不可避免，那么在放弃挣扎之前也要尽量想办法降低系统复杂性，甚至尝试采取完全相反的设计。</p>
+<p>完美主义（为了偏袒设计而放弃生产力）</p>
+<p>完美主义可以分为两种：一种是追求程序极致性能的工程文化，另一种是个人特质。不管是哪一种完美主义，它们都会对程序员实现快速交付造成阻碍。完美主义和对外部评判的恐惧会导致设计上的偏袒，程序员根据主观的心理因素和无关紧要的衡量参数做出设计决策，却忽略了健壮性、简洁性和及时交付。</p>
+<p>知识：理论有益</p>
+<p>在处理复杂任务时，具备一些理论方面的知识会对设计产生重要影响，比如数据结构方面的知识、了解计算能力的局限性和一些重要的算法。我们没有必要成为无所不知的超级专家，但至少要知道一些问题的潜在解决方案。例如，在给一个给定流统计单一元素的个数时，我们可以在设计上做出权衡（接受一定程度的错误），并结合概率集合的基数估计（cardinality estimation）算法，避免设计出复杂、缓慢、低内存效能的解决方案。</p>
+<p>底层：理解机器原理</p>
+<p>程序的很多问题都是源于对计算机工作原理的误解，即使是使用高级语言开发的程序也不外乎如此。这种情况可能导致一个项目需要重新设计和实现，因为项目所使用的工具和算法出现了根本性的错误。精通C语言，知道CPU的工作原理，了解系统内核的行为以及系统调用的实现原理，做到这几点可以挽救你于危难之中。</p>
+<p>调试技能</p>
+<p>查找和解决bug经常会占用我们大量的时间。查找引起bug的问题根源，在合理的步骤内修复bug，以简单的方式编写包含较少bug的代码，对于程序员来说，做到这几点可以显著提升效率。</p>
+<p>一个程序员如果具备了上述几点特质，那么他们的产出将会有10倍的提升，对此我一点也不感到惊讶。综合这些特质，从一个可行的模型开始，实现更简单更好的设计。我认为简洁性就是一种“投机取巧的编程”。简而言之，就是在开发的每个阶段选择性地实现一些功能，以最小化的付出为用户带来最大化的影响。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;原文链接: &lt;a href=&quot;http://www.infoq.com/cn/news/2017/04/Redis-father-10x&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://www.infoq.com/cn/news/2017/04
+    
+    </summary>
+    
+      <category term="工作&amp;职场" scheme="http://blog.100dos.com/categories/%E5%B7%A5%E4%BD%9C-%E8%81%8C%E5%9C%BA/"/>
+    
+    
+      <category term="程序员" scheme="http://blog.100dos.com/tags/%E7%A8%8B%E5%BA%8F%E5%91%98/"/>
+    
+  </entry>
+  
+  <entry>
     <title>深入理解PHP的ini配置</title>
     <link href="http://blog.100dos.com/2017/08/21/deep-understandint-php-ini-config/"/>
     <id>http://blog.100dos.com/2017/08/21/deep-understandint-php-ini-config/</id>
     <published>2017-08-21T14:50:02.000Z</published>
-    <updated>2017-08-26T14:29:13.741Z</updated>
+    <updated>2017-08-31T02:52:15.072Z</updated>
     
     <content type="html"><![CDATA[<p>好久没更了，今天读到一篇介绍非常详细的文章，转载一下，凑个数。</p>
 <p>转自：<a href="http://www.cnblogs.com/driftcloudy/p/4011954.html" target="_blank" rel="external">http://www.cnblogs.com/driftcloudy/p/4011954.html</a></p>
@@ -135,7 +187,7 @@
     <link href="http://blog.100dos.com/2017/04/07/php-garbage-collection-collect-cycles/"/>
     <id>http://blog.100dos.com/2017/04/07/php-garbage-collection-collect-cycles/</id>
     <published>2017-04-07T08:00:53.000Z</published>
-    <updated>2017-08-26T14:29:13.745Z</updated>
+    <updated>2017-08-31T02:52:15.076Z</updated>
     
     <content type="html"><![CDATA[<h5 id="先来看一下什么是循环引用问题？"><a href="#先来看一下什么是循环引用问题？" class="headerlink" title="先来看一下什么是循环引用问题？"></a>先来看一下什么是循环引用问题？</h5><p>在 PHP 5.2 中使用的垃圾回收算法是 Reference Counting（引用计数）。非常简单，为每个 zval 分配一个计数器，当一个 zval 建立时计数器初始化为1，以后每有一个新变量引用此 zval，则计数器加1，而每当减少一个引用的变量则计数器减 1，当垃圾回收机制运作的时候，将所有计数器为0的zval销毁并回收其占用的内存。但是对于以下代码，把数组作为一个元素添加到自己，自身引用自身。</p>
 <figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$a = <span class="keyword">array</span>( <span class="string">'one'</span> );</div><div class="line">$a[] =&amp; $a;</div><div class="line">xdebug_debug_zval( <span class="string">'a'</span> );</div><div class="line"><span class="meta">?&gt;</span></div><div class="line"></div><div class="line"><span class="comment">// output </span></div><div class="line">a: (refcount=<span class="number">2</span>, is_ref=<span class="number">1</span>)=<span class="keyword">array</span> (</div><div class="line">   <span class="number">0</span> =&gt; (refcount=<span class="number">1</span>, is_ref=<span class="number">0</span>)=<span class="string">'one'</span>,</div><div class="line">   <span class="number">1</span> =&gt; (refcount=<span class="number">2</span>, is_ref=<span class="number">1</span>)=...</div><div class="line">)</div></pre></td></tr></table></figure>
@@ -211,7 +263,7 @@
     <link href="http://blog.100dos.com/2017/03/24/publish-hexo-post-on-github-pages-by-travis-ci/"/>
     <id>http://blog.100dos.com/2017/03/24/publish-hexo-post-on-github-pages-by-travis-ci/</id>
     <published>2017-03-24T06:45:17.000Z</published>
-    <updated>2017-08-26T14:29:13.745Z</updated>
+    <updated>2017-08-31T02:52:15.076Z</updated>
     
     <content type="html"><![CDATA[<p>之前重新梳理了 <a href="http://blog.100dos.com/2017/03/14/how-to-use-hexo-post-articles-on-multiple-pcs/">Hexo 博客的发布流程</a>，可以还是觉得麻烦。毕竟操作太多，容易出错。于是想到了用 Travis CI 简化一下，效果不错，省去了不少步骤。现在只需要在 hexo 分支撰写 blog，然后push到github就可以了。Travis 会帮助完成剩下的merge hexo分支、生成静态文件、提交 master 这些工作。</p>
 <p>首先，用 Github 账号创建 <a href="https://travis-ci.org/" target="_blank" rel="external">Travis CI</a> 账号，直接用 Github 账号登录，并赋予权限即可。并在项目列表选择并创建 Travis CI 项目 <code>jixiaod / jixiaod.github.io</code>项目。</p>
@@ -257,7 +309,7 @@
     <link href="http://blog.100dos.com/2017/03/24/copy-and-chage-on-write-with-php/"/>
     <id>http://blog.100dos.com/2017/03/24/copy-and-chage-on-write-with-php/</id>
     <published>2017-03-24T03:45:33.000Z</published>
-    <updated>2017-08-26T14:29:13.741Z</updated>
+    <updated>2017-08-31T02:52:15.072Z</updated>
     
     <content type="html"><![CDATA[<p>对于这样一段代码：</p>
 <figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$a = <span class="number">1</span>;</div><div class="line">xdebug_debug_zval(<span class="string">'a'</span>);</div><div class="line">$b = $a;</div><div class="line">xdebug_debug_zval(<span class="string">'a'</span>);</div></pre></td></tr></table></figure>
@@ -302,7 +354,7 @@
     <link href="http://blog.100dos.com/2017/03/22/deeper-understanding-php7-reference/"/>
     <id>http://blog.100dos.com/2017/03/22/deeper-understanding-php7-reference/</id>
     <published>2017-03-22T07:53:49.000Z</published>
-    <updated>2017-08-26T14:29:13.741Z</updated>
+    <updated>2017-08-31T02:52:15.072Z</updated>
     
     <content type="html"><![CDATA[<p>转载：<a href="https://github.com/laruence/php7-internal/edit/master/reference.md" target="_blank" rel="external">https://github.com/laruence/php7-internal/edit/master/reference.md</a></p>
 <h4 id="REFERENCE"><a href="#REFERENCE" class="headerlink" title="REFERENCE"></a>REFERENCE</h4><p> 上一章说过引用(REFERENCE)在PHP5的时候是一个标志位, 而在PHP7以后我们把它变成了一种新的类型:<code>IS_REFERNCE</code>. 然而引用是一种很常见的应用, 所以这个变化带来了很多的变化, 也给我们在做PHP7开发的时候, 因为有的时候疏忽忘了处理这个类型, 而带来不少的bug.</p>
@@ -347,7 +399,7 @@
     <link href="http://blog.100dos.com/2017/03/22/deeper-understanding-php7-zval/"/>
     <id>http://blog.100dos.com/2017/03/22/deeper-understanding-php7-zval/</id>
     <published>2017-03-22T02:42:21.000Z</published>
-    <updated>2017-08-26T14:29:13.741Z</updated>
+    <updated>2017-08-31T02:52:15.072Z</updated>
     
     <content type="html"><![CDATA[<p>转载：<a href="https://github.com/laruence/php7-internal/blob/master/zval.md" target="_blank" rel="external">https://github.com/laruence/php7-internal/blob/master/zval.md</a></p>
 <p>PHP7已经发布, 如承诺, 我也要开始这个系列的文章的编写, 今天我想先和大家聊聊zval的变化. 在讲zval变化的之前我们先来看看zval在PHP5下面是什么样子</p>
@@ -449,7 +501,7 @@
     <link href="http://blog.100dos.com/2017/03/14/how-to-use-hexo-post-articles-on-multiple-pcs/"/>
     <id>http://blog.100dos.com/2017/03/14/how-to-use-hexo-post-articles-on-multiple-pcs/</id>
     <published>2017-03-14T04:11:57.000Z</published>
-    <updated>2017-08-26T14:29:13.745Z</updated>
+    <updated>2017-08-31T02:52:15.072Z</updated>
     
     <content type="html"><![CDATA[<p>最近公司和家里各有一台电脑，有需求在俩台电脑上都能发布 Hexo 文章。怎么办呢？</p>
 <p><a href="https://www.zhihu.com/question/21193762" target="_blank" rel="external">知乎上的回答提供了思路</a>，即创建俩个分支 master 和 hexo，下面的方案大体一样，具体操作流程详细描述一下。如何在PC1上<a href="http://blog.100dos.com/2016/05/15/build-blog-sys-by-hexo-on-github-pages/">创建 Hexo 项目</a>，可以参考之前的文章。如果像我一样已经有在线的 Github Pages，可以考虑重新创建 Project，这样可以保证 master 和 hexo 代码纯净。</p>
@@ -494,7 +546,7 @@
     <link href="http://blog.100dos.com/2017/03/14/understand-aclocal-autoconf-automake-autoheader-configure/"/>
     <id>http://blog.100dos.com/2017/03/14/understand-aclocal-autoconf-automake-autoheader-configure/</id>
     <published>2017-03-14T03:02:23.000Z</published>
-    <updated>2017-08-26T14:29:13.749Z</updated>
+    <updated>2017-08-31T02:52:15.076Z</updated>
     
     <content type="html"><![CDATA[<h3 id="autoscan-autoconf"><a href="#autoscan-autoconf" class="headerlink" title="autoscan (autoconf)"></a>autoscan (autoconf)</h3><p>扫描源代码以搜寻普通的可移植性问题，比如检查编译器、库、头文件等，生成文件configure.scan，它是configure.ac的一个雏形。</p>
 <h3 id="aclocal-automake"><a href="#aclocal-automake" class="headerlink" title="aclocal (automake)"></a>aclocal (automake)</h3><p>根据已经安装的宏，用户定义宏和 acinclude.m4 文件中的宏将 configure.ac 文件所需要的宏集中定义到文件 aclocal.m4 中。aclocal是一个 perl 脚本程序，它的定义是：</p>
@@ -532,7 +584,7 @@
     <link href="http://blog.100dos.com/2017/03/03/installing-gitlab-ce-on-centos7/"/>
     <id>http://blog.100dos.com/2017/03/03/installing-gitlab-ce-on-centos7/</id>
     <published>2017-03-03T03:30:02.000Z</published>
-    <updated>2017-08-26T14:29:13.745Z</updated>
+    <updated>2017-08-31T02:52:15.072Z</updated>
     
     <content type="html"><![CDATA[<ol>
 <li>安装配置依赖项<br>如想使用Postfix来发送邮件,在安装期间请选择’Internet Site’. 您也可以用sendmai或者 配置SMTP服务 并 使用SMTP发送邮件.<br>在 Centos 6 和 7 系统上, 下面的命令将在系统防火墙里面开放HTTP和SSH端口.</li>
@@ -577,7 +629,7 @@
     <link href="http://blog.100dos.com/2017/03/03/installing-centos7-nginx1-10-3-php7-mysql5-7/"/>
     <id>http://blog.100dos.com/2017/03/03/installing-centos7-nginx1-10-3-php7-mysql5-7/</id>
     <published>2017-03-03T02:10:36.000Z</published>
-    <updated>2017-08-26T14:29:13.745Z</updated>
+    <updated>2017-08-31T02:52:15.072Z</updated>
     
     <content type="html"><![CDATA[<p>最近买了 Linode VPS 服务。5刀每月，只有1G的内存，编译 Mysql 内存溢出，然后升级到2G内存的版本，每月10刀……以下纪录 LNMP 环境安装过程：</p>
 <h2 id="安装-Nginx"><a href="#安装-Nginx" class="headerlink" title="安装 Nginx"></a>安装 Nginx</h2><figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">~<span class="comment"># yum install wget</span></div><div class="line">~<span class="comment"># wget http://nginx.org/download/nginx-1.10.3.tar.gz</span></div><div class="line">~<span class="comment"># tar zxf nginx-1.10.3.tar.gz</span></div><div class="line">~<span class="comment"># cd nginx-1.10.3</span></div><div class="line"></div><div class="line">~<span class="comment"># yum install pcre-devel pcre openssl openssl-devel</span></div><div class="line">~<span class="comment"># yum install gcc</span></div><div class="line">~<span class="comment"># ./configure --prefix=/opt/nginx</span></div><div class="line">~<span class="comment"># make &amp; make install</span></div></pre></td></tr></table></figure>
@@ -621,7 +673,7 @@
     <link href="http://blog.100dos.com/2017/02/27/processes-and-threads/"/>
     <id>http://blog.100dos.com/2017/02/27/processes-and-threads/</id>
     <published>2017-02-27T03:11:14.000Z</published>
-    <updated>2017-08-26T14:29:13.745Z</updated>
+    <updated>2017-08-31T02:52:15.076Z</updated>
     
     <content type="html"><![CDATA[<p><a href="https://zh.wikipedia.org/wiki/行程" target="_blank" rel="external">进程</a>（process）是计算机中已运行程序的实体。关于进程需要知道的几点：</p>
 <ul>
@@ -728,7 +780,7 @@
     <link href="http://blog.100dos.com/2017/02/09/nearby-jobs/"/>
     <id>http://blog.100dos.com/2017/02/09/nearby-jobs/</id>
     <published>2017-02-09T06:25:08.000Z</published>
-    <updated>2017-08-26T14:29:13.745Z</updated>
+    <updated>2017-08-31T02:52:15.076Z</updated>
     
     <content type="html"><![CDATA[<p>从<a href="https://www.lagou.com/" target="_blank" rel="external">拉勾网</a>抓取的 86341 条招聘企业数据，企业地址匹配 LBS 经纬度取自<a href="http://lbs.amap.com/console/show/picker" target="_blank" rel="external">高德开放平台API</a>，成功匹配到 83090 条经纬度数据。没有做详细做企业主正在招聘岗位的数据，所以很大可能情况会遇到附近的公司没有招聘信息的情况，但是某些方面还是能大概了解自己附近有什么值得考虑的公司，有一定参考价值。</p>
 <h2 id="查询附近的工作"><a href="#查询附近的工作" class="headerlink" title="查询附近的工作"></a>查询附近的工作</h2><p>Github地址: <a href="https://github.com/jixiaod/NearbyJobs" target="_blank" rel="external">https://github.com/jixiaod/NearbyJobs</a></p>
@@ -759,7 +811,7 @@
     <link href="http://blog.100dos.com/2017/01/19/minesweeper-on-wechat-app/"/>
     <id>http://blog.100dos.com/2017/01/19/minesweeper-on-wechat-app/</id>
     <published>2017-01-19T02:55:08.000Z</published>
-    <updated>2017-08-26T14:29:13.745Z</updated>
+    <updated>2017-08-31T02:52:15.072Z</updated>
     
     <content type="html"><![CDATA[<p>微信小程序这几天很火，9号正式发布，今天19号过了10天，到现在略有降温的趋势。个大厂商对微信小程序的态度很不看好，最激进的要数[罗辑思维]，直接下架了自己的[得到APP]。滴滴、京东等APP也只保留了最精简的功能，某些担心过于完善的功能会抢夺APP本身的用户。不过这也印证了小程序的初衷，小而精、用完即走。（并不否认腾讯微信平台确实流氓的事实）</p>
 <blockquote>
@@ -813,7 +865,7 @@
     <link href="http://blog.100dos.com/2016/12/27/reading-note-the-trime-minister-of-qing-dynasty/"/>
     <id>http://blog.100dos.com/2016/12/27/reading-note-the-trime-minister-of-qing-dynasty/</id>
     <published>2016-12-27T11:18:35.000Z</published>
-    <updated>2017-08-26T14:29:13.745Z</updated>
+    <updated>2017-08-31T02:52:15.076Z</updated>
     
     <content type="html"><![CDATA[<p><strong>很多事情不像表面上那么简单，尤其是在官场，要考虑点更多。</strong>发生的时间、涉及的官员、所涉及到官员之间的关系、地位、各自的立场。</p>
 <p>皇上：要顾全皇族的利益，凡事涉及皇族，一定是要偏袒皇族，照顾其颜面。朝中大臣以和为贵，可以接受做官贪赃枉法，但是对上对皇上要有敬畏之心，对下对百姓不能做太过分出格。</p>
@@ -850,7 +902,7 @@
     <link href="http://blog.100dos.com/2016/12/14/cancer-is-not-far-from-us/"/>
     <id>http://blog.100dos.com/2016/12/14/cancer-is-not-far-from-us/</id>
     <published>2016-12-14T10:10:51.000Z</published>
-    <updated>2017-08-26T14:29:13.741Z</updated>
+    <updated>2017-08-31T02:52:15.072Z</updated>
     
     <content type="html"><![CDATA[<p>前几天知道了妈得了癌症的消息，原来新闻里、电视里不相干的陌生人得的病，也来到了我的身边。原来癌症离我也并不远……</p>
 <p>刚知道的时候心情不免低落，一个是为老妈难过，刚到60便染此恶疾，虽有希望治愈，治疗过程不免受苦；在一个也为自己难过，刚刚步入正轨的生活，又被被打乱了。本来还打算着让老妈过来帮带带孩子呢，结果计划全变了……孩子还未满月，老婆尚未做完月子。家里出了这么大的事情，也不敢告诉她。怕月子里身子虚，心情压抑，对恢复有影响。</p>
@@ -886,7 +938,7 @@
     <link href="http://blog.100dos.com/2016/12/13/say-goodbye-to-stevengerrard/"/>
     <id>http://blog.100dos.com/2016/12/13/say-goodbye-to-stevengerrard/</id>
     <published>2016-12-13T09:47:55.000Z</published>
-    <updated>2017-08-26T14:29:13.745Z</updated>
+    <updated>2017-08-31T02:52:15.076Z</updated>
     
     <content type="html"><![CDATA[<p>杰拉德退役的消息出来好几天了，想想还是写一篇吧。以纪念我浦最伟大的队长……</p>
 <blockquote>
@@ -939,7 +991,7 @@
     <link href="http://blog.100dos.com/2016/12/05/how-to-c-in-2016/"/>
     <id>http://blog.100dos.com/2016/12/05/how-to-c-in-2016/</id>
     <published>2016-12-05T03:23:52.000Z</published>
-    <updated>2017-08-26T14:29:13.745Z</updated>
+    <updated>2017-08-31T02:52:15.072Z</updated>
     
     <content type="html"><![CDATA[<p>英文原文：<a href="https://matt.sh/howto-c" target="_blank" rel="external">https://matt.sh/howto-c</a></p>
 <p>这原本是一篇我写在 2015 年没有发布出来的草稿。为了让大家也能受益，我决定把它从我的草稿文件夹里拿出来。并且基本是原文，未做过多修改。大概只是把年份改了一下，2015 改成了 2016。</p>
@@ -1240,7 +1292,7 @@
     <link href="http://blog.100dos.com/2016/10/27/seckill-on-e-shop/"/>
     <id>http://blog.100dos.com/2016/10/27/seckill-on-e-shop/</id>
     <published>2016-10-27T10:37:48.000Z</published>
-    <updated>2017-08-26T14:29:13.745Z</updated>
+    <updated>2017-08-31T02:52:15.076Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <p>抢购是指在某一个时间段内商家低价甚至免费销售商品，消费者突发性的集中投入购买力，大批量的、超常规的购买某种或某类商品的现象。</p>
@@ -1286,7 +1338,7 @@
     <link href="http://blog.100dos.com/2016/10/14/centsos6.6-mysql5.7-install/"/>
     <id>http://blog.100dos.com/2016/10/14/centsos6.6-mysql5.7-install/</id>
     <published>2016-10-14T04:05:45.000Z</published>
-    <updated>2017-08-26T14:29:13.741Z</updated>
+    <updated>2017-08-31T02:52:15.072Z</updated>
     
     <content type="html"><![CDATA[<p>在 CentOS 的 yum 默认安装的是 mysql 5.5 版本，由于开发需要 5.6 以上版本，索性就装个 5.7。</p>
 <p>到官网下载对应的 rpm buddle 包，CentOS 6 选择选择如下对应的版本</p>
@@ -1327,67 +1379,6 @@
       <category term="mysql" scheme="http://blog.100dos.com/tags/mysql/"/>
     
       <category term="centos" scheme="http://blog.100dos.com/tags/centos/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>PHP 中的 Lambdas 和 Closures</title>
-    <link href="http://blog.100dos.com/2016/09/30/Lambdas-and-Closures-in-PHP/"/>
-    <id>http://blog.100dos.com/2016/09/30/Lambdas-and-Closures-in-PHP/</id>
-    <published>2016-09-30T07:14:55.000Z</published>
-    <updated>2017-08-26T14:29:13.741Z</updated>
-    
-    <content type="html"><![CDATA[<p>PHP 5.3 开始，添加了 Lambdas（匿名函数）和 CLosures（闭包）这俩个新的特性。函数式编程也越来越能够得到程序员的追捧。其他语言，比如 Javascript 或 Ruby 中也经常能看到匿名函数的实现。</p>
-<p>那么什，么是 Lambda 函数？</p>
-<p>一个匿名函数可以简单理解为一个没有被定义的函数。</p>
-<p>没有名字函数，允许临时创建一个没有指定命名的函数。最经常用作回调函数（callback）参数的值。当然，也有其它应用的情况。</p>
-<p>比如我们定义一个正式的函数定义，可能是下面这个样子：</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">greeting</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">     <span class="keyword">return</span> <span class="string">"Hello world."</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// call function</span></div><div class="line"><span class="keyword">echo</span> greeting();</div></pre></td></tr></table></figure>
-<p>一个 lambda 函数</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span><span class="params">()</span> </span>&#123;</div><div class="line">     <span class="keyword">return</span> <span class="string">"Hello world."</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>因为 lambda 函数没有命名，不能像正式的函数那样调用。需要把它赋值给一个变量。</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><div class="line">$greeting = <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>&#123;</div><div class="line">     <span class="keyword">return</span> <span class="string">"Hello world."</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// call function</span></div><div class="line"><span class="keyword">echo</span> $greeting();</div></pre></td></tr></table></figure>
-<p>或者把 lambda 函数作为另一个函数的参数。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">function shout ($message)</div><div class="line">&#123;</div><div class="line">     echo $message();</div><div class="line">&#125;</div><div class="line"></div><div class="line">shout(function()&#123;</div><div class="line">     return ‘Hello world.&apos;;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<p>为什么要使用 lambda 函数？</p>
-<p>通常使用匿名函数可以让我们摆脱那些在程序中只会调用一次的函数。很多时候，我们需要定义一个函数来执行一项任务，但并不意味着我们需要一直需要该函数，也不需要它之后还能被调用。这种时候，我们就可以使用匿名函数。</p>
-<p>在函数式编程中，lambdas 被称为一流的函数，因为它们能够：</p>
-<ul>
-<li>作为参数来传递。</li>
-<li>可在运行过程中创建并使用。</li>
-<li>从函数返回。</li>
-<li>分配给变量。</li>
-</ul>
-<p>可以使用内置函数 <code>create_function</code> ，作用是一样的。</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><div class="line">$greeting = create_function(<span class="string">''</span>, <span class="string">'echo "Hello world."'</span>);</div><div class="line"></div><div class="line">$greeting();</div></pre></td></tr></table></figure>
-<p>但是 <code>create_function</code> 的语法很繁琐。一方面，该代码是在一个大引证字符串中。因此，不要期望从 PHP 编辑器获得帮助，而且不要忘了尽量避免使用该代码串。此外，<code>create_function</code> 的代码是在执行时进行编译，而且结果函数无法被缓存。</p>
-<p>什么是 Closure ？</p>
-<p>如果 Lambdas 是没有名字的函数，那么 Closures 仅比 Lambdas 多一个上下文。就是说，Closure 是个匿名函数，在其创建时，将来自创建该函数的代码范围内得变量值附加到它本身。</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="comment">// Create a user</span></div><div class="line">$user = <span class="string">"Philip"</span>;</div><div class="line"></div><div class="line"><span class="comment">// Create a Closure</span></div><div class="line">$greeting = <span class="function"><span class="keyword">function</span><span class="params">()</span> <span class="title">use</span> <span class="params">($user)</span> </span>&#123;</div><div class="line">     <span class="keyword">echo</span> <span class="string">"Hello $user"</span>;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">// Greet the user</span></div><div class="line">$greeting(); <span class="comment">// Returns "Hello Philip"</span></div></pre></td></tr></table></figure>
-<p>从上面的例子能看到，在 Closure 定义中，通过 <code>use</code> 语句传递了 $user 变量, 所以 Closure 内部能够访问到 <code>$user</code> 。但是如果在 Closure 作用域内修改变量 <code>$user</code> 的值，并不会修改父作用域的 <code>$user</code> 值。如果希望修改父作用域的 <code>$user</code>，可以传递变量的引用 <code>&amp;$user</code> 给 Closure   。</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="comment">// Set counter</span></div><div class="line">$i = <span class="number">0</span>;</div><div class="line"></div><div class="line"><span class="comment">// Increase counter within the scope</span></div><div class="line"><span class="comment">// of the function</span></div><div class="line">$closure = <span class="function"><span class="keyword">function</span> <span class="params">()</span> <span class="title">use</span> <span class="params">($i)</span></span>&#123; $i++; &#125;;</div><div class="line"></div><div class="line"><span class="comment">// Run the function</span></div><div class="line">$closure();</div><div class="line"><span class="comment">// The global count hasn't changed</span></div><div class="line"><span class="keyword">echo</span> $i; <span class="comment">// Returns 0</span></div><div class="line"></div><div class="line"><span class="comment">// Reset count</span></div><div class="line">$i = <span class="number">0</span>;</div><div class="line"></div><div class="line"><span class="comment">// Increase counter within the scope</span></div><div class="line"><span class="comment">// of the function but pass it as a reference</span></div><div class="line">$closure = <span class="function"><span class="keyword">function</span> <span class="params">()</span> <span class="title">use</span> <span class="params">(&amp;$i)</span></span>&#123; $i++; &#125;;</div><div class="line"></div><div class="line"><span class="comment">// Run the function</span></div><div class="line">$closure();</div><div class="line"><span class="comment">// The global count has increased</span></div><div class="line"><span class="keyword">echo</span> $i; <span class="comment">// Returns 1</span></div></pre></td></tr></table></figure>
-<p>Closure 在作为回调函数的参数时，非常有用，比如 <code>array_map</code>、<code>array_filter</code>、<code>array_reduce</code>、<code>array_walk</code>等。</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="comment">// An array of names</span></div><div class="line">$users = <span class="keyword">array</span>(<span class="string">"John"</span>, <span class="string">"Jane"</span>, <span class="string">"Sally"</span>, <span class="string">"Philip"</span>);</div><div class="line"></div><div class="line"><span class="comment">// Pass the array to array_walk</span></div><div class="line">array_walk($users, <span class="function"><span class="keyword">function</span> <span class="params">($name)</span> </span>&#123;</div><div class="line">  <span class="keyword">echo</span> <span class="string">"Hello $name&lt;br&gt;"</span>;</div><div class="line">&#125;);</div><div class="line"><span class="comment">// Returns</span></div><div class="line"><span class="comment">// -&gt; Hello John</span></div><div class="line"><span class="comment">// -&gt; Hello Jane</span></div><div class="line"><span class="comment">// -&gt; ..</span></div></pre></td></tr></table></figure>
-<p>同样的，可通过 <code>use</code> 语句把父作用变量传递到 Closure 中。</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><div class="line"><span class="comment">// Set a multiplier</span></div><div class="line">$multiplier = <span class="number">3</span>;</div><div class="line"></div><div class="line"><span class="comment">// Create a list of numbers</span></div><div class="line">$numbers = <span class="keyword">array</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>);</div><div class="line"></div><div class="line"><span class="comment">// Use array_walk to iterate</span></div><div class="line"><span class="comment">// through the list and multiply</span></div><div class="line">array_walk($numbers, <span class="function"><span class="keyword">function</span><span class="params">($number)</span> <span class="title">use</span><span class="params">($multiplier)</span></span>&#123;</div><div class="line">  <span class="keyword">echo</span> $number * $multiplier;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<p>在目前流行的 laravel 框架中，能看到如下处理路由的方法。</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><div class="line">Route::get(<span class="string">'user/(:any)'</span>, <span class="function"><span class="keyword">function</span><span class="params">($name)</span></span>&#123;</div><div class="line">  <span class="keyword">return</span> <span class="string">"Hello "</span> . $name;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<p>有没有觉得非常的简洁和清晰。利用这俩个新的特性，可以尝试重构之前的老代码，使得代码更简洁、更直观、更容易理解。也可以进一步学习函数式编程，感受新的开发模式和打破原有编码习惯。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;PHP 5.3 开始，添加了 Lambdas（匿名函数）和 CLosures（闭包）这俩个新的特性。函数式编程也越来越能够得到程序员的追捧。其他语言，比如 Javascript 或 Ruby 中也经常能看到匿名函数的实现。&lt;/p&gt;
-&lt;p&gt;那么什，么是 Lambda 函数？&lt;
-    
-    </summary>
-    
-      <category term="PHP" scheme="http://blog.100dos.com/categories/PHP/"/>
-    
-    
-      <category term="Lambdas" scheme="http://blog.100dos.com/tags/Lambdas/"/>
-    
-      <category term="Closures" scheme="http://blog.100dos.com/tags/Closures/"/>
     
   </entry>
   
