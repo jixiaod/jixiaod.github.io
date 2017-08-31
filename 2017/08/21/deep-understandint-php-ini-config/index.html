@@ -27,7 +27,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="PHP," />
+  <meta name="keywords" content="PHP,php.ini," />
 
 
 
@@ -43,17 +43,17 @@
 
 
 <meta name="description" content="好久没更了，今天读到一篇介绍非常详细的文章，转载一下，凑个数。 转自：http://www.cnblogs.com/driftcloudy/p/4011954.html 这篇文章不会详细叙述某个ini配置项的用途，这些在手册上已经讲解的面面俱到。我只是想从某个特定的角度去挖掘php的实现机制，会涉及到一些php内核方面的知识:-) 使用php的同学都知道 php.ini 配置的生效会贯穿整个SAP">
-<meta name="keywords" content="PHP">
+<meta name="keywords" content="PHP,php.ini">
 <meta property="og:type" content="article">
-<meta property="og:title" content="深入理解PHP的ini配置">
+<meta property="og:title" content="深入理解PHP的INI配置">
 <meta property="og:url" content="http://blog.100dos.com/2017/08/21/deep-understandint-php-ini-config/index.html">
 <meta property="og:site_name" content="百作坊">
 <meta property="og:description" content="好久没更了，今天读到一篇介绍非常详细的文章，转载一下，凑个数。 转自：http://www.cnblogs.com/driftcloudy/p/4011954.html 这篇文章不会详细叙述某个ini配置项的用途，这些在手册上已经讲解的面面俱到。我只是想从某个特定的角度去挖掘php的实现机制，会涉及到一些php内核方面的知识:-) 使用php的同学都知道 php.ini 配置的生效会贯穿整个SAP">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://blog.100dos.com/images/deep-understanding-php.ini-config.png">
-<meta property="og:updated_time" content="2017-08-31T02:52:15.072Z">
+<meta property="og:updated_time" content="2017-08-31T02:55:56.912Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="深入理解PHP的ini配置">
+<meta name="twitter:title" content="深入理解PHP的INI配置">
 <meta name="twitter:description" content="好久没更了，今天读到一篇介绍非常详细的文章，转载一下，凑个数。 转自：http://www.cnblogs.com/driftcloudy/p/4011954.html 这篇文章不会详细叙述某个ini配置项的用途，这些在手册上已经讲解的面面俱到。我只是想从某个特定的角度去挖掘php的实现机制，会涉及到一些php内核方面的知识:-) 使用php的同学都知道 php.ini 配置的生效会贯穿整个SAP">
 <meta name="twitter:image" content="http://blog.100dos.com/images/deep-understanding-php.ini-config.png">
 
@@ -75,7 +75,7 @@
   <link rel="canonical" href="http://blog.100dos.com/2017/08/21/deep-understandint-php-ini-config/"/>
 
 
-  <title> 深入理解PHP的ini配置 | 百作坊 </title>
+  <title> 深入理解PHP的INI配置 | 百作坊 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -230,7 +230,7 @@
             
             
               
-                深入理解PHP的ini配置
+                深入理解PHP的INI配置
               
             
           </h1>
@@ -390,6 +390,8 @@
           
             <a href="/tags/PHP/" rel="tag">#PHP</a>
           
+            <a href="/tags/php-ini/" rel="tag">#php.ini</a>
+          
         </div>
       
 
@@ -517,7 +519,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">118</span>
+                <span class="site-state-item-count">119</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
