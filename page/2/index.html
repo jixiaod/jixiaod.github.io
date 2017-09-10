@@ -229,6 +229,130 @@
             
               
                 
+                <a class="post-title-link" href="/2017/03/14/how-to-use-hexo-post-articles-on-multiple-pcs/" itemprop="url">
+                  如何使用 hexo 在多台 PC 发布文章？
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-03-14T12:11:57+08:00" content="2017-03-14">
+              2017-03-14
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/流程-工具/" itemprop="url" rel="index">
+                    <span itemprop="name">流程&工具</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>最近公司和家里各有一台电脑，有需求在俩台电脑上都能发布 Hexo 文章。怎么办呢？</p>
+<p><a href="https://www.zhihu.com/question/21193762" target="_blank" rel="external">知乎上的回答提供了思路</a>，即创建俩个分支 master 和 hexo，下面的方案大体一样，具体操作流程详细描述一下。如何在PC1上<a href="http://blog.100dos.com/2016/05/15/build-blog-sys-by-hexo-on-github-pages/">创建 Hexo 项目</a>，可以参考之前的文章。如果像我一样已经有在线的 Github Pages，可以考虑重新创建 Project，这样可以保证 master 和 hexo 代码纯净。</p>
+<p>重新部署 hexo：</p>
+<ol>
+<li>重新创建 hexo 项目 <code>hexo init blog.100dos.com</code> ，拷贝之前的 _config.yml、 theme、README.md、CNAME 等资源到新的hexo</li>
+<li>提交代码到master，然后创建 hexo 分支，切换到 hexo 分支</li>
+<li>确保 hexo 分支的代码 <code>hexo server</code> 运行时，跟你之前的博客一样</li>
+<li>提交 hexo 分支代码，切换到 master，<code>git merge hexo</code> 合并刚刚的修改（如果有的话）</li>
+<li>最后在查看 <code>hexo server</code> master 分支下的代码，没问题的话，准备提交github。如果有问题，在 hexo 分支修改，然后再 merge 到 master</li>
+<li>删除 Github 上的原Project</li>
+<li>提交 hexo 分支到Github，<code>git push origin hexo</code></li>
+<li>部署 master 分支，<code>hexo d --g</code></li>
+<li>OK完成重新部署工作。</li>
+</ol>
+<p>如何在其他电脑发布文章？</p>
+<ol>
+<li>检出代码 git clone git@github.com:jixiaod/jixiaod.github.io.git</li>
+<li>切换到 hexo 分支，创建文章 <code>hexo new xxxxx</code>，文章编写完成后，提交</li>
+<li>切换到master，合并hexo分支新编写的文章，<code>git merge hexo</code></li>
+<li>部署 master 分支，<code>hexo d --g</code>，发布新文章成功</li>
+</ol>
+<p>亲测，有效。可以查看<a href="https://github.com/jixiaod/jixiaod.github.io" target="_blank" rel="external">我的 Github Hexo 代码</a>。</p>
+
+          
+        
+      
+    </div>
+
+   
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+
+      
+     
+    </footer>
+  </article>
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/03/14/understand-aclocal-autoconf-automake-autoheader-configure/" itemprop="url">
                   图解 autoscan、aclocal、automake、autoconf、autoheader、configure
                 </a>
@@ -1097,121 +1221,6 @@
   </article>
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/12/14/cancer-is-not-far-from-us/" itemprop="url">
-                  癌症离我们不远
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-12-14T18:10:51+08:00" content="2016-12-14">
-              2016-12-14
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/杂/" itemprop="url" rel="index">
-                    <span itemprop="name">杂</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>前几天知道了妈得了癌症的消息，原来新闻里、电视里不相干的陌生人得的病，也来到了我的身边。原来癌症离我也并不远……</p>
-<p>刚知道的时候心情不免低落，一个是为老妈难过，刚到60便染此恶疾，虽有希望治愈，治疗过程不免受苦；在一个也为自己难过，刚刚步入正轨的生活，又被被打乱了。本来还打算着让老妈过来帮带带孩子呢，结果计划全变了……孩子还未满月，老婆尚未做完月子。家里出了这么大的事情，也不敢告诉她。怕月子里身子虚，心情压抑，对恢复有影响。</p>
-<p>上周末已回老家抚顺看过，现在在抚顺矿务局医院（当地三甲）接受治疗。老妈的状态还不错，些许安慰。刚做完化疗，吃不下东西。中午一家人吃了点东西，都吐了。晚上还好，因为打了抗呕吐的针，而且是上周五最后做的化疗，已隔了2天，身体已无太大反应。</p>
-<p>最近看了好多关于癌症的资料，老妈得得是鼻癌（鼻咽癌）。很是吃紧，离大脑太近，后期如果癌细胞扩散到脑腔，就会引发头痛，而且是痛的要撞墙的那种。据老妈自己说，最近感觉还好，感觉肿块相比之前软了许多，或许治疗起作用了。今天电话又说，做了放疗，并无大碍。而且吃饭很好，吃了一碗。</p>
-<p>在医院时候陪父母跟老婆和孩子视频聊天，老人家很开心，这个时间段，让老人保持心情舒畅很重要。也告诉老爸钱方面不要担心，更不要在老妈面前提钱字。老爸也确实很上火，家里确实不太富裕。不过我觉得还好吧，毕竟有三个子女，看病的话大家分担一下，压力还没有那么大。病还是要治的，就算治不好，多活一年是一年。也能多陪老爸一年，老伴老伴，到老了才是伴。假如说老妈真的没了，老爸难免会孤单。</p>
-<p>今天又跟家里视频，老人家，总是看见孩子就很开心。孩子这时候真是法宝，且当作你奶奶的开心果吧……</p>
-<p>琢磨着过年时偶接老俩口过来住几天，看看孩子。</p>
-<p>查看癌症资料，无意间看到了一位癌症患者的博客，<a href="http://xin-sheng.hxwk.org/" target="_blank" rel="external">辛声文集</a>，翻看了很多篇文章。甚是佩服博主的乐观态度，但是停更很久了，不知道现在是否安好。</p>
-<p>健康生活很重要，乐观的生活态度也少不了。猜测老妈大概就是因为心情长期压抑导致的癌症，总是看不惯这个那个，埋怨这个那个。可能有点像姥姥，不过姥姥倒是活了很大年纪，所以也吃不太准，也可能是姥姥比较善忘的缘故。老妈可能一件烦心事可以憋很久吧。本身老人都是农村人，体力活干过不少，身体应该还是不错的。总之，癌症又有点来的不明所以。</p>
-<p>病既来之，只好安之……</p>
-<p>老爸那边更多的是需要宽慰、开导，老妈那边要多多的哄她开心。毕竟也刚刚 60 出头，刚刚结束了一辈子的辛苦，还没有开始享受生活。</p>
-<p>同时告诫自己：锻炼身体、保持健康、凡事轻看、心情愉悦，还有多多赚钱……</p>
-<p>如果你也在看，共勉之。</p>
-
-          
-        
-      
-    </div>
-
-   
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-
-      
-     
-    </footer>
-  </article>
-
-    
   </section>
 
   
@@ -1253,7 +1262,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">169</span>
+              <span class="site-state-item-count">170</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
