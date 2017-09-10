@@ -1,8 +1,9 @@
 ---
-title: 深入理解PHP的ini配置
+title: 深入理解PHP的INI配置
 date: 2017-08-21 22:50:02
 tags:
 - PHP
+- php.ini
 categories:
 - PHP
 
