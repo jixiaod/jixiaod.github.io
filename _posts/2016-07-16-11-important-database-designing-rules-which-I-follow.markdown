@@ -2,7 +2,7 @@
 layout: post
 title: 11 个我遵循的重要数据库设计原则
 date: 2016-07-16 16:15:01
-categories: 技术 MySQL
+categories: MySQL
 
 ---
 

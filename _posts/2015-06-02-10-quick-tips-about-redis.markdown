@@ -2,7 +2,7 @@
 layout: post
 title: "Redis使用的10个小贴士"
 date: 2015-06-02 16:32:45
-categories: 技术 Redis
+categories: Redis
 
 ---
 

@@ -2,7 +2,7 @@
 layout: post
 title: PHP 中的 Lambdas 和 Closures
 date: 2016-09-30 15:14:55
-categories: 技术 PHP 
+categories: PHP 
     
 ---
 
