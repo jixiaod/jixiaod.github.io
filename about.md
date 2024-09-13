@@ -1,6 +1,7 @@
 ---
-layout: page
+layout: about
 title: About Me
+image: /assets/images/post/livepool.jpg
 permalink: /about/
 ---
 
@@ -11,4 +12,5 @@ permalink: /about/
 * 🏢 Worked at a few second-tier internet companies and currently [freelancing](https://100dos.github.io/).
 * 📝 I don't write [blog posts](https://jixiaod.github.io/) too much, but write [Weibo](https://weibo.com/jixiaod) from time to time
 * ⚙️ I don't really enjoy programming; I hope to make enough money quickly to enjoy the rest of my life
+* ❤️‍🔥 I'm a die-hard Liverpool fan, and YNWA!!!
 
