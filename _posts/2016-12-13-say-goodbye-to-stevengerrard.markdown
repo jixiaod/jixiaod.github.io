@@ -4,13 +4,14 @@ title: 告别 斯蒂芬·杰拉德
 date: 2016-12-13 17:47:55
 tags:
 categories: Life
+image: /assets/images/post/livepool.jpg
 
 ---
 杰拉德退役的消息出来好几天了，想想还是写一篇吧。以纪念我浦最伟大的队长……
 
 >一个人守护一座城，一座城守护一个人 -- 杰拉德和利物浦
 
-![](/images/steven-gerrard.jpg)
+![](/assets/images/post/steven-gerrard.jpg)
 
 我看球应该算是比较晚的，02年世界杯因为中国队杀入了世界杯决赛圈，大家都在看球。那时候不太懂，就跟着一起瞎看，人都认不全，什么是越位都不懂……大概也就知道足球，只能用脚，不能用手吧。
 

@@ -16,13 +16,13 @@ categories: MySQL
 - 事物性质：在这类程序中，你的终端用户更多操作的是CURD。比如：创建、读取、更新和删除表中的记录。这种数据库的比较官方说法是 OLTP。
 -  分析性质：在这类程序中，你的终端用户更多操作的是分析、报告、预报等。这类数据库的插入和查询操作很少。更快的查询和分析数据是首要考虑的问题。这种数据库的比较官方说法是 OLAP。
 
-![](/images/11-important-database-designing-rules-which-I-follow/a2.jpg)
+![](/assets/images/post/11-important-database-designing-rules-which-I-follow/a2.jpg)
 
 换句话来说，在数据库设计中，如果你认为插入、更新和删除更加显著，就选择标准化（根据数据库设计范式）的表设计。反之，就选择非标准化的数据库结构。
 
 下面的简单图标显示了如何把左侧的标准化的表（包括用户名和地址），变成右侧非标准化结构的扁平的数据表结构。
 
-![](/images/11-important-database-designing-rules-which-I-follow/a3.jpg)
+![](/assets/images/post/11-important-database-designing-rules-which-I-follow/a3.jpg)
 
 ## 原则二：把数据拆分到多个逻辑碎片，变得更简单
 
@@ -32,7 +32,7 @@ categories: MySQL
 
 所以，最好的方案是把这个学生姓名字段拆分到几个字段，这样的话写入表哥也会更清晰，查询也会更佳理想。
 
-![](/images/11-important-database-designing-rules-which-I-follow/a4.jpg)
+![](/assets/images/post/11-important-database-designing-rules-which-I-follow/a4.jpg)
 
 ## 原则三：对于原则二的不能使用过度
 
@@ -40,7 +40,7 @@ categories: MySQL
 
 例如，你能看到电话号码字段。很少会有需求把电话号码拆分开来使用，除非你的程序有特殊需求。否则拆分出来会导致更复杂的问题，那还是放着不动比较好。
 
-![](/images/11-important-database-designing-rules-which-I-follow/a5.jpg)
+![](/assets/images/post/11-important-database-designing-rules-which-I-follow/a5.jpg)
 
 ## 原则四：把重复、不统一的数据当作你最大的敌人
 
@@ -48,21 +48,21 @@ categories: MySQL
 
 例如，在下表中，你可以看到“5th Standard” 和“Fifth standard”表达的是同一个意思。由于垃圾数据或者输入验证没有做好，这些数据才会进入到数据表中来。如果用这个数据导出报表给用户看，相信用户一定会晕掉。
 
-![](/images/11-important-database-designing-rules-which-I-follow/a6.jpg)
+![](/assets/images/post/11-important-database-designing-rules-which-I-follow/a6.jpg)
 
 有一个办法是，就是把这些数据放到另外一张表，然后用外键做关联。看下面图表的演示，创建另外一张表叫做年级表（Standards Table），然后用简单的外键关联起来。
 
-![](/images/11-important-database-designing-rules-which-I-follow/a7.jpg)
+![](/assets/images/post/11-important-database-designing-rules-which-I-follow/a7.jpg)
 
 ## 原则五：小心那些用分隔符分割的数据
 
 第1NF范式的第二条原则说要避免重复组（原子性）。下面的图表既是重复组的一个小例子。仔细观察“Syllabus”（教学大纲）字段，这个字段被塞入了很多的课程名称，这种类似的字段就可以被叫称为“重复组”。一旦我们要操作这个字段，查询会变的非常复杂，效率一定不高。
 
-![](/images/11-important-database-designing-rules-which-I-follow/a8.jpg)
+![](/assets/images/post/11-important-database-designing-rules-which-I-follow/a8.jpg)
 
 这种被塞满用分隔符分开的数据字段必须要引起重视。一个好的办法是把这些内容拆开，放到不同的表中，并用外键关联。
 
-![](/images/11-important-database-designing-rules-which-I-follow/a9.jpg)
+![](/assets/images/post/11-important-database-designing-rules-which-I-follow/a9.jpg)
 
 现在就能套用1NF方式的第二原则：所有的属性均有原子性，既所有的属性均不可被再分割。正如上面的图表中所示，我创建了一个单独的表“Syllabus”（教学大纲）。并于“Subject”（课程）表建立了多对多的关系。
 
@@ -70,7 +70,7 @@ categories: MySQL
 
 ## 原则六：小心部分关联
 
-![](/images/11-important-database-designing-rules-which-I-follow/a10.jpg)
+![](/assets/images/post/11-important-database-designing-rules-which-I-follow/a10.jpg)
 
 小心那些只是部分关联主键的字段。例如上图，能看到主键被创建在“Roll No”和年级（Standard）字段上。现在仔细观察教学大纲字段（Syllabus）。教学大纲字段和年级是有关联的，但是跟学生没有关联。
 
@@ -82,7 +82,7 @@ categories: MySQL
 
 ## 原则七：谨慎的选择创建派生字段
 
-![](/images/11-important-database-designing-rules-which-I-follow/a11.jpg)
+![](/assets/images/post/11-important-database-designing-rules-which-I-follow/a11.jpg)
 
 如果正在开发的是 OLTP 的应用程序，应该避免创建派生字段，除非真的有极特殊因为性能的原因。在OLAP程序中，我们会做许多的求和、计算，这些派生的字段会大大提升性能。
 
@@ -92,7 +92,7 @@ categories: MySQL
 
 ## 原则八：如果性能是关键的话，就不用太关注去避免冗余
 
-![](/images/11-important-database-designing-rules-which-I-follow/a12.jpg)
+![](/assets/images/post/11-important-database-designing-rules-which-I-follow/a12.jpg)
 
 不需要过于严格的去遵守避免冗余数据的原则。如果非常迫切的需要性能，就考虑下非原则性的东西吧。在考虑原则的时候，查询可能需要联合查询好多张表。但是如果不考虑原则，联合查询减少了，这样性能和效率也就能够得到提升。
 
@@ -100,17 +100,17 @@ categories: MySQL
 
 OLAP 的程序通常有要处理多维数据的问题。例如看下图表，现在想要得到每个国家、用户、日期的销售额。简单来说，就是这三个交叉维度的销售额。
 
-![](/images/11-important-database-designing-rules-which-I-follow/a13.jpg)
+![](/assets/images/post/11-important-database-designing-rules-which-I-follow/a13.jpg)
 
 这种情况下一个“维度＋事实”的设计是一个不错的方法。简单来说，创建一个以销售数据为中心的表，然后让该表用外键关联所有的维度。
 
-![](/images/11-important-database-designing-rules-which-I-follow/a14.jpg)
+![](/assets/images/post/11-important-database-designing-rules-which-I-follow/a14.jpg)
 
 ## 原则十：以键值为中心的表结构设计
 
 很多时候，我们会遇到名称和值的表。名称和值表示它有键和并且有一些数据关联这个键。例如下图表，有一张现金表（Currency）和国家表。如果仔细观察我们它们实际上只有一个键和一个值。
 
-![](/images/11-important-database-designing-rules-which-I-follow/a16.jpg)
+![](/assets/images/post/11-important-database-designing-rules-which-I-follow/a16.jpg)
 
 对于这样的一些表，创建一个中心化的表，然后用一个类型（type）字段来区分不同类型的数据更合理一些。
 
@@ -118,10 +118,10 @@ OLAP 的程序通常有要处理多维数据的问题。例如看下图表，现
 
 很多时候，我们会遇到无穷父子结构的数据。例如，考虑一下传销模型，一个传销下面还可以有多个传销，然后这多个传销的每个人下面还有多个传销。这个场景下，使用一个自引用的主键和外键就能够帮助我们实现这个功能。
 
-![](/images/11-important-database-designing-rules-which-I-follow/a17.jpg)
+![](/assets/images/post/11-important-database-designing-rules-which-I-follow/a17.jpg)
 
 最后，这篇文章并不是要告诉大家不要遵从数据库设计范式，而是说不要“盲目”的去遵从数据库的设计范式。在数据库设计之前，首先多看看你的应用程序本质上要实现的功能，和你要处理的数据类型。
 
-![](/images/11-important-database-designing-rules-which-I-follow/a18.jpg)
+![](/assets/images/post/11-important-database-designing-rules-which-I-follow/a18.jpg)
 
 原文链接：[11 important database designing rules which I follow](http://www.codeproject.com/Articles/359654/11-important-database-designing-rules-which-I-follow)
