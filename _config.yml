@@ -24,7 +24,7 @@ paginate:	10
 url: "https://jixiaod.github.io" # the base hostname & protocol for your site
 baseurl: ""
 #used to display twitter cards
-twitter_handle: '@ttiger_cn'
+twitter_handle: '@jixiaod_cn'
 
 #fill in disqus shortname to use disqus
 #disqus: disqus-shortname
@@ -41,7 +41,7 @@ social:
     share_link: "&amp;url="
 
   - icon:	twitter
-    url:	https://twitter.com/ttiger_cn
+    url:	https://twitter.com/jixiaod_cn
     desc: Follow me on twitter
     share_url: http://twitter.com/share
     share_title: ?text=
